@@ -12,7 +12,19 @@ class HomeRepo {
     String requestUrl = AppUrls.BASE_URL + MethodNames.getAngle;
 
     result = await BaseApiHelper.getRequest(requestUrl);
-    log("result-----asasas------->${result}");
+    // log("result-----asasas------->${result}");
+    return result;
+  }
+
+  /// Get Single Angel Data Api
+  static Future<ResponseItem> getSingleAngleAPi(String angelId) async {
+    ResponseItem result;
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNames.getSingleAngleDetails + angelId;
+
+    result = await BaseApiHelper.getRequest(requestUrl);
+    // log("result-----asasas------->${result}");
     return result;
   }
 
@@ -26,10 +38,11 @@ class HomeRepo {
     String requestUrl = AppUrls.BASE_URL + MethodNames.callAngle;
 
     result = await BaseApiHelper.postRequestToken(requestUrl, params);
-    log("result------------>${result}");
+    // log("result------------>${result}");
     return result;
   }
 
+  /// add wallet amount api
   static Future<ResponseItem> walletApi(String amount, String paymentId) async {
     ResponseItem result;
     Map<String, dynamic> params = {
@@ -37,10 +50,6 @@ class HomeRepo {
       "amount": amount,
       "payment_id": paymentId,
     };
-    // Map<String, dynamic> params = {
-    //   "mobile_number": mobileNumber,
-    //   "amount": amount,
-    // };
 
     String requestUrl = AppUrls.BASE_URL + MethodNames.angleWallet;
 
@@ -56,7 +65,7 @@ class HomeRepo {
     String requestUrl = AppUrls.BASE_URL + MethodNames.getUserDetails + userId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
-    log("result----getUserDetailsAPi-------->${result}");
+    // log("result----getUserDetailsAPi-------->${result}");
     return result;
   }
 
@@ -66,8 +75,7 @@ class HomeRepo {
 
     String requestUrl = AppUrls.BASE_URL + MethodNames.getRechargeList;
     result = await BaseApiHelper.getRequest(requestUrl);
-    log("result----getAllRechargesApi-------->${result}");
-
+    // log("result----getAllRechargesApi-------->${result}");
     return result;
   }
 
@@ -82,7 +90,23 @@ class HomeRepo {
 
     String requestUrl = AppUrls.BASE_URL + MethodNames.postReferralCode;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    return result;
+  }
 
+  /// post Rating code
+  static Future<ResponseItem> postRatingApi(
+      String angelId, String rating, String comment) async {
+    ResponseItem result;
+    Map<String, dynamic> requestData = {
+      "user_id": "${PreferenceManager().getId() ?? ''}",
+      "angel_id": angelId,
+      // "angel_id": "659cdf9a57a5087d111c47a4",
+      "rating": rating,
+      "comment": comment
+    };
+
+    String requestUrl = AppUrls.BASE_URL + MethodNames.postRating;
+    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
     return result;
   }
 }

@@ -122,8 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   controller.setAngle(
                                       controller.resModel.data![index]);
                                   Get.toNamed(Routes.personDetailScreen,
-                                      arguments:
-                                          controller.resModel.data?[index]);
+                                      arguments: {
+                                        "angel_id":
+                                            controller.resModel.data?[index].id
+                                      });
                                 },
                                 child: Container(
                                   height: h * 0.13,
@@ -351,24 +353,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontColor: whiteColor,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500),
+                                          (h * 0.005).addHSpace(),
                                           AppString.F25Yrs3yrsofExperience
                                               .regularLeagueSpartan(
                                                   fontColor: whiteColor,
                                                   fontSize: 10),
-                                          AppString.ratings
-                                              .regularLeagueSpartan(
-                                                  fontColor: index == 0
-                                                      ? greenColor
-                                                      : yellowColor,
-                                                  fontSize: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const Icon(Icons.star,
+                                                  size: 11, color: yellowColor),
+                                              (w * 0.01).addWSpace(),
+                                              ("${controller.resModel.data?[index].totalRating}  (${controller.resModel.data?[index].reviews?.length} Rating)")
+                                                  .regularLeagueSpartan(
+                                                      fontColor: yellowColor,
+                                                      fontSize: 10),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                       const Spacer(),
                                       InkWell(
                                         onTap: () {
-                                          log(",PreferenceManager().getId()-------1----${PreferenceManager().getId()}");
-                                          log(",PreferenceManager().getId()------2-----${PreferenceManager().getToken()}");
-                                          log(",PreferenceManager().getId()-----3------${controller.resModel.data![index].id!}");
+                                          // log(",PreferenceManager().getId()-------1----${PreferenceManager().getId()}");
+                                          // log(",PreferenceManager().getId()------2-----${PreferenceManager().getToken()}");
+                                          // log(",PreferenceManager().getId()-----3------${controller.resModel.data![index].id!}");
                                           controller.setAngle(
                                               controller.resModel.data![index]);
 

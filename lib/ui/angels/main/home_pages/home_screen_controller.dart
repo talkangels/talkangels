@@ -33,7 +33,6 @@ class HomeController extends GetxController {
     update();
     log("TOKEN---------->${PreferenceManager().getToken()}");
     ResponseItem item = await HomeRepo.getAngleAPi();
-    log("item---------->${item.status}");
     log("item---------->${item.data}");
     if (item.status == true) {
       try {
@@ -45,8 +44,6 @@ class HomeController extends GetxController {
         isLoading = false;
         update();
       }
-
-      log("res-data---->${resModel.data}");
     } else {
       isLoading = false;
       update();
@@ -97,8 +94,7 @@ class HomeController extends GetxController {
     if (item.status == true) {
       try {
         userDetailsResModel = UserDetailsResponseModel.fromJson(item.data);
-        log("UserDetailsResponseModel==12212=>    ${item.data!}");
-        log("UserDetailsResponseMhihjuihuodel==12212=>    ${userDetailsResModel.data?.mobileNumber}");
+        log("UserDetailsResponseModel===>    ${item.data!}");
         isUserLoading = false;
         update();
       } catch (e) {
