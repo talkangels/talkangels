@@ -375,16 +375,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:talkangels/const/shared_prefs.dart';
-import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
 import 'package:talkangels/ui/angels/main/home_pages/home_screen_controller.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/ui/angels/main/home_pages/person_details_screen_controller.dart';
+import 'package:talkangels/ui/angels/utils/share_profile_details_service.dart';
 import 'package:talkangels/ui/angels/widgets/app_app_bar.dart';
 import 'package:talkangels/ui/angels/widgets/app_button.dart';
 import 'package:talkangels/ui/angels/widgets/app_show_profile_pic.dart';
@@ -403,9 +403,6 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
 
   String angelId = Get.arguments["angel_id"];
 
-  TextEditingController ratingController = TextEditingController();
-  String? rating;
-
   @override
   void initState() {
     super.initState();
@@ -415,8 +412,6 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
   @override
   void dispose() {
     super.dispose();
-    rating;
-    ratingController.text;
   }
 
   @override
@@ -570,7 +565,15 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                                                           .w900),
                                                               const Spacer(),
                                                               InkWell(
-                                                                onTap: () {},
+                                                                onTap:
+                                                                    () async {
+                                                                  String url = await DynamicLinkService()
+                                                                      .createShareProfileLink(
+                                                                          angelId:
+                                                                              angelId);
+                                                                  Share.share(
+                                                                      url);
+                                                                },
                                                                 child:
                                                                     Container(
                                                                   height:
@@ -634,17 +637,20 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                       },
                                       borderShow: false,
                                       radius: 70),
-                                  const Positioned(
+                                  Positioned(
                                     right: 6,
                                     bottom: 6,
-                                    child: CircleAvatar(
-                                      backgroundColor: containerColor,
-                                      radius: 7,
-                                      child: CircleAvatar(
-                                        backgroundColor: greenColor,
-                                        radius: 4.5,
-                                      ),
-                                    ),
+                                    child: controller.getSingleAngelResModel
+                                                .data?.activeStatus ==
+                                            "Online"
+                                        ? const CircleAvatar(
+                                            backgroundColor: containerColor,
+                                            radius: 7,
+                                            child: CircleAvatar(
+                                                backgroundColor: greenColor,
+                                                radius: 4.5),
+                                          )
+                                        : const SizedBox(),
                                   ),
                                 ],
                               ),
@@ -671,14 +677,24 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                               ?.activeStatus ??
                                           "")
                                       .regularLeagueSpartan(
-                                          fontColor: greenColor,
+                                          fontColor: controller
+                                                      .getSingleAngelResModel
+                                                      .data
+                                                      ?.activeStatus ==
+                                                  "Online"
+                                              ? greenColor
+                                              : yellowColor,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
                                 ],
                               ),
                               const Spacer(),
                               InkWell(
-                                onTap: () {},
+                                onTap: () async {
+                                  String url = await DynamicLinkService()
+                                      .createShareProfileLink(angelId: angelId);
+                                  Share.share(url);
+                                },
                                 child: const CircleAvatar(
                                   backgroundColor: redFontColor,
                                   radius: 17,
@@ -804,7 +820,7 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                                   children: [
                                                     ("${AppString.totalReviews} :   ")
                                                         .regularLeagueSpartan(),
-                                                    ("${controller.getSingleAngelResModel.data?.reviews?.length ?? "0"}+ Reviews")
+                                                    ("${(controller.getSingleAngelResModel.data?.reviews?.length ?? 0)} Reviews")
                                                         .regularLeagueSpartan(
                                                             fontWeight:
                                                                 FontWeight.w800)
@@ -932,14 +948,15 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                         .paddingOnly(right: w * 0.04),
                                   ],
                                 ),
-                                AppString.customerRatingValue
+                                ("${controller.getSingleAngelResModel.data?.listingHours ?? ''} Listing")
+                                    .regularLeagueSpartan(
+                                        fontColor: greyFontColor, fontSize: 15)
+                                    .paddingOnly(left: w * 0.04),
+                                ("${controller.getSingleAngelResModel.data?.reviews?.length ?? "0"} Reviews")
                                     .regularLeagueSpartan(
                                         fontColor: greyFontColor, fontSize: 15)
                                     .paddingOnly(
-                                      left: w * 0.04,
-                                      right: w * 0.04,
-                                      bottom: h * 0.015,
-                                    ),
+                                        left: w * 0.04, bottom: h * 0.015),
                               ],
                             ),
                           ),
@@ -951,10 +968,11 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                 color: whiteColor),
                             title: AppString.charges,
                           ),
-                          "${controller.getSingleAngelResModel.data?.charges ?? ""}"
+                          "₹ ${controller.getSingleAngelResModel.data?.charges ?? ""} ${AppString.perMin}"
                               .regularLeagueSpartan(
                                 fontColor: greyFontColor,
                                 fontSize: 15,
+                                fontWeight: FontWeight.w800,
                               )
                               .paddingOnly(
                                 left: w * 0.04,
@@ -962,7 +980,7 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                 bottom: h * 0.015,
                               ),
 
-                          (h * 0.03).addHSpace(),
+                          (h * 0.08).addHSpace(),
                           AppButton(
                             onTap: () {
                               homeController.angleCallingApi(
@@ -979,151 +997,6 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                               ],
                             ),
                           ).paddingSymmetric(horizontal: w * 0.04),
-                          (h * 0.03).addHSpace(),
-                          AppButton(
-                            onTap: () {
-                              showDialog(
-                                barrierDismissible: true,
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  insetPadding: EdgeInsets.symmetric(
-                                      horizontal: w * 0.08),
-                                  contentPadding: EdgeInsets.all(w * 0.05),
-                                  // clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  content: Builder(
-                                    builder: (context) {
-                                      return Container(
-                                        padding: EdgeInsets.zero,
-                                        height: h * 0.5,
-                                        width: w * 0.9,
-                                        child: Column(
-                                          children: [
-                                            AppString.pleaseRatingThisCall
-                                                .regularLeagueSpartan(
-                                                    fontColor: blackColor,
-                                                    fontSize: 24,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                            (h * 0.03).addHSpace(),
-                                            RatingBar.builder(
-                                              initialRating: 0,
-                                              minRating: 1,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: false,
-                                              itemCount: 5,
-                                              itemPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 4.0),
-                                              itemBuilder: (context, _) =>
-                                                  const Icon(Icons.star,
-                                                      color: Colors.amber),
-                                              onRatingUpdate: (ratingValue) {
-                                                rating = ratingValue
-                                                    .toString()
-                                                    .split('.')
-                                                    .first;
-                                                log("$rating");
-                                              },
-                                            ),
-                                            (h * 0.03).addHSpace(),
-                                            TextField(
-                                              maxLines: 6,
-                                              minLines: 5,
-                                              onChanged: (value) {},
-                                              controller: ratingController,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 16,
-                                                  height: 1.2,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'League Spartan'),
-                                              decoration: InputDecoration(
-                                                hintText: "Comments",
-                                                hintStyle: TextStyle(
-                                                    color: blackColor
-                                                        .withOpacity(0.5),
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w300,
-                                                    fontFamily:
-                                                        'League Spartan'),
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  borderSide: const BorderSide(
-                                                      color: appBarColor),
-                                                ),
-                                              ),
-                                            ),
-                                            (h * 0.04).addHSpace(),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: AppButton(
-                                                    height: h * 0.06,
-                                                    color: Colors.transparent,
-                                                    onTap: () {
-                                                      Get.back();
-                                                      log("RATING_SKIP");
-                                                    },
-                                                    child: AppString.skip
-                                                        .regularLeagueSpartan(
-                                                            fontColor:
-                                                                blackColor,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                  ),
-                                                ),
-                                                (w * 0.02).addWSpace(),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: AppButton(
-                                                    height: h * 0.06,
-                                                    border: Border.all(
-                                                        color: redFontColor),
-                                                    color: redFontColor,
-                                                    onTap: () {
-                                                      if (rating != null ||
-                                                          ratingController.text
-                                                              .isNotEmpty) {
-                                                        /// Post Rating Api
-                                                        personDetailsScreenController
-                                                            .addRatingApi(
-                                                          "${controller.getSingleAngelResModel.data?.id}",
-                                                          rating!,
-                                                          ratingController.text,
-                                                        );
-
-                                                        log("DDDDDOOOONNNNEEE   ${rating}  :  ${ratingController.text}");
-                                                      } else {
-                                                        showAppSnackBar(
-                                                            "Please Select Require Fields");
-                                                      }
-                                                    },
-                                                    child: AppString.submit
-                                                        .regularLeagueSpartan(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text("Rating"),
-                          ),
                           (h * 0.03).addHSpace(),
                         ],
                       ),

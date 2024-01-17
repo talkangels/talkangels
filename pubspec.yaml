@@ -44,6 +44,8 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_messaging: ^14.7.10
   flutter_local_notifications: ^16.2.0
+  firebase_dynamic_links: ^5.4.8
+  share_plus: ^7.2.1
   #  Local Storage
   get_storage: ^2.1.1
   lottie: ^2.7.0

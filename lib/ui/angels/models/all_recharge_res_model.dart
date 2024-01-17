@@ -9,7 +9,7 @@ String getAllRechargeResModelToJson(GetAllRechargeResModel data) =>
 class GetAllRechargeResModel {
   int? status;
   bool? success;
-  List<Datum>? data;
+  List<RechargeList>? data;
 
   GetAllRechargeResModel({
     this.status,
@@ -23,7 +23,8 @@ class GetAllRechargeResModel {
         success: json["success"],
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<RechargeList>.from(
+                json["data"]!.map((x) => RechargeList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,7 +36,7 @@ class GetAllRechargeResModel {
       };
 }
 
-class Datum {
+class RechargeList {
   String? id;
   String? amount;
   String? discountAmount;
@@ -43,7 +44,7 @@ class Datum {
   int? status;
   int? v;
 
-  Datum({
+  RechargeList({
     this.id,
     this.amount,
     this.discountAmount,
@@ -52,7 +53,7 @@ class Datum {
     this.v,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory RechargeList.fromJson(Map<String, dynamic> json) => RechargeList(
         id: json["_id"],
         amount: json["amount"],
         discountAmount: json["discount_amount"],

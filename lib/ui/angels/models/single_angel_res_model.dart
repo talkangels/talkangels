@@ -46,7 +46,8 @@ class Data {
   int? charges;
   String? fcmToken;
   int? countryCode;
-  double? totalRating;
+  int? totalRating;
+  String? listingHours;
   List<Review>? reviews;
 
   Data({
@@ -65,6 +66,7 @@ class Data {
     this.fcmToken,
     this.countryCode,
     this.totalRating,
+    this.listingHours,
     this.reviews,
   });
 
@@ -83,7 +85,8 @@ class Data {
         charges: json["charges"],
         fcmToken: json["fcmToken"],
         countryCode: json["country_code"],
-        totalRating: json["total_rating"]?.toDouble(),
+        totalRating: json["total_rating"],
+        listingHours: json["listing_hours"],
         reviews: json["reviews"] == null
             ? []
             : List<Review>.from(
@@ -106,6 +109,7 @@ class Data {
         "fcmToken": fcmToken,
         "country_code": countryCode,
         "total_rating": totalRating,
+        "listing_hours": listingHours,
         "reviews": reviews == null
             ? []
             : List<dynamic>.from(reviews!.map((x) => x.toJson())),
@@ -113,29 +117,29 @@ class Data {
 }
 
 class Review {
-  DateTime? date;
   int? rating;
   String? comment;
+  DateTime? date;
   String? id;
 
   Review({
-    this.date,
     this.rating,
     this.comment,
+    this.date,
     this.id,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
-        date: json["date"] == null ? null : DateTime.parse(json["date"]),
         rating: json["rating"],
         comment: json["comment"],
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
         id: json["_id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "date": date?.toIso8601String(),
         "rating": rating,
         "comment": comment,
+        "date": date?.toIso8601String(),
         "_id": id,
       };
 }

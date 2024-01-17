@@ -109,6 +109,7 @@ class AppString {
   static const submit = "Submit";
   static const noReviewsYet = "No reviews yet";
   static const skip = "Skip";
+  static const perMin = "Per min";
 
   ///
   static const appLink =
@@ -123,7 +124,7 @@ class AppString {
   static const walletAmount = "₹300.00";
   static const chargesValue = "₹ 16.0  ₹ 8.0 Per min";
   static const hazelkaur12 = "@hazelkaur12";
-  static const customerRatingValue = "2k+ Listing Hours\n8.5K+ Reviews";
+  static const customerRatingValue = "2k+ Listing Hours";
   static const languageValue = "English, Hindi, malayalam, kannada";
   static const genderFemale = "Gender : Female,";
   static const comment = "Comments";

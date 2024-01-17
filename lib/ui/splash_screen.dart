@@ -10,6 +10,7 @@ import 'package:talkangels/ui/angels/constant/app_string.dart';
 import 'package:talkangels/const/app_routes.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/const/shared_prefs.dart';
+import 'package:talkangels/ui/angels/utils/share_profile_details_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,6 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
       if (PreferenceManager().getLogin() == true) {
         log("PreferenceManager().getRole()=>${PreferenceManager().getRole()}");
         if (PreferenceManager().getRole() == "user") {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            await DynamicLinkService().handleDynamicLinks();
+          });
+
           Get.offAllNamed(Routes.homeScreen);
         } else {
           log("userRest.data!.role----dss->${PreferenceManager().getRole()}");

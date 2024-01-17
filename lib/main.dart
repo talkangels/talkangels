@@ -59,7 +59,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: MyHomePage(),
       title: 'Talk Angels',
       initialRoute: Routes.splashScreen,
       getPages: Routes.routes,

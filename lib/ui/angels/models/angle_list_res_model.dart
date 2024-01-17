@@ -162,23 +162,27 @@ String getAngleListResModelToJson(GetAngleListResModel data) =>
 class GetAngleListResModel {
   int? status;
   bool? success;
-  List<Datum>? data;
+  List<AngleData>? data;
   Pagination? pagination;
+  String? message;
 
   GetAngleListResModel({
     this.status,
     this.success,
     this.data,
     this.pagination,
+    this.message,
   });
 
   factory GetAngleListResModel.fromJson(Map<String, dynamic> json) =>
       GetAngleListResModel(
         status: json["status"],
         success: json["success"],
+        message: json["message"] ?? "",
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<AngleData>.from(
+                json["data"]!.map((x) => AngleData.fromJson(x))),
         pagination: json["pagination"] == null
             ? null
             : Pagination.fromJson(json["pagination"]),
@@ -187,6 +191,7 @@ class GetAngleListResModel {
   Map<String, dynamic> toJson() => {
         "status": status,
         "success": success,
+        "message": message,
         "data": data == null
             ? []
             : List<dynamic>.from(data!.map((x) => x.toJson())),
@@ -194,7 +199,7 @@ class GetAngleListResModel {
       };
 }
 
-class Datum {
+class AngleData {
   String? id;
   String? userName;
   String? name;
@@ -212,7 +217,7 @@ class Datum {
   double? totalRating;
   List<Review>? reviews;
 
-  Datum({
+  AngleData({
     this.id,
     this.userName,
     this.name,
@@ -231,7 +236,7 @@ class Datum {
     this.reviews,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory AngleData.fromJson(Map<String, dynamic> json) => AngleData(
         id: json["_id"],
         userName: json["user_name"],
         name: json["name"],

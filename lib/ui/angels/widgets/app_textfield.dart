@@ -52,8 +52,8 @@ class AppTextFormField extends StatelessWidget {
 class SearchTextFormField extends StatelessWidget {
   TextEditingController? controller;
   final String? labelText;
-  final validator;
-  final onChanged;
+  final String? Function(String?)? validator;
+  final Function(String)? onChanged;
   final Widget? suffixIcon;
   Widget? prefixIcon;
   double? fontSize;

@@ -18,7 +18,7 @@ class CallingScreen extends StatefulWidget {
 }
 
 class _CallingScreenState extends State<CallingScreen> {
-  Datum selectedAngle = Get.arguments["selectedAngle"];
+  AngleData selectedAngle = Get.arguments["selectedAngle"];
   AngleCallResModel angleCallResModel = Get.arguments["angleCallResModel"];
   HomeController homeController = Get.find();
   CallingScreenController callingScreenController = Get.find();
