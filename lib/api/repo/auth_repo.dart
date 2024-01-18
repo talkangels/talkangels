@@ -14,7 +14,7 @@ class AuthRepo {
       "fcmToken": fcmToken,
     };
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.logIn;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.logIn;
 
     result = await BaseApiHelper.postRequest(requestUrl, params);
 

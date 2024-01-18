@@ -107,7 +107,7 @@ class LoginScreenController extends GetxController {
             PreferenceManager().setRole(userRest.data!.role ?? '');
             log("userRest.data!.role----->${userRest.data!.role}");
             if (userRest.data!.role == "user") {
-              Get.offAllNamed(Routes.homeScreen);
+              // Get.offAllNamed(Routes.homeScreen);
 
               ///
 

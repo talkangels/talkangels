@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
@@ -65,13 +66,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 (h * 0.15).addHSpace(),
                 AppButton(
                   onTap: () async {
-                    if (Get.arguments != null) {
-                      referCode = Get.arguments["refer_code"] ?? '';
-                      log("refer_code=====>>>    ${Get.arguments["refer_code"] ?? ''}");
-                    }
+                    // if (Get.arguments != null) {
+                    //   referCode = Get.arguments["refer_code"] ?? '';
+                    //   log("refer_code=====>>>    ${Get.arguments["refer_code"] ?? ''}");
+                    // }
+                    //
+                    // /// whatsapp login
+                    // await loginScreenController.startOtpless(referCode);
 
-                    /// whatsapp login
-                    await loginScreenController.startOtpless(referCode);
+                    ///
+                    ///
+                    /// API signIn _STAFF
+                    await loginScreenController.signIn(
+                        name: "Test11",
+                        mNo: "1234567890",
+                        cCode: "91",
+                        fcm:
+                            PreferenceManager().getFCMNotificationToken() ?? '',
+                        referCode: referCode);
                   },
                   child: Row(
                     children: [

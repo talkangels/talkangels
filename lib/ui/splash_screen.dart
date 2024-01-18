@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
         log("PreferenceManager().getRole()=>${PreferenceManager().getRole()}");
         if (PreferenceManager().getRole() == "user") {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
+            await DynamicShareAppLinkService().handleDynamicShareAppLinks();
             await DynamicLinkService().handleDynamicLinks();
           });
 

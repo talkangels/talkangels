@@ -4,7 +4,7 @@ class AppUrls {
   static const BASE_URL = "https://talkangels-api.vercel.app/api/v1/";
 }
 
-class MethodNames {
+class MethodNamesAngels {
   static const logIn = "auth/login";
   static const getAngle = "user/all-angels";
   static const getSingleAngleDetails = "user/angel-detail/";
@@ -14,4 +14,8 @@ class MethodNames {
   static const getRechargeList = "user/all-recharge";
   static const postReferralCode = "user/apply-refer-code";
   static const postRating = "user/add-rating";
+}
+
+class MethodNamesStaff {
+  static const getStaffDetails = "staff/detail/";
 }

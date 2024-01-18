@@ -397,7 +397,7 @@ class PersonDetailScreen extends StatefulWidget {
 }
 
 class _PersonDetailScreenState extends State<PersonDetailScreen> {
-  HomeController homeController = Get.find();
+  HomeScreenController homeController = Get.find();
   PersonDetailsScreenController personDetailsScreenController =
       Get.put(PersonDetailsScreenController());
 
@@ -416,7 +416,7 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log("angel_id=========>>>>>>   ${angelId}");
+    log("angel_id=========>>>>>>   $angelId");
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
     return Scaffold(

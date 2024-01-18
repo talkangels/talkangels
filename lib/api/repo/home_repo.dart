@@ -5,11 +5,12 @@ import 'package:talkangels/const/request_constant.dart';
 import 'package:talkangels/models/response_item.dart';
 import 'package:talkangels/const/shared_prefs.dart';
 
-class HomeRepo {
+///Angels
+class HomeRepoAngels {
   static Future<ResponseItem> getAngleAPi() async {
     ResponseItem result;
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.getAngle;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getAngle;
 
     result = await BaseApiHelper.getRequest(requestUrl);
     // log("result-----asasas------->${result}");
@@ -21,7 +22,7 @@ class HomeRepo {
     ResponseItem result;
 
     String requestUrl =
-        AppUrls.BASE_URL + MethodNames.getSingleAngleDetails + angelId;
+        AppUrls.BASE_URL + MethodNamesAngels.getSingleAngleDetails + angelId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
     // log("result-----asasas------->${result}");
@@ -35,7 +36,7 @@ class HomeRepo {
       "user_id": userId,
     };
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.callAngle;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.callAngle;
 
     result = await BaseApiHelper.postRequestToken(requestUrl, params);
     // log("result------------>${result}");
@@ -46,12 +47,13 @@ class HomeRepo {
   static Future<ResponseItem> walletApi(String amount, String paymentId) async {
     ResponseItem result;
     Map<String, dynamic> params = {
-      "user_id": PreferenceManager().getId(),
+      "user_id": PreferenceManager().getId().toString(),
       "amount": amount,
       "payment_id": paymentId,
     };
+    log("AAAAAAAAAAAAAAA   ${params}");
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.angleWallet;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.angleWallet;
 
     result = await BaseApiHelper.postRequestToken(requestUrl, params);
     return result;
@@ -62,7 +64,8 @@ class HomeRepo {
     ResponseItem result;
     String userId = PreferenceManager().getId();
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.getUserDetails + userId;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesAngels.getUserDetails + userId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
     // log("result----getUserDetailsAPi-------->${result}");
@@ -73,7 +76,7 @@ class HomeRepo {
   static Future<ResponseItem> getAllRechargesApi() async {
     ResponseItem result;
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.getRechargeList;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getRechargeList;
     result = await BaseApiHelper.getRequest(requestUrl);
     // log("result----getAllRechargesApi-------->${result}");
     return result;
@@ -88,7 +91,7 @@ class HomeRepo {
       // "refer_code": "Vul9Pygv"
     };
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.postReferralCode;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.postReferralCode;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
     return result;
   }
@@ -105,8 +108,22 @@ class HomeRepo {
       "comment": comment
     };
 
-    String requestUrl = AppUrls.BASE_URL + MethodNames.postRating;
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.postRating;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    return result;
+  }
+}
+
+///Staff
+class HomeRepoStaff {
+  static Future<ResponseItem> getStaffDetail() async {
+    ResponseItem result;
+    String userId = PreferenceManager().getId().toString();
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.getStaffDetails + userId;
+    result = await BaseApiHelper.getRequest(requestUrl);
+
     return result;
   }
 }

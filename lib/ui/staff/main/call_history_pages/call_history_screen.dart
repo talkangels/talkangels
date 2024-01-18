@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/const/app_routes.dart';
 import 'package:talkangels/const/extentions.dart';
-import 'package:talkangels/ui/staff/constant/app_assets.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
 import 'package:talkangels/ui/staff/widgets/app_appbar.dart';
 import 'package:talkangels/ui/staff/widgets/app_show_profile_pic.dart';
-
 
 class CallHistoryScreen extends StatefulWidget {
   const CallHistoryScreen({Key? key}) : super(key: key);
@@ -47,7 +45,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                     children: [
                       AppShowProfilePic(
                         onTap: () {},
-                        image: AppAssets.profiles,
+                        image: '',
                         borderShow: false,
                       ),
                       (w * 0.02).addWSpace(),

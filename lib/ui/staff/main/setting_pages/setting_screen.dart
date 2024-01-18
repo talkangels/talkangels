@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
-import 'package:talkangels/ui/staff/constant/app_assets.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
 import 'package:talkangels/ui/staff/widgets/app_appbar.dart';
 
@@ -32,8 +31,12 @@ class _SettingScreenState extends State<SettingScreen> {
         decoration: const BoxDecoration(gradient: appGradient),
         child: SafeArea(
           child: Center(
-            child: assetImage(
-              AppAssets.somethingWentWrongAnimationAssets,
+            child: InkWell(
+              onTap: () {},
+              child: Text(
+                "Coming soon!",
+                style: TextStyle(color: whiteColor, fontSize: 25),
+              ),
             ),
           ),
         ),

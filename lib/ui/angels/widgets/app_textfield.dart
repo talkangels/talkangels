@@ -130,8 +130,8 @@ class UnderLineTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String? labelText;
   final String? hintText;
-  final validator;
-  final onChanged;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   final double? width;
   final double? height;
   final bool? readOnly;

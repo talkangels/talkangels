@@ -57,6 +57,8 @@ class AppString {
   static const success = "Success!";
   static const yourSelectedTalktimeRechargeIsDoneSuccessfullyContinueUsingyourFavouriteAppHaveaNiceDay =
       "Your selected Talktime recharge is done successfully! Continue using your favourite app. Have a Nice Day!";
+  static const amountSuccessfullyAddedInWalletContinueUsingYourFavouriteAppHaveANiceDay =
+      "Amount Successfully! Added in Wallet Continue using your favourite app. Have a Nice Day!";
   static const okayThanks = "Okay, Thanks!";
   static const together = "TOGETHER,";
   static const weAreGoingFurther = "WE ARE GOING FURTHER!";
@@ -110,6 +112,8 @@ class AppString {
   static const noReviewsYet = "No reviews yet";
   static const skip = "Skip";
   static const perMin = "Per min";
+  static const pleaseEnterAmount = "Please Enter Amount";
+  static const noDataFound = "No Data Found!";
 
   ///
   static const appLink =

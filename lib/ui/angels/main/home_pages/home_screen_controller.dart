@@ -10,7 +10,7 @@ import 'package:talkangels/ui/angels/models/user_details_res_model.dart';
 import 'package:talkangels/ui/angels/main/home_pages/calling_screen_controller.dart';
 import 'package:talkangels/const/app_routes.dart';
 
-class HomeController extends GetxController {
+class HomeScreenController extends GetxController {
   CallingScreenController callingScreenController =
       Get.put(CallingScreenController());
   GetAngleListResModel resModel = GetAngleListResModel();
@@ -30,7 +30,7 @@ class HomeController extends GetxController {
   homeAngleApi() async {
     isLoading = true;
     update();
-    ResponseItem item = await HomeRepo.getAngleAPi();
+    ResponseItem item = await HomeRepoAngels.getAngleAPi();
     log("item---------->${item.data}");
     if (item.status == true) {
       try {
@@ -76,7 +76,7 @@ class HomeController extends GetxController {
     isCallLoading = true;
     update();
     log("angleId---------->$angleId");
-    ResponseItem item = await HomeRepo.callApi(angleId, userId);
+    ResponseItem item = await HomeRepoAngels.callApi(angleId, userId);
     log("item---------->${item.data}");
     if (item.status == true) {
       try {
@@ -109,7 +109,7 @@ class HomeController extends GetxController {
   userDetailsApi() async {
     isUserLoading = true;
     update();
-    ResponseItem item = await HomeRepo.getUserDetailsAPi();
+    ResponseItem item = await HomeRepoAngels.getUserDetailsAPi();
     log("item---------->${item.data}");
     if (item.status == true) {
       try {

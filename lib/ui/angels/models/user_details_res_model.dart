@@ -36,24 +36,28 @@ class Data {
   String? id;
   String? name;
   int? mobileNumber;
+  int? countryCode;
+  String? referCode;
+  int? referCodeStatus;
   String? image;
   int? status;
   String? role;
   int? v;
   String? fcmToken;
-  int? countryCode;
 
   Data({
     this.talkAngelWallet,
     this.id,
     this.name,
     this.mobileNumber,
+    this.countryCode,
+    this.referCode,
+    this.referCodeStatus,
     this.image,
     this.status,
     this.role,
     this.v,
     this.fcmToken,
-    this.countryCode,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -63,12 +67,14 @@ class Data {
         id: json["_id"],
         name: json["name"],
         mobileNumber: json["mobile_number"],
+        countryCode: json["country_code"],
+        referCode: json["refer_code"],
+        referCodeStatus: json["refer_code_status"],
         image: json["image"],
         status: json["status"],
         role: json["role"],
         v: json["__v"],
         fcmToken: json["fcmToken"],
-        countryCode: json["country_code"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,12 +82,14 @@ class Data {
         "_id": id,
         "name": name,
         "mobile_number": mobileNumber,
+        "country_code": countryCode,
+        "refer_code": referCode,
+        "refer_code_status": referCodeStatus,
         "image": image,
         "status": status,
         "role": role,
         "__v": v,
         "fcmToken": fcmToken,
-        "country_code": countryCode,
       };
 }
 

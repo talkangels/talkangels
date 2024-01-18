@@ -7,6 +7,7 @@ import 'package:talkangels/ui/staff/constant/app_assets.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
 import 'package:talkangels/ui/staff/main/bottom_navigation_bar/bottom_bar_controller.dart';
+import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
 import 'package:talkangels/ui/staff/widgets/app_appbar.dart';
 import 'package:talkangels/ui/staff/widgets/app_button.dart';
 import 'package:talkangels/ui/staff/widgets/app_show_profile_pic.dart';
@@ -20,167 +21,214 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  HomeController homeController = Get.find();
   TextEditingController searchController = TextEditingController();
   BottomBarController bottomBarController = Get.find();
 
   bool requestStatus = true;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    homeController.getStaffDetailApi();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
-    return Scaffold(
-      drawer: homeDrawer(),
-      appBar: AppAppBar(
-        appBarHeight: 80,
-        backGroundColor: appBarColor,
-        titleText: AppString.heyTalkAngel,
-        // leadingIcon: Padding(
-        //   padding: EdgeInsets.only(left: w * 0.06),
-        //   child: svgAssetImage(AppAssets.menuBar),
-        // ),
-        // leadingWidth: w * 0.125,
-        titleSpacing: w * 0.06,
-        action: [
-          AppShowProfilePic(
-            image: AppAssets.profiles,
-            onTap: () {
-              Get.toNamed(Routes.profileDetailsScreen);
-            },
-          ),
-          (w * 0.045).addWSpace(),
-        ],
-      ),
-      body: Container(
-        height: h,
-        width: w,
-        decoration: const BoxDecoration(gradient: appGradient),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: CommonContainer(
-                          height: h * 0.15,
-                          width: double.infinity,
-                          bottomChild: AppString.totalMinute,
-                          title: AppString.total,
-                          subTitle: AppString.minutes,
-                          icon: Icons.timer_outlined,
-                        ),
-                      ),
-                      (w * 0.03).addWSpace(),
-                      Expanded(
-                        flex: 1,
-                        child: CommonContainer(
-                          height: h * 0.15,
-                          width: double.infinity,
-                          bottomChild: AppString.rupies,
-                          title: AppString.total,
-                          subTitle: AppString.currentEarnings,
-                          icon: Icons.payments_outlined,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: h * 0.015),
-                    child: CommonContainer(
-                      height: h * 0.15,
-                      width: double.infinity,
-                      bottomChild: AppString.totalMoneyWithdraws,
-                      title: AppString.total,
-                      subTitle: AppString.moneyWithdraws,
-                      icon: Icons.book_online,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: CommonContainer(
-                          height: h * 0.15,
-                          width: double.infinity,
-                          bottomChild: AppString.totalPendingMoney,
-                          title: AppString.total,
-                          subTitle: AppString.pendingMoney,
-                          icon: Icons.monetization_on_outlined,
-                        ),
-                      ),
-                      (w * 0.03).addWSpace(),
-                      Expanded(
-                        flex: 1,
-                        child: CommonContainer(
-                          height: h * 0.15,
-                          width: double.infinity,
-                          bottomChild: AppString.totalRequestSent,
-                          title: AppString.withdraw,
-                          subTitle: AppString.requestSent,
-                          icon: Icons.check_circle_outline,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: h * 0.015),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: w * 0.03, vertical: h * 0.015),
-                      decoration: BoxDecoration(
-                          color: containerColor,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  AppString.withdraw.regularLeagueSpartan(
-                                      fontSize: 14, fontColor: appColorBlue),
-                                  AppString.requestStatus.regularLeagueSpartan(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
-                                ],
-                              ),
-                              AppString.oneLineExplanation.regularLeagueSpartan(
-                                  fontColor: greyFontColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400),
-                            ],
-                          ),
-                          const Spacer(),
-                          Switch(
-                            activeColor: appColorGreen,
-                            inactiveTrackColor: textFieldBorderColor,
-                            thumbColor:
-                                MaterialStateProperty.resolveWith((Set states) {
-                              if (states.contains(MaterialState.disabled)) {
-                                return containerColor.withOpacity(0.05);
-                              }
-                              return containerColor;
-                            }),
-                            value: requestStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                requestStatus = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+    return GetBuilder<HomeController>(
+      builder: (controller) {
+        return Scaffold(
+          drawer: homeDrawer(),
+          appBar: AppAppBar(
+            appBarHeight: 80,
+            backGroundColor: appBarColor,
+            titleText: "${AppString.hey}${PreferenceManager().getName()}",
+            // leadingIcon: Padding(
+            //   padding: EdgeInsets.only(left: w * 0.06),
+            //   child: svgAssetImage(AppAssets.menuBar),
+            // ),
+            // leadingWidth: w * 0.125,
+            titleSpacing: w * 0.06,
+            action: [
+              AppShowProfilePic(
+                image: controller.getStaffDetailResModel.data?.image ?? '',
+                onTap: () {
+                  Get.toNamed(Routes.profileDetailsScreen);
+                },
               ),
-            ),
+              (w * 0.045).addWSpace(),
+            ],
           ),
-        ),
-      ),
+          body: Container(
+            height: h,
+            width: w,
+            decoration: const BoxDecoration(gradient: appGradient),
+            child: controller.isLoading == true
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : controller.getStaffDetailResModel.data == null
+                    ? Center(
+                        child: AppString.noDataFound.regularLeagueSpartan(
+                            fontColor: greyFontColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700))
+                    : SafeArea(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: w * 0.04),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: CommonContainer(
+                                        height: h * 0.15,
+                                        width: double.infinity,
+                                        bottomChild: controller
+                                                .getStaffDetailResModel
+                                                .data
+                                                ?.listing
+                                                ?.totalMinutes ??
+                                            '',
+                                        title: AppString.total,
+                                        subTitle: AppString.minutes,
+                                        icon: Icons.timer_outlined,
+                                      ),
+                                    ),
+                                    (w * 0.03).addWSpace(),
+                                    Expanded(
+                                      flex: 1,
+                                      child: CommonContainer(
+                                        height: h * 0.15,
+                                        width: double.infinity,
+                                        bottomChild:
+                                            "₹ ${controller.getStaffDetailResModel.data?.earnings?.currentEarnings ?? ''}",
+                                        title: AppString.total,
+                                        subTitle: AppString.currentEarnings,
+                                        icon: Icons.payments_outlined,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: h * 0.015),
+                                  child: CommonContainer(
+                                    height: h * 0.15,
+                                    width: double.infinity,
+                                    bottomChild:
+                                        "${controller.getStaffDetailResModel.data?.earnings?.totalMoneyWithdraws ?? ''}",
+                                    title: AppString.total,
+                                    subTitle: AppString.moneyWithdraws,
+                                    icon: Icons.book_online,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: CommonContainer(
+                                        height: h * 0.15,
+                                        width: double.infinity,
+                                        bottomChild:
+                                            "₹ ${controller.getStaffDetailResModel.data?.earnings?.totalPendingMoney ?? ''}",
+                                        title: AppString.total,
+                                        subTitle: AppString.pendingMoney,
+                                        icon: Icons.monetization_on_outlined,
+                                      ),
+                                    ),
+                                    (w * 0.03).addWSpace(),
+                                    Expanded(
+                                      flex: 1,
+                                      child: CommonContainer(
+                                        height: h * 0.15,
+                                        width: double.infinity,
+                                        bottomChild:
+                                            "${controller.getStaffDetailResModel.data?.earnings?.sentWithdrawRequest ?? ''}",
+                                        title: AppString.withdraw,
+                                        subTitle: AppString.requestSent,
+                                        icon: Icons.check_circle_outline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: h * 0.015),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: w * 0.03,
+                                        vertical: h * 0.015),
+                                    decoration: BoxDecoration(
+                                        color: containerColor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                AppString.withdraw
+                                                    .regularLeagueSpartan(
+                                                        fontSize: 14,
+                                                        fontColor:
+                                                            appColorBlue),
+                                                AppString.requestStatus
+                                                    .regularLeagueSpartan(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                              ],
+                                            ),
+                                            AppString.oneLineExplanation
+                                                .regularLeagueSpartan(
+                                                    fontColor: greyFontColor,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        Switch(
+                                          activeColor: appColorGreen,
+                                          inactiveTrackColor:
+                                              textFieldBorderColor,
+                                          thumbColor:
+                                              MaterialStateProperty.resolveWith(
+                                                  (Set states) {
+                                            if (states.contains(
+                                                MaterialState.disabled)) {
+                                              return containerColor
+                                                  .withOpacity(0.05);
+                                            }
+                                            return containerColor;
+                                          }),
+                                          value: requestStatus,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              requestStatus = value;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+          ),
+        );
+      },
     );
   }
 
@@ -212,16 +260,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           AppShowProfilePic(
-                            image: AppAssets.profiles,
+                            image: homeController
+                                    .getStaffDetailResModel.data!.image ??
+                                '',
                             onTap: () {},
                             radius: w * 0.18,
                           ),
                           (w * 0.04).addWSpace(),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AppString.jenilTaylor.regularLeagueSpartan(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                              AppString.phoneNumber
+                              ("${PreferenceManager().getName() ?? ''}")
+                                  .regularLeagueSpartan(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                              ("+91 ${PreferenceManager().getNumber() ?? ''}")
                                   .regularLeagueSpartan(fontSize: 12),
                             ],
                           ),
@@ -265,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         closeDrawer();
 
-                        ///
+                        /// Delete Account
                         showDialog(
                           barrierDismissible: false,
                           context: context,
@@ -309,6 +362,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: h * 0.06,
                                               color: Colors.transparent,
                                               onTap: () {
+                                                PreferenceManager()
+                                                    .setClearALlPref();
                                                 Get.offAllNamed(
                                                     Routes.loginScreen);
                                               },
@@ -353,6 +408,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: AppString.logOut,
                       fontColor: redColor,
                       onTap: () {
+                        /// LogOut Account
+                        closeDrawer();
                         showModalBottomSheet<void>(
                           context: context,
                           builder: (BuildContext context) {
@@ -468,7 +525,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         PreferenceManager()
                                                                             .setClearALlPref();
                                                                         Get.back();
-
                                                                         Get.offAllNamed(
                                                                             Routes.loginScreen);
                                                                       },

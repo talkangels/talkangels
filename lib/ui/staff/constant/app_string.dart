@@ -30,7 +30,7 @@ class AppString {
   static const somethingWentWrongDescription =
       "Looks like there's a small issue logging into your account. No worries! Just try logging in again, and it should be fixed. Thanks for your patience!";
   static const tryAgain = "Try Again";
-  static const heyTalkAngel = "Hey, TalkAngel";
+  static const hey = "Hey, ";
   static const jenilTaylor = "Jenil Taylor";
   static const myProfile = "My Profile";
   static const callHistory = "Call History";
@@ -81,6 +81,10 @@ class AppString {
   static const talkNow = "Talk Now";
   static const oneLineExplanation = "One line explanation";
   static const referralCodeApplied = "Referral Code Applied";
+  static const noDataFound = "No Data Found!";
+  static const totalReviews = "Total Reviews";
+  static const noReviewsYet = "No Reviews Yet!";
+  static const perMin = "Per Min";
 
   ///
   static const rupies = "₹574";

@@ -32,10 +32,8 @@ class AppAssets {
 
   /// ANIMATION
   static const animationPath = "assets/lottie/";
-
   static const animationIncomingCall = "${animationPath}Animation.json";
   static const animationLoading = "${animationPath}Animation_loading.json";
-
   static const referralCodeAnimationAssets =
       "${animationPath}Referral_Code_animation.gif";
   static const successAnimationAssets = "${animationPath}Success_animation.gif";

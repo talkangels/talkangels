@@ -38,8 +38,8 @@ class GetAllRechargeResModel {
 
 class RechargeList {
   String? id;
-  String? amount;
-  String? discountAmount;
+  int? amount;
+  int? discountAmount;
   String? description;
   int? status;
   int? v;

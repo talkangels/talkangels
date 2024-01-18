@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:talkangels/ui/staff/main/call_history_pages/call_history_screen.dart';
-import 'package:talkangels/ui/staff/main/drawer_pages/my_profile_pages/profile_details_screen.dart';
+import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
+import 'package:talkangels/ui/staff/main/my_profile_pages/profile_details_screen.dart';
 import 'package:talkangels/ui/staff/main/home_pages/home_screen.dart';
 import 'package:talkangels/ui/staff/main/setting_pages/setting_screen.dart';
 
-
-
 class BottomBarController extends GetxController {
+  // HomeController homeController = Get.find();
   int selectedPage = 0;
 
   setSelectedPage(int value) {

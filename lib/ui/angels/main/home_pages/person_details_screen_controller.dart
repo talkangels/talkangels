@@ -16,7 +16,7 @@ class PersonDetailsScreenController extends GetxController {
 
   getSingleAngelData(String angelId) async {
     isDetailsLoading = true;
-    ResponseItem result = await HomeRepo.getSingleAngleAPi(angelId);
+    ResponseItem result = await HomeRepoAngels.getSingleAngleAPi(angelId);
     // log("response=====>>   $result");
     log("result.statusCode=====>>   ${result.statusCode}");
 
@@ -41,7 +41,7 @@ class PersonDetailsScreenController extends GetxController {
     isLoading = true;
 
     ResponseItem result =
-        await HomeRepo.postRatingApi(angelId, rating, comment);
+        await HomeRepoAngels.postRatingApi(angelId, rating, comment);
 
     log("RESULT====== $result");
     log("RESPONSE=====>>>>>   ${result.statusCode}");

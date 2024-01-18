@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
 import 'package:talkangels/const/extentions.dart';
+import 'package:talkangels/ui/angels/utils/share_profile_details_service.dart';
 import 'package:talkangels/ui/angels/widgets/app_app_bar.dart';
 import 'package:talkangels/ui/angels/widgets/app_button.dart';
 
@@ -15,6 +20,20 @@ class ReferEarnScreen extends StatefulWidget {
 }
 
 class _ReferEarnScreenState extends State<ReferEarnScreen> {
+  String referCode = Get.arguments["referCode"];
+  String? url;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      url = await DynamicShareAppLinkService()
+          .createShareAppLink(referCode: referCode);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
@@ -52,14 +71,20 @@ class _ReferEarnScreenState extends State<ReferEarnScreen> {
                       fontWeight: FontWeight.w900),
                   AppString.weAreGoingFurther.regularLeagueSpartan(),
                   (h * 0.005).addHSpace(),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: w * 0.025, vertical: 3),
-                    decoration: BoxDecoration(
-                        color: yellowColor.withOpacity(0.06),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: AppString.referalCode_SpreadtheLove
-                        .regularLeagueSpartan(fontColor: redFontColor),
+                  InkWell(
+                    onTap: () async {
+                      await Clipboard.setData(
+                          ClipboardData(text: referCode.toString()));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: w * 0.025, vertical: 3),
+                      decoration: BoxDecoration(
+                          color: yellowColor.withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(15)),
+                      child: (referCode)
+                          .regularLeagueSpartan(fontColor: redFontColor),
+                    ),
                   ),
                   (h * 0.045).addHSpace(),
                   AppString
@@ -69,8 +94,7 @@ class _ReferEarnScreenState extends State<ReferEarnScreen> {
                   InkWell(
                     onTap: () async {
                       await Clipboard.setData(
-                          const ClipboardData(text: AppString.appLink));
-                      // copied successfully
+                          ClipboardData(text: url.toString()));
                     },
                     child: Container(
                       height: h * 0.07,
@@ -84,7 +108,7 @@ class _ReferEarnScreenState extends State<ReferEarnScreen> {
                           Expanded(
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: AppString.appLink.regularLeagueSpartan(
+                              child: (url ?? '').regularLeagueSpartan(
                                 fontColor: whiteColor.withOpacity(0.5),
                                 textOverflow: TextOverflow.ellipsis,
                               ),
@@ -156,7 +180,9 @@ class _ReferEarnScreenState extends State<ReferEarnScreen> {
                   ),
                   (h * 0.04).addHSpace(),
                   AppButton(
-                    onTap: () {},
+                    onTap: () {
+                      Share.share("$url");
+                    },
                     child: AppString.referNow.regularLeagueSpartan(
                         fontSize: 20, fontWeight: FontWeight.w600),
                   ),

@@ -44,6 +44,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
     // TODO: implement dispose
     super.dispose();
     razorpay.clear();
+    textFieldController;
   }
 
   @override
@@ -295,21 +296,25 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
 
     setState(() {
       walletBallance = walletBallance + int.parse(textFieldController.text);
-      textFieldController.clear();
     });
 
     ///API calling
-    // myWalletScreenController.addMyWalletAmountApi(
-    //   textFieldController.text,
-    //   response.paymentId.toString(),
-    // );
+    myWalletScreenController.addMyWalletAmountApi(
+      textFieldController.text,
+      response.paymentId.toString(),
+    );
 
     log(response.data.toString(), name: "SUCCESS");
 
-    appDialogBox(context,
-        h: MediaQuery.of(context).size.height,
-        w: MediaQuery.of(context).size.width,
-        barrierDismissible: true);
+    paymentSuccessDialogBox(
+      context,
+      h: MediaQuery.of(context).size.height,
+      w: MediaQuery.of(context).size.width,
+      barrierDismissible: true,
+    );
+    setState(() {
+      textFieldController.clear();
+    });
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {

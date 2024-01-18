@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
@@ -27,8 +28,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  HomeController homeController = Get.put(HomeController());
-  TextEditingController searchController = TextEditingController();
+  HomeScreenController homeController = Get.put(HomeScreenController());
   TextEditingController talkTimeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Razorpay razorpay = Razorpay();
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
-    return GetBuilder<HomeController>(
+    return GetBuilder<HomeScreenController>(
       builder: (controller) {
         return Stack(
           children: [
@@ -103,18 +103,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: const BoxDecoration(gradient: appGradient),
                         child: const Center(
                             child:
-                                CircularProgressIndicator(color: Colors.white)),
+                                CircularProgressIndicator(color: whiteColor)),
                       )
                     : Container(
                         height: h,
                         width: w,
                         decoration: const BoxDecoration(gradient: appGradient),
                         child: controller.searchDataList.isEmpty
-                            ? const Center(
-                                child: Text(
-                                'No Data Found! ',
-                                style: TextStyle(color: Colors.white),
-                              ))
+                            ? Center(
+                                child: AppString.noDataFound
+                                    .regularLeagueSpartan(
+                                        fontColor: greyFontColor,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700))
                             : ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: controller.searchDataList.length,
@@ -462,9 +463,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final w = MediaQuery.of(context).size.width;
     return PreferredSize(
       preferredSize: Size(double.infinity, h * 0.20),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeScreenController>(builder: (controller) {
         return SearchTextFormField(
-          controller: searchController,
+          controller: controller.searchController,
           labelText: AppString.searchTalkAngelHere,
           prefixIcon: Icon(Icons.search, color: whiteColor.withOpacity(0.5)),
           onChanged: (p0) {
@@ -526,19 +527,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: TextFormField(
                               cursorColor: blackColor,
                               keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                setState(() {
-                                  homeController.searchController.text = value;
-                                });
-                              },
-                              controller: homeController.searchController,
-                              // controller: talkTimeController,
-                              // validator: (text) {
-                              //   if (text == null || text.isEmpty) {
-                              //     return '';
-                              //   }
-                              //   return null;
+                              // onChanged: (value) {
+                              //   setState(() {
+                              //     homeController.searchController.text = value;
+                              //   });
                               // },
+                              // controller: homeController.searchController,
+                              controller: talkTimeController,
+
                               style: const TextStyle(
                                   color: blackColor,
                                   fontSize: 16,
@@ -599,6 +595,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 } catch (e) {
                                   log("ERROR==RAZORPAY   $e");
                                 }
+                              } else {
+                                showAppSnackBar(AppString.pleaseEnterAmount);
                               }
                             },
                             child: AppString.add.regularLeagueSpartan(
@@ -713,7 +711,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: AppString.referEarn,
                   onTap: () {
                     closeDrawer();
-                    Get.toNamed(Routes.referEarnScreen);
+                    Get.toNamed(Routes.referEarnScreen, arguments: {
+                      "referCode":
+                          homeController.userDetailsResModel.data?.referCode ??
+                              ''
+                    });
                   },
                   image: AppAssets.referEarnIcon,
                 ),
@@ -1088,15 +1090,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
     log(response.data.toString(), name: "SUCCESS");
 
-    setState(() {
-      talkTimeController.clear();
-    });
     appDialogBox(
       context,
       h: MediaQuery.of(context).size.height,
       w: MediaQuery.of(context).size.width,
       barrierDismissible: true,
     );
+    setState(() {
+      talkTimeController.clear();
+    });
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {

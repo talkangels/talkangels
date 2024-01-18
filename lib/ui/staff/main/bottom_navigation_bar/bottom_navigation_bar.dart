@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/const/app_routes.dart';
+import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
+import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
 import 'bottom_bar_controller.dart';
 
 class BottomBarScreen extends StatefulWidget {
@@ -13,6 +18,7 @@ class BottomBarScreen extends StatefulWidget {
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
   BottomBarController bottomBarController = Get.put(BottomBarController());
+  HomeController homeController = Get.put(HomeController());
 
   @override
   void initState() {
@@ -22,6 +28,16 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("${PreferenceManager().getId()}", name: "USERID");
+    log("${PreferenceManager().getToken()}", name: "TOKEN");
+    log("${PreferenceManager().getLogin()}", name: "LOGIN");
+    log(PreferenceManager().getName(), name: "NAME");
+    log(PreferenceManager().getNumber(), name: "NUMBER");
+    log(PreferenceManager().getFCMNotificationToken(),
+        name: "FCMNOTIFICATIONTOKEN");
+    log("${jsonDecode(PreferenceManager().getUserDetails())}",
+        name: "DECODE====GETUSERDETAILS");
+
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
     return GetBuilder<BottomBarController>(

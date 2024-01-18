@@ -18,9 +18,10 @@ class AppAssets {
   static const holdIcon = "${imagePath}hold_icon.svg";
   static const volumeIcon = "${imagePath}volume_icon.svg";
   static const gridIcon = "${imagePath}grid_icon.svg";
+  static const blankProfile = "${imagePath}blank_image.jpg";
 
   /// ANIMATION
-  static const animationPath = "assets/animation/";
+  static const animationPath = "assets/lottie/";
 
   static const splashScreenAnimationAssets =
       "${animationPath}SplashScreen_animation.gif";

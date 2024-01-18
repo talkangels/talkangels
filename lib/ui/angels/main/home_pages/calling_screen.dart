@@ -20,7 +20,7 @@ class CallingScreen extends StatefulWidget {
 class _CallingScreenState extends State<CallingScreen> {
   AngleData selectedAngle = Get.arguments["selectedAngle"];
   AngleCallResModel angleCallResModel = Get.arguments["angleCallResModel"];
-  HomeController homeController = Get.find();
+  HomeScreenController homeController = Get.find();
   CallingScreenController callingScreenController = Get.find();
   bool isMute = false;
   bool isBluetooth = false;

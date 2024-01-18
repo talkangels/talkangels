@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/const/shared_prefs.dart';
 
+/// Angels
 class BaseApiHelper {
   ///===========
   static Future<ResponseItem> postRequest(
@@ -29,7 +30,7 @@ class BaseApiHelper {
     String token = PreferenceManager().getToken();
 
     return await http
-        .get(Uri.parse(requestUrl), headers: {"Authorization": token ?? ""})
+        .get(Uri.parse(requestUrl), headers: {"Authorization": token})
         .then((response) => onValue(response))
         .onError((error, stackTrace) => onError(error));
   }
@@ -42,7 +43,7 @@ class BaseApiHelper {
 
     return await http
         .post(Uri.parse(requestUrl),
-            body: requestData, headers: {"Authorization": token ?? ""})
+            body: requestData, headers: {"Authorization": token})
         .then((response) => onValue(response))
         .onError((error, stackTrace) => onError(error));
   }

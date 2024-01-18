@@ -7,14 +7,14 @@ import 'package:talkangels/models/response_item.dart';
 import 'package:talkangels/ui/angels/main/home_pages/home_screen_controller.dart';
 
 class MyWalletScreenController extends GetxController {
-  HomeController homeController = Get.find();
+  HomeScreenController homeController = Get.put(HomeScreenController());
   bool isLoading = false;
 
   addMyWalletAmountApi(String amount, String paymentId) async {
     isLoading = true;
     update();
 
-    ResponseItem item = await HomeRepo.walletApi(amount, paymentId);
+    ResponseItem item = await HomeRepoAngels.walletApi(amount, paymentId);
     log("item---------->${item.status}");
     log("item---------->${item.data}");
     if (item.status == true) {
