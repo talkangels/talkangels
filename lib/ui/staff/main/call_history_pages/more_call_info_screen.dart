@@ -1,10 +1,13 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 import 'package:talkangels/ui/staff/constant/app_assets.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
+import 'package:talkangels/ui/staff/models/get_call_history_res_model.dart';
 
 class MoreCallInfoScreen extends StatefulWidget {
   const MoreCallInfoScreen({Key? key}) : super(key: key);
@@ -14,6 +17,8 @@ class MoreCallInfoScreen extends StatefulWidget {
 }
 
 class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
+  CallHistory callHistory = Get.arguments["call_history"];
+
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
@@ -30,9 +35,11 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                 SizedBox(
                   height: h * 0.4,
                   width: w,
-                  child:
-                      // Icon(Icons.person, size: 150, color: greyFontColor),
-                      assetImage(AppAssets.profiles, fit: BoxFit.fill),
+                  child: callHistory.user?.image == '' ||
+                          callHistory.user?.image == "0"
+                      ? assetImage(AppAssets.blankProfile, fit: BoxFit.fill)
+                      : Image.network("${callHistory.user!.image}",
+                          fit: BoxFit.fill),
                 ),
                 Positioned(
                   child: Container(
@@ -64,8 +71,8 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                 Positioned(
                   bottom: h * 0.04,
                   left: w * 0.08,
-                  child:
-                      AppString.jenilTaylor.leagueSpartanfs20w600(fontSize: 36),
+                  child: (callHistory.user?.userName ?? '')
+                      .leagueSpartanfs20w600(fontSize: 36),
                 ),
               ],
             ),
@@ -77,7 +84,8 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppString.phoneNumbers.regularLeagueSpartan(fontSize: 18),
+                      ("${callHistory.user?.mobileNumber ?? ''}")
+                          .regularLeagueSpartan(fontSize: 18),
                       AppString.mobileIndia.regularLeagueSpartan(
                           fontColor: greyFontColor,
                           fontSize: 11,
@@ -118,49 +126,67 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                   fontSize: 12,
                   fontWeight: FontWeight.w300),
             ),
-            Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: w * 0.08, vertical: h * 0.018),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Icon(Icons.phone_callback),
-                          // Icon(Icons.phone_missed),
-                          // Icon(Icons.phone_forwarded,),
-                          const Icon(Icons.phone_callback_rounded,
-                              color: whiteColor, size: 15),
-                          (w * 0.04).addWSpace(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppString.time.regularLeagueSpartan(
-                                  fontWeight: FontWeight.w700),
-                              (w * 0.02).addWSpace(),
-                              AppString.Incomingcall1min20sec
-                                  .regularLeagueSpartan(
-                                      fontColor: greyFontColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w300),
-                            ],
+            callHistory.history!.isEmpty
+                ? Center(
+                    child: AppString.noDataFound.regularLeagueSpartan(
+                        fontColor: greyFontColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700))
+                : Expanded(
+                    child: ListView.separated(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: callHistory.history!.length,
+                      itemBuilder: (context, index) {
+                        DateTime myDateTime = DateTime.parse(
+                            "${callHistory.history?[index].date}");
+                        String formattedDate =
+                            DateFormat('d MMM hh:mm a').format(myDateTime);
+
+                        return InkWell(
+                          onTap: () {},
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.08, vertical: h * 0.018),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                callHistory.history![index].callType ==
+                                        "outgoing"
+                                    ? const Icon(Icons.phone_forwarded,
+                                        color: whiteColor, size: 15)
+                                    : callHistory.history![index].callType ==
+                                            "incoming"
+                                        ? const Icon(
+                                            Icons.phone_callback_rounded,
+                                            color: whiteColor,
+                                            size: 15)
+                                        : const Icon(Icons.phone_missed,
+                                            color: whiteColor, size: 15),
+                                (w * 0.04).addWSpace(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    formattedDate.regularLeagueSpartan(
+                                        fontWeight: FontWeight.w700),
+                                    (w * 0.02).addWSpace(),
+                                    "${callHistory.history![index].callType ?? ''} ${callHistory.history![index].minutes ?? ''}"
+                                        .regularLeagueSpartan(
+                                            fontColor: greyFontColor,
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w300),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return 1.0.appDivider();
+                      },
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return 1.0.appDivider();
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),

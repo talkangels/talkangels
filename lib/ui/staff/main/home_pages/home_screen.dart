@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/const/app_routes.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/const/shared_prefs.dart';
+import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/ui/staff/constant/app_assets.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
@@ -25,7 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   BottomBarController bottomBarController = Get.find();
 
-  bool requestStatus = true;
+  bool requestStatus = false;
+  int? amounts;
+  final _formKey = GlobalKey<FormState>();
+
+  int tap = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -34,11 +42,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    tap;
+    homeController.withdrawController;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
     return GetBuilder<HomeController>(
       builder: (controller) {
+        controller.getStaffDetailResModel.data?.earnings?.sentWithdrawRequest ==
+                0
+            ? requestStatus = false
+            : requestStatus = true;
+
         return Scaffold(
           drawer: homeDrawer(),
           appBar: AppAppBar(
@@ -212,9 +233,385 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }),
                                           value: requestStatus,
                                           onChanged: (value) {
-                                            setState(() {
-                                              requestStatus = value;
-                                            });
+                                            /// call Rating API
+                                            Get.dialog(
+                                              barrierDismissible: false,
+                                              AlertDialog(
+                                                insetPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            Get.width * 0.08),
+                                                contentPadding: EdgeInsets.all(
+                                                    Get.width * 0.05),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    return Container(
+                                                      padding: EdgeInsets.zero,
+                                                      height: Get.height * 0.4,
+                                                      width: Get.width * 0.9,
+                                                      child: Form(
+                                                        key: _formKey,
+                                                        child: Column(
+                                                          children: [
+                                                            (Get.height * 0.03)
+                                                                .addHSpace(),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                AppString.totalMoney.regularLeagueSpartan(
+                                                                    fontColor:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700),
+                                                                " : ₹ ${controller.getStaffDetailResModel.data?.earnings?.totalPendingMoney ?? ''}".regularLeagueSpartan(
+                                                                    fontColor:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w900),
+                                                              ],
+                                                            ),
+                                                            (Get.height * 0.05)
+                                                                .addHSpace(),
+                                                            TextFormField(
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              controller: controller
+                                                                  .withdrawController,
+                                                              validator:
+                                                                  (value) {
+                                                                if (controller
+                                                                    .withdrawController
+                                                                    .text
+                                                                    .isNotEmpty) {
+                                                                  amounts = int.parse(
+                                                                      controller
+                                                                          .withdrawController
+                                                                          .text);
+                                                                }
+
+                                                                if (controller
+                                                                    .withdrawController
+                                                                    .text
+                                                                    .isEmpty) {
+                                                                  return "Please Enter Amount";
+                                                                } else if (controller
+                                                                        .getStaffDetailResModel
+                                                                        .data!
+                                                                        .earnings!
+                                                                        .totalPendingMoney! <
+                                                                    amounts!) {
+                                                                  return "Please Enter Valid Amount";
+                                                                }
+                                                                return null;
+                                                              },
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                hintText:
+                                                                    "Enter Amount",
+                                                                hintStyle: TextStyle(
+                                                                    color: blackColor
+                                                                        .withOpacity(
+                                                                            0.5),
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                    fontFamily:
+                                                                        'League Spartan'),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  borderSide:
+                                                                      const BorderSide(
+                                                                          color:
+                                                                              appBarColor),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            (Get.height * 0.1)
+                                                                .addHSpace(),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  flex: 1,
+                                                                  child:
+                                                                      AppButton(
+                                                                    height:
+                                                                        Get.height *
+                                                                            0.06,
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    onTap: () {
+                                                                      Get.back();
+                                                                      controller
+                                                                          .withdrawController
+                                                                          .clear();
+                                                                    },
+                                                                    child: AppString.back.regularLeagueSpartan(
+                                                                        fontColor:
+                                                                            blackColor,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w700),
+                                                                  ),
+                                                                ),
+                                                                (Get.width *
+                                                                        0.02)
+                                                                    .addWSpace(),
+                                                                Expanded(
+                                                                  flex: 1,
+                                                                  child:
+                                                                      AppButton(
+                                                                    height:
+                                                                        Get.height *
+                                                                            0.06,
+                                                                    color:
+                                                                        appColorBlue,
+                                                                    onTap: () {
+                                                                      if (_formKey
+                                                                          .currentState!
+                                                                          .validate()) {
+                                                                        ///  Post Withdraw Api
+                                                                        homeController.sendWithdrawRequest(controller
+                                                                            .withdrawController
+                                                                            .text);
+                                                                        Get.back();
+                                                                        controller
+                                                                            .withdrawController
+                                                                            .clear();
+                                                                      }
+                                                                    },
+                                                                    child: AppString
+                                                                        .withdraw
+                                                                        .regularLeagueSpartan(
+                                                                            fontSize:
+                                                                                14,
+                                                                            fontWeight:
+                                                                                FontWeight.w700),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                            // if (requestStatus == false) {
+                                            //   Get.dialog(
+                                            //     barrierDismissible: false,
+                                            //     AlertDialog(
+                                            //       insetPadding:
+                                            //           EdgeInsets.symmetric(
+                                            //               horizontal:
+                                            //                   Get.width * 0.08),
+                                            //       contentPadding:
+                                            //           EdgeInsets.all(
+                                            //               Get.width * 0.05),
+                                            //       shape: RoundedRectangleBorder(
+                                            //           borderRadius:
+                                            //               BorderRadius.circular(
+                                            //                   10)),
+                                            //       content: Builder(
+                                            //         builder: (context) {
+                                            //           return Container(
+                                            //             padding:
+                                            //                 EdgeInsets.zero,
+                                            //             height:
+                                            //                 Get.height * 0.4,
+                                            //             width: Get.width * 0.9,
+                                            //             child: Form(
+                                            //               key: _formKey,
+                                            //               child: Column(
+                                            //                 children: [
+                                            //                   (Get.height *
+                                            //                           0.03)
+                                            //                       .addHSpace(),
+                                            //                   Row(
+                                            //                     mainAxisAlignment:
+                                            //                         MainAxisAlignment
+                                            //                             .center,
+                                            //                     children: [
+                                            //                       AppString.totalMoney.regularLeagueSpartan(
+                                            //                           fontColor:
+                                            //                               blackColor,
+                                            //                           fontSize:
+                                            //                               18,
+                                            //                           fontWeight:
+                                            //                               FontWeight
+                                            //                                   .w700),
+                                            //                       " : ₹ ${controller.getStaffDetailResModel.data?.earnings?.totalPendingMoney ?? ''}".regularLeagueSpartan(
+                                            //                           fontColor:
+                                            //                               blackColor,
+                                            //                           fontSize:
+                                            //                               18,
+                                            //                           fontWeight:
+                                            //                               FontWeight
+                                            //                                   .w900),
+                                            //                     ],
+                                            //                   ),
+                                            //                   (Get.height *
+                                            //                           0.05)
+                                            //                       .addHSpace(),
+                                            //                   TextFormField(
+                                            //                     keyboardType:
+                                            //                         TextInputType
+                                            //                             .number,
+                                            //                     controller:
+                                            //                         controller
+                                            //                             .withdrawController,
+                                            //                     validator:
+                                            //                         (value) {
+                                            //                       if (controller
+                                            //                           .withdrawController
+                                            //                           .text
+                                            //                           .isNotEmpty) {
+                                            //                         amounts = int.parse(
+                                            //                             controller
+                                            //                                 .withdrawController
+                                            //                                 .text);
+                                            //                       }
+                                            //
+                                            //                       if (controller
+                                            //                           .withdrawController
+                                            //                           .text
+                                            //                           .isEmpty) {
+                                            //                         return "Please Enter Amount";
+                                            //                       } else if (controller
+                                            //                               .getStaffDetailResModel
+                                            //                               .data!
+                                            //                               .earnings!
+                                            //                               .totalPendingMoney! <
+                                            //                           amounts!) {
+                                            //                         return "Please Enter Valid Amount";
+                                            //                       }
+                                            //                       return null;
+                                            //                     },
+                                            //                     decoration:
+                                            //                         InputDecoration(
+                                            //                       hintText:
+                                            //                           "Enter Amount",
+                                            //                       hintStyle: TextStyle(
+                                            //                           color: blackColor.withOpacity(
+                                            //                               0.5),
+                                            //                           fontSize:
+                                            //                               16,
+                                            //                           fontWeight:
+                                            //                               FontWeight
+                                            //                                   .w300,
+                                            //                           fontFamily:
+                                            //                               'League Spartan'),
+                                            //                       border:
+                                            //                           OutlineInputBorder(
+                                            //                         borderRadius:
+                                            //                             BorderRadius
+                                            //                                 .circular(5),
+                                            //                         borderSide:
+                                            //                             const BorderSide(
+                                            //                                 color:
+                                            //                                     appBarColor),
+                                            //                       ),
+                                            //                     ),
+                                            //                   ),
+                                            //                   (Get.height * 0.1)
+                                            //                       .addHSpace(),
+                                            //                   Row(
+                                            //                     children: [
+                                            //                       Expanded(
+                                            //                         flex: 1,
+                                            //                         child:
+                                            //                             AppButton(
+                                            //                           height: Get
+                                            //                                   .height *
+                                            //                               0.06,
+                                            //                           color: Colors
+                                            //                               .transparent,
+                                            //                           onTap:
+                                            //                               () {
+                                            //                             Get.back();
+                                            //                             controller
+                                            //                                 .withdrawController
+                                            //                                 .clear();
+                                            //                           },
+                                            //                           child: AppString.back.regularLeagueSpartan(
+                                            //                               fontColor:
+                                            //                                   blackColor,
+                                            //                               fontSize:
+                                            //                                   14,
+                                            //                               fontWeight:
+                                            //                                   FontWeight.w700),
+                                            //                         ),
+                                            //                       ),
+                                            //                       (Get.width *
+                                            //                               0.02)
+                                            //                           .addWSpace(),
+                                            //                       Expanded(
+                                            //                         flex: 1,
+                                            //                         child:
+                                            //                             AppButton(
+                                            //                           height: Get
+                                            //                                   .height *
+                                            //                               0.06,
+                                            //                           color:
+                                            //                               appColorBlue,
+                                            //                           onTap:
+                                            //                               () {
+                                            //                             if (_formKey
+                                            //                                 .currentState!
+                                            //                                 .validate()) {
+                                            //                               ///  Post Withdraw Api
+                                            //                               homeController.sendWithdrawRequest(controller
+                                            //                                   .withdrawController
+                                            //                                   .text);
+                                            //                               Get.back();
+                                            //                               controller
+                                            //                                   .withdrawController
+                                            //                                   .clear();
+                                            //                             }
+                                            //                           },
+                                            //                           child: AppString.withdraw.regularLeagueSpartan(
+                                            //                               fontSize:
+                                            //                                   14,
+                                            //                               fontWeight:
+                                            //                                   FontWeight.w700),
+                                            //                         ),
+                                            //                       )
+                                            //                     ],
+                                            //                   ),
+                                            //                 ],
+                                            //               ),
+                                            //             ),
+                                            //           );
+                                            //         },
+                                            //       ),
+                                            //     ),
+                                            //   );
+                                            // } else {
+                                            //   log("Already request sent");
+                                            //
+                                            //   snack();
+                                            // }
                                           },
                                         ),
                                       ],
@@ -656,5 +1053,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void snack() {
+    tap++;
+    if (tap % 5 == 0) {
+      showAppSnackBar(AppString.youHaveAlreadySentWithdrawRequest);
+    }
   }
 }

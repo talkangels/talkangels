@@ -18,4 +18,6 @@ class MethodNamesAngels {
 
 class MethodNamesStaff {
   static const getStaffDetails = "staff/detail/";
+  static const getStaffCallHistory = "staff/call-history/";
+  static const sendWithdrawRequest = "staff/send-withdraw-request";
 }

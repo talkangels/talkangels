@@ -27,7 +27,7 @@ class BaseApiHelper {
   ///===========
   static Future<ResponseItem> getRequest(String requestUrl) async {
     log("request:$requestUrl");
-    String token = PreferenceManager().getToken();
+    String token = PreferenceManager().getToken().toString();
 
     return await http
         .get(Uri.parse(requestUrl), headers: {"Authorization": token})
@@ -38,8 +38,11 @@ class BaseApiHelper {
   ///===========
   static Future<ResponseItem> postRequestToken(
       String requestUrl, Map<String, dynamic> requestData) async {
-    log("request:$requestUrl");
-    String token = PreferenceManager().getToken();
+    String token = PreferenceManager().getToken().toString();
+    log("request 1:${requestUrl}   ${requestUrl.runtimeType}");
+    log("request 21:${requestData["staffId"]}  ${requestData["staffId"].runtimeType}");
+    log("request 22:${requestData["request_amount"]}  ${requestData["request_amount"].runtimeType}");
+    log("request 3:${token}    ${token.runtimeType}");
 
     return await http
         .post(Uri.parse(requestUrl),

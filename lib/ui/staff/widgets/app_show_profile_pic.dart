@@ -45,7 +45,7 @@ class AppShowProfilePic extends StatelessWidget {
                 color: containerColor, shape: BoxShape.circle),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(radius ?? 200),
-              child: image == ""
+              child: image == "" || image == "0"
                   ? assetImage(AppAssets.blankProfile)
                   : Image.network(image, fit: BoxFit.cover),
             ),

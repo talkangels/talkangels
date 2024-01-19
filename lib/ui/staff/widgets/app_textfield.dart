@@ -4,8 +4,8 @@ import 'package:talkangels/ui/staff/constant/app_color.dart';
 class SearchTextFormField extends StatelessWidget {
   TextEditingController? controller;
   final String? hintText;
-  final validator;
-  final onChanged;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   final Widget? suffixIcon;
   Widget? prefixIcon;
   double? fontSize;

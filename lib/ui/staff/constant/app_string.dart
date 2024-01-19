@@ -85,6 +85,10 @@ class AppString {
   static const totalReviews = "Total Reviews";
   static const noReviewsYet = "No Reviews Yet!";
   static const perMin = "Per Min";
+  static const back = "Back";
+  static const totalMoney = "Total Money";
+  static const youHaveAlreadySentWithdrawRequest =
+      "There are pending withdrawal requests. Please wait for approval or rejection";
 
   ///
   static const rupies = "₹574";

@@ -411,9 +411,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                       ),
                                       2.0.appDivider(),
                                       (h * 0.01).addHSpace(),
-                                      controller.getStaffDetailResModel.data
-                                                  ?.reviews ==
-                                              null
+                                      controller.getStaffDetailResModel.data!
+                                              .reviews!.isEmpty
                                           ? Padding(
                                               padding: EdgeInsets.symmetric(
                                                   vertical: h * 0.15),

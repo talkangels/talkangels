@@ -116,6 +116,7 @@ class HomeRepoAngels {
 
 ///Staff
 class HomeRepoStaff {
+  /// Get staff Details
   static Future<ResponseItem> getStaffDetail() async {
     ResponseItem result;
     String userId = PreferenceManager().getId().toString();
@@ -123,6 +124,38 @@ class HomeRepoStaff {
     String requestUrl =
         AppUrls.BASE_URL + MethodNamesStaff.getStaffDetails + userId;
     result = await BaseApiHelper.getRequest(requestUrl);
+
+    return result;
+  }
+
+  /// Get Call History
+
+  static Future<ResponseItem> getCallHistory() async {
+    ResponseItem result;
+
+    String userId = PreferenceManager().getId().toString();
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.getStaffCallHistory + userId;
+
+    result = await BaseApiHelper.getRequest(requestUrl);
+
+    return result;
+  }
+
+  /// Post Send Withdraw Request
+  static Future<ResponseItem> sendWithdrawRequest(String amount) async {
+    ResponseItem result;
+    String userId = PreferenceManager().getId().toString();
+
+    Map<String, dynamic> requestData = {
+      "staffId": userId,
+      "request_amount": amount,
+    };
+
+    String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.sendWithdrawRequest;
+
+    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
 
     return result;
   }

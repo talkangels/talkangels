@@ -62,7 +62,8 @@ dependencies:
   flutter_callkit_incoming: ^2.0.1+1
   #  Rating
   flutter_rating_bar: ^4.0.1
-
+  #  DateTime
+  intl: ^0.19.0
 
 
 dev_dependencies:

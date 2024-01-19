@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:talkangels/const/app_routes.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
+import 'package:talkangels/ui/staff/main/call_history_pages/call_history_controller.dart';
 import 'package:talkangels/ui/staff/widgets/app_appbar.dart';
 import 'package:talkangels/ui/staff/widgets/app_show_profile_pic.dart';
 
@@ -15,6 +19,15 @@ class CallHistoryScreen extends StatefulWidget {
 }
 
 class _CallHistoryScreenState extends State<CallHistoryScreen> {
+  CallHistoryController callHistoryController =
+      Get.put(CallHistoryController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    callHistoryController.getCallHistoryApi();
+  }
+
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
@@ -25,82 +38,148 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
         bottom: PreferredSize(
             preferredSize: const Size(300, 50), child: 1.0.appDivider()),
       ),
-      body: Container(
-        height: h,
-        width: w,
-        decoration: const BoxDecoration(gradient: appGradient),
-        child: SafeArea(
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Get.toNamed(Routes.moreCallInfoScreen);
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: w * 0.05, vertical: h * 0.015),
-                  child: Row(
-                    children: [
-                      AppShowProfilePic(
-                        onTap: () {},
-                        image: '',
-                        borderShow: false,
-                      ),
-                      (w * 0.02).addWSpace(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              // Icon(Icons.phone_callback),
-                              // Icon(Icons.phone_missed),
-                              // Icon(Icons.phone_forwarded,),
-                              AppString.jenilTaylor.regularLeagueSpartan(
-                                  fontWeight: FontWeight.w700),
-                              (w * 0.02).addWSpace(),
-                              const CircleAvatar(
-                                radius: 8,
-                                backgroundColor: appColorGreen,
-                                // backgroundColor: appColorBlue,
-                                // backgroundColor: redColor,
-                                child: Icon(
-                                  Icons.phone_callback,
-                                  size: 10,
-                                  color: whiteColor,
+      body: GetBuilder<CallHistoryController>(
+        builder: (controller) {
+          return Container(
+            height: h,
+            width: w,
+            decoration: const BoxDecoration(gradient: appGradient),
+            child: SafeArea(
+              child: controller.isLoading == true
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : controller.getCallHistoryResModel.data!.isEmpty
+                      ? Center(
+                          child: AppString.noDataFound.regularLeagueSpartan(
+                              fontColor: greyFontColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700))
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          itemCount:
+                              controller.getCallHistoryResModel.data!.length,
+                          itemBuilder: (context, index) {
+                            DateTime myDateTime = DateTime.parse(
+                                "${controller.getCallHistoryResModel.data![index].history?[0].date}");
+
+                            String formattedDate =
+                                DateFormat('MMM d').format(myDateTime);
+                            String formattedTime =
+                                DateFormat('hh:mm a').format(myDateTime);
+
+                            return InkWell(
+                              onTap: () {
+                                Get.toNamed(Routes.moreCallInfoScreen,
+                                    arguments: {
+                                      "call_history": controller
+                                          .getCallHistoryResModel.data?[index]
+                                    });
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: w * 0.05, vertical: h * 0.015),
+                                child: Row(
+                                  children: [
+                                    AppShowProfilePic(
+                                        onTap: () {},
+                                        image: controller.getCallHistoryResModel
+                                                .data![index].user?.image ??
+                                            "",
+                                        borderShow: false),
+                                    (w * 0.02).addWSpace(),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            (controller
+                                                        .getCallHistoryResModel
+                                                        .data?[index]
+                                                        .user
+                                                        ?.userName ??
+                                                    '')
+                                                .regularLeagueSpartan(
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                            (w * 0.02).addWSpace(),
+                                            controller
+                                                        .getCallHistoryResModel
+                                                        .data?[index]
+                                                        .history?[0]
+                                                        .callType ==
+                                                    "outgoing"
+                                                ? const CircleAvatar(
+                                                    radius: 8,
+                                                    backgroundColor:
+                                                        appColorBlue,
+                                                    child: Icon(
+                                                      Icons.phone_forwarded,
+                                                      size: 10,
+                                                      color: whiteColor,
+                                                    ),
+                                                  )
+                                                : controller
+                                                            .getCallHistoryResModel
+                                                            .data?[index]
+                                                            .history?[0]
+                                                            .callType ==
+                                                        "incoming"
+                                                    ? const CircleAvatar(
+                                                        radius: 8,
+                                                        backgroundColor:
+                                                            appColorGreen,
+                                                        child: Icon(
+                                                          Icons.phone_callback,
+                                                          size: 10,
+                                                          color: whiteColor,
+                                                        ),
+                                                      )
+                                                    : const CircleAvatar(
+                                                        radius: 8,
+                                                        backgroundColor:
+                                                            redColor,
+                                                        child: Icon(
+                                                          Icons.phone_missed,
+                                                          size: 10,
+                                                          color: whiteColor,
+                                                        ),
+                                                      ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: w * 0.65,
+                                          child:
+                                              "${controller.getCallHistoryResModel.data?[index].user?.mobileNumber ?? ''} • $formattedDate •${controller.getCallHistoryResModel.data?[index].history?[0].callType} call at $formattedTime"
+                                                  .regularLeagueSpartan(
+                                                      fontColor: greyFontColor,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      textOverflow: TextOverflow
+                                                          .ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                      color: whiteColor.withOpacity(0.5),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: w * 0.65,
-                            child:
-                                "${AppString.phoneNumbers} • ${AppString.date} • ${AppString.callTime}"
-                                    .regularLeagueSpartan(
-                                        fontColor: greyFontColor,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w300,
-                                        textOverflow: TextOverflow.ellipsis),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 12,
-                        color: whiteColor.withOpacity(0.5),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return 1.0.appDivider();
-            },
-          ),
-        ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return 1.0.appDivider();
+                          },
+                        ),
+            ),
+          );
+        },
       ),
     );
   }
