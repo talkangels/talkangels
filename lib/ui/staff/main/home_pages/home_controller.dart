@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/api/repo/home_repo.dart';
 import 'package:talkangels/models/response_item.dart';
+import 'package:talkangels/ui/staff/models/active_status_res_model.dart';
+import 'package:talkangels/ui/staff/models/add_call_history_res_model.dart';
 import 'package:talkangels/ui/staff/models/get_staff_detail_res_model.dart';
 import 'package:talkangels/ui/staff/models/send_withdraw_req_res_model.dart';
 
@@ -14,6 +16,13 @@ class HomeController extends GetxController {
   bool isRequestLoading = false;
   SendWithdrawReqResModel sendWithdrawReqResModel = SendWithdrawReqResModel();
   TextEditingController withdrawController = TextEditingController();
+  List<UserReview> reviewList = [];
+
+  bool isStatusLoading = false;
+  ActiveStatusResModel activeStatusResModel = ActiveStatusResModel();
+
+  bool isAddHistoryLoading = false;
+  AddCallHistoryResModel addCallHistoryResModel = AddCallHistoryResModel();
 
   /// Get Staff Details
   getStaffDetailApi() async {
@@ -21,10 +30,19 @@ class HomeController extends GetxController {
 
     ResponseItem result = await HomeRepoStaff.getStaffDetail();
     log("result---1-------> ${result.data}");
-
+    reviewList = [];
     if (result.status) {
       try {
         getStaffDetailResModel = GetStaffDetailResModel.fromJson(result.data);
+
+        getStaffDetailResModel.data?.reviews?.forEach((element) {
+          element.userReviews?.forEach((element1) {
+            reviewList.add(element1);
+          });
+        });
+
+        reviewList.sort((a, b) => b.date!.compareTo(a.date!));
+
         isLoading = false;
         update();
       } catch (e) {
@@ -49,19 +67,12 @@ class HomeController extends GetxController {
     if (result.status) {
       try {
         sendWithdrawReqResModel = SendWithdrawReqResModel.fromJson(result.data);
-        // type 'int' is not a subtype of type 'String' in type cast
-        // type 'String' is not a subtype of type 'int?'
 
-        try {
-          /// get Staff details api
-          await getStaffDetailApi();
-          log("qrfev");
-        } catch (e) {
-          log("ERRER  =====    $e");
-        }
+        /// get Staff details api
+        await getStaffDetailApi();
+
         isRequestLoading = false;
         update();
-        log("uk,m,m");
       } catch (e) {
         isRequestLoading = false;
         update();
@@ -69,6 +80,53 @@ class HomeController extends GetxController {
       }
     } else {
       isRequestLoading = false;
+      update();
+    }
+  }
+
+  /// Active status Api
+  activeStatusApi(String status) async {
+    isStatusLoading = true;
+    update();
+    ResponseItem item = await HomeRepoStaff.activeStatusUpdate(status);
+    log("item---3------->${item.data}");
+    if (item.status == true) {
+      try {
+        activeStatusResModel = ActiveStatusResModel.fromJson(item.data);
+
+        isStatusLoading = false;
+        update();
+      } catch (e) {
+        log("e=====activeStatusApi==========>$e");
+        isStatusLoading = false;
+        update();
+      }
+    } else {
+      isStatusLoading = false;
+      update();
+    }
+  }
+
+  /// Add Call History Api
+  addCallHistory(String angelId, String callType, String minutes) async {
+    isAddHistoryLoading = true;
+    update();
+    ResponseItem item =
+        await HomeRepoStaff.addCallHistory(angelId, callType, minutes);
+    log("item---4------->${item.data}");
+    if (item.status == true) {
+      try {
+        addCallHistoryResModel = AddCallHistoryResModel.fromJson(item.data);
+
+        isAddHistoryLoading = false;
+        update();
+      } catch (e) {
+        log("e=======addCallHistory=======>$e");
+        isAddHistoryLoading = false;
+        update();
+      }
+    } else {
+      isAddHistoryLoading = false;
       update();
     }
   }

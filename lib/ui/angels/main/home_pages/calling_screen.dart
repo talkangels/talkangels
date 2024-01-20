@@ -81,7 +81,7 @@ class _CallingScreenState extends State<CallingScreen> {
                         ripplesCount: 6,
                         duration: const Duration(milliseconds: 6 * 300),
                         child: homeController.selectedAngle!.image == ""
-                            ? CircleAvatar(
+                            ? const CircleAvatar(
                                 minRadius: 75,
                                 maxRadius: 75,
                                 backgroundImage:

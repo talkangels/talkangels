@@ -36,7 +36,7 @@ class SendWithdrawReqResModel {
 }
 
 class Data {
-  int? requestAmount;
+  String? requestAmount;
   int? currentAmount;
   int? pendingAmount;
   DateTime? date;

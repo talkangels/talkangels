@@ -23,6 +23,7 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
+    List<History>? reverseData = callHistory.history!.reversed.toList();
     return Scaffold(
       body: Container(
         height: h,
@@ -136,10 +137,10 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                     child: ListView.separated(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
-                      itemCount: callHistory.history!.length,
+                      itemCount: reverseData.length,
                       itemBuilder: (context, index) {
-                        DateTime myDateTime = DateTime.parse(
-                            "${callHistory.history?[index].date}");
+                        DateTime myDateTime =
+                            DateTime.parse("${reverseData[index].date}");
                         String formattedDate =
                             DateFormat('d MMM hh:mm a').format(myDateTime);
 
@@ -151,12 +152,10 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                callHistory.history![index].callType ==
-                                        "outgoing"
+                                reverseData[index].callType == "outgoing"
                                     ? const Icon(Icons.phone_forwarded,
                                         color: whiteColor, size: 15)
-                                    : callHistory.history![index].callType ==
-                                            "incoming"
+                                    : reverseData[index].callType == "incoming"
                                         ? const Icon(
                                             Icons.phone_callback_rounded,
                                             color: whiteColor,
@@ -170,7 +169,7 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                                     formattedDate.regularLeagueSpartan(
                                         fontWeight: FontWeight.w700),
                                     (w * 0.02).addWSpace(),
-                                    "${callHistory.history![index].callType ?? ''} ${callHistory.history![index].minutes ?? ''}"
+                                    "${reverseData[index].callType ?? ''} Call, ${reverseData[index].minutes ?? ''}"
                                         .regularLeagueSpartan(
                                             fontColor: greyFontColor,
                                             fontSize: 11,

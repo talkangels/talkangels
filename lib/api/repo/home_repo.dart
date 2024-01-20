@@ -159,4 +159,43 @@ class HomeRepoStaff {
 
     return result;
   }
+
+  /// Put Active Status
+
+  static Future<ResponseItem> activeStatusUpdate(String status) async {
+    ResponseItem result;
+    String userId = PreferenceManager().getId().toString();
+
+    Map<String, dynamic> requestData = {
+      "active_status": status,
+      // "Online", "Offline"
+    };
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.activeStatus + userId;
+
+    result = await BaseApiHelper.putActiveStatue(requestUrl, requestData);
+
+    return result;
+  }
+
+  /// Add Call History
+
+  static Future<ResponseItem> addCallHistory(
+      String angelId, String callType, String minutes) async {
+    ResponseItem result;
+    String userId = PreferenceManager().getId().toString();
+
+    Map<String, dynamic> requestData = {
+      "staff_id": userId,
+      "user_id": angelId,
+      "call_type": callType,
+      "minutes": minutes,
+    };
+    String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.addCallHistory;
+
+    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+
+    return result;
+  }
 }

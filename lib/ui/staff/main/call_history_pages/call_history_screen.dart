@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +6,7 @@ import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 import 'package:talkangels/ui/staff/constant/app_string.dart';
 import 'package:talkangels/ui/staff/main/call_history_pages/call_history_controller.dart';
+import 'package:talkangels/ui/staff/models/get_call_history_res_model.dart';
 import 'package:talkangels/ui/staff/widgets/app_appbar.dart';
 import 'package:talkangels/ui/staff/widgets/app_show_profile_pic.dart';
 
@@ -40,6 +39,8 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
       ),
       body: GetBuilder<CallHistoryController>(
         builder: (controller) {
+          List<CallHistory>? reverseData =
+              controller.getCallHistoryResModel.data?.reversed.toList();
           return Container(
             height: h,
             width: w,
@@ -57,11 +58,13 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                               fontWeight: FontWeight.w700))
                       : ListView.separated(
                           shrinkWrap: true,
-                          itemCount:
-                              controller.getCallHistoryResModel.data!.length,
+                          itemCount: reverseData!.length,
                           itemBuilder: (context, index) {
+                            int lastIndex =
+                                reverseData[index].history!.length - 1;
+
                             DateTime myDateTime = DateTime.parse(
-                                "${controller.getCallHistoryResModel.data![index].history?[0].date}");
+                                "${reverseData[index].history?[lastIndex].date}");
 
                             String formattedDate =
                                 DateFormat('MMM d').format(myDateTime);
@@ -72,8 +75,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                               onTap: () {
                                 Get.toNamed(Routes.moreCallInfoScreen,
                                     arguments: {
-                                      "call_history": controller
-                                          .getCallHistoryResModel.data?[index]
+                                      "call_history": reverseData[index]
                                     });
                               },
                               child: Padding(
@@ -83,8 +85,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                   children: [
                                     AppShowProfilePic(
                                         onTap: () {},
-                                        image: controller.getCallHistoryResModel
-                                                .data![index].user?.image ??
+                                        image: reverseData[index].user?.image ??
                                             "",
                                         borderShow: false),
                                     (w * 0.02).addWSpace(),
@@ -94,9 +95,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                       children: [
                                         Row(
                                           children: [
-                                            (controller
-                                                        .getCallHistoryResModel
-                                                        .data?[index]
+                                            (reverseData[index]
                                                         .user
                                                         ?.userName ??
                                                     '')
@@ -104,10 +103,8 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                     fontWeight:
                                                         FontWeight.w700),
                                             (w * 0.02).addWSpace(),
-                                            controller
-                                                        .getCallHistoryResModel
-                                                        .data?[index]
-                                                        .history?[0]
+                                            reverseData[index]
+                                                        .history?[lastIndex]
                                                         .callType ==
                                                     "outgoing"
                                                 ? const CircleAvatar(
@@ -120,10 +117,8 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                       color: whiteColor,
                                                     ),
                                                   )
-                                                : controller
-                                                            .getCallHistoryResModel
-                                                            .data?[index]
-                                                            .history?[0]
+                                                : reverseData[index]
+                                                            .history?[lastIndex]
                                                             .callType ==
                                                         "incoming"
                                                     ? const CircleAvatar(
@@ -151,7 +146,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                         SizedBox(
                                           width: w * 0.65,
                                           child:
-                                              "${controller.getCallHistoryResModel.data?[index].user?.mobileNumber ?? ''} • $formattedDate •${controller.getCallHistoryResModel.data?[index].history?[0].callType} call at $formattedTime"
+                                              "${reverseData[index].user?.mobileNumber ?? ''} • $formattedDate •${reverseData[index].history?[lastIndex].callType} call at $formattedTime"
                                                   .regularLeagueSpartan(
                                                       fontColor: greyFontColor,
                                                       fontSize: 10,

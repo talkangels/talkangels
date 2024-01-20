@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getStaffDetailResModel = getStaffDetailResModelFromJson(jsonString);
-
 import 'dart:convert';
 
 GetStaffDetailResModel getStaffDetailResModelFromJson(String str) =>
@@ -42,6 +38,7 @@ class Data {
   String? userName;
   String? name;
   int? mobileNumber;
+  int? countryCode;
   String? gender;
   String? bio;
   String? image;
@@ -52,15 +49,11 @@ class Data {
   int? status;
   int? charges;
   String? role;
+  double? totalRating;
   List<Review>? reviews;
   DateTime? updatedAt;
   int? v;
-  String? listingHours;
   String? fcmToken;
-  int? countryCode;
-  int? totalRating;
-  String? dataAge;
-  String? dataLanguage;
 
   Data({
     this.listing,
@@ -69,6 +62,7 @@ class Data {
     this.userName,
     this.name,
     this.mobileNumber,
+    this.countryCode,
     this.gender,
     this.bio,
     this.image,
@@ -79,15 +73,11 @@ class Data {
     this.status,
     this.charges,
     this.role,
+    this.totalRating,
     this.reviews,
     this.updatedAt,
     this.v,
-    this.listingHours,
     this.fcmToken,
-    this.countryCode,
-    this.totalRating,
-    this.dataAge,
-    this.dataLanguage,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -100,16 +90,18 @@ class Data {
         userName: json["user_name"],
         name: json["name"],
         mobileNumber: json["mobile_number"],
+        countryCode: json["country_code"],
         gender: json["gender"],
         bio: json["bio"],
         image: json["image"],
-        language: json["Language"],
-        age: json["Age"],
+        language: json["language"],
+        age: json["age"],
         activeStatus: json["active_status"],
         callStatus: json["call_status"],
         status: json["status"],
         charges: json["charges"],
         role: json["role"],
+        totalRating: json["total_rating"],
         reviews: json["reviews"] == null
             ? []
             : List<Review>.from(
@@ -118,12 +110,7 @@ class Data {
             ? null
             : DateTime.parse(json["updated_at"]),
         v: json["__v"],
-        listingHours: json["Listing_hours"],
         fcmToken: json["fcmToken"],
-        countryCode: json["country_code"],
-        totalRating: json["total_rating"],
-        dataAge: json["age"],
-        dataLanguage: json["language"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -133,80 +120,77 @@ class Data {
         "user_name": userName,
         "name": name,
         "mobile_number": mobileNumber,
+        "country_code": countryCode,
         "gender": gender,
         "bio": bio,
         "image": image,
-        "Language": language,
-        "Age": age,
+        "language": language,
+        "age": age,
         "active_status": activeStatus,
         "call_status": callStatus,
         "status": status,
         "charges": charges,
         "role": role,
+        "total_rating": totalRating,
         "reviews": reviews == null
             ? []
             : List<dynamic>.from(reviews!.map((x) => x.toJson())),
         "updated_at": updatedAt?.toIso8601String(),
         "__v": v,
-        "Listing_hours": listingHours,
         "fcmToken": fcmToken,
-        "country_code": countryCode,
-        "total_rating": totalRating,
-        "age": dataAge,
-        "language": dataLanguage,
       };
 }
 
 class Earnings {
   int? currentEarnings;
-  int? sentWithdrawRequest;
   int? totalMoneyWithdraws;
   int? totalPendingMoney;
+  int? sentWithdrawRequest;
 
   Earnings({
     this.currentEarnings,
-    this.sentWithdrawRequest,
     this.totalMoneyWithdraws,
     this.totalPendingMoney,
+    this.sentWithdrawRequest,
   });
 
   factory Earnings.fromJson(Map<String, dynamic> json) => Earnings(
         currentEarnings: json["current_earnings"],
-        sentWithdrawRequest: json["sent_withdraw_request"],
         totalMoneyWithdraws: json["total_money_withdraws"],
         totalPendingMoney: json["total_pending_money"],
+        sentWithdrawRequest: json["sent_withdraw_request"],
       );
 
   Map<String, dynamic> toJson() => {
         "current_earnings": currentEarnings,
-        "sent_withdraw_request": sentWithdrawRequest,
         "total_money_withdraws": totalMoneyWithdraws,
         "total_pending_money": totalPendingMoney,
+        "sent_withdraw_request": sentWithdrawRequest,
       };
 }
 
 class Listing {
-  List<CallHistory>? callHistory;
   String? totalMinutes;
+  List<CallHistory>? callHistory;
 
   Listing({
-    this.callHistory,
     this.totalMinutes,
+    this.callHistory,
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) => Listing(
+        totalMinutes: json["total_minutes"],
         callHistory: json["call_history"] == null
             ? []
             : List<CallHistory>.from(
                 json["call_history"]!.map((x) => CallHistory.fromJson(x))),
-        totalMinutes: json["total_minutes"],
       );
 
   Map<String, dynamic> toJson() => {
+        "total_minutes": totalMinutes,
         "call_history": callHistory == null
             ? []
             : List<dynamic>.from(callHistory!.map((x) => x.toJson())),
-        "total_minutes": totalMinutes,
       };
 }
 

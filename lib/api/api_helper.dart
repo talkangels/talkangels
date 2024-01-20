@@ -39,10 +39,6 @@ class BaseApiHelper {
   static Future<ResponseItem> postRequestToken(
       String requestUrl, Map<String, dynamic> requestData) async {
     String token = PreferenceManager().getToken().toString();
-    log("request 1:${requestUrl}   ${requestUrl.runtimeType}");
-    log("request 21:${requestData["staffId"]}  ${requestData["staffId"].runtimeType}");
-    log("request 22:${requestData["request_amount"]}  ${requestData["request_amount"].runtimeType}");
-    log("request 3:${token}    ${token.runtimeType}");
 
     return await http
         .post(Uri.parse(requestUrl),
@@ -51,6 +47,18 @@ class BaseApiHelper {
         .onError((error, stackTrace) => onError(error));
   }
 
+  /// Put Active Status
+  static Future<ResponseItem> putActiveStatue(
+      String requestUrl, Map<String, dynamic> requestData) async {
+    String token = PreferenceManager().getToken().toString();
+    return await http
+        .put(Uri.parse(requestUrl),
+            body: requestData, headers: {"Authorization": token})
+        .then((response) => onValue(response))
+        .onError((error, stackTrace) => onError(error));
+  }
+
+  ///
   ///===========
   static Future onValue(http.Response response) async {
     log(response.statusCode.toString(), name: "RESPONSE STATUSCODE");

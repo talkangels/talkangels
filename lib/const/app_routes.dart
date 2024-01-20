@@ -19,6 +19,7 @@ import 'package:talkangels/ui/staff/main/call_history_pages/call_history_screen.
 import 'package:talkangels/ui/staff/main/call_history_pages/more_call_info_screen.dart';
 import 'package:talkangels/ui/staff/main/my_profile_pages/profile_details_screen.dart';
 import 'package:talkangels/ui/staff/main/setting_pages/setting_screen.dart';
+import 'package:talkangels/ui/staff/main/report_problem_pages/report_problem_screen.dart';
 import 'package:talkangels/ui/staff/main/calling_pages/calling_screen.dart'
     as staff;
 import 'package:talkangels/ui/staff/main/home_pages/home_screen.dart' as staff;
@@ -46,6 +47,7 @@ class Routes {
   static String moreCallInfoScreen = "/moreCallInfoScreen";
   static String bottomBarScreen = "/bottomBarScreen";
   static String settingScreen = "/settingScreen";
+  static String reportProblemScreen = "/reportProblemScreen";
 
   ///
   ///
@@ -59,7 +61,6 @@ class Routes {
     GetPage(name: myWalletScreen, page: () => const MyWalletScreen()),
     GetPage(name: referEarnScreen, page: () => const ReferEarnScreen()),
     GetPage(name: callingScreen, page: () => const CallingScreen()),
-    // GetPage(name: callingScreen, page: () =>  CallingScreen(selectedAngle: Angle(),angleCallResModel: AngleCallResModel(),)),
     GetPage(name: allChargesScreen, page: () => const AllChargesScreen()),
 
     ///staff
@@ -82,5 +83,6 @@ class Routes {
     GetPage(name: moreCallInfoScreen, page: () => const MoreCallInfoScreen()),
     GetPage(name: bottomBarScreen, page: () => const BottomBarScreen()),
     GetPage(name: settingScreen, page: () => const SettingScreen()),
+    GetPage(name: reportProblemScreen, page: () => const ReportProblemScreen()),
   ];
 }

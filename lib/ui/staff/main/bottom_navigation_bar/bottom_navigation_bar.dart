@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/const/app_routes.dart';
 import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
+import 'package:talkangels/ui/staff/constant/app_string.dart';
 import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
 import 'bottom_bar_controller.dart';
 
@@ -16,14 +18,59 @@ class BottomBarScreen extends StatefulWidget {
   State<BottomBarScreen> createState() => _BottomBarScreenState();
 }
 
-class _BottomBarScreenState extends State<BottomBarScreen> {
+class _BottomBarScreenState extends State<BottomBarScreen>
+    with WidgetsBindingObserver {
   BottomBarController bottomBarController = Get.put(BottomBarController());
   HomeController homeController = Get.put(HomeController());
 
+  final List<AppLifecycleState> _stateHistoryList = <AppLifecycleState>[];
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    /// ACTIVE STATUS API
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await homeController.activeStatusApi(AppString.online);
+      await homeController.getStaffDetailApi();
+    });
+
+    WidgetsBinding.instance.addObserver(this);
+    if (WidgetsBinding.instance.lifecycleState != null) {
+      _stateHistoryList.add(WidgetsBinding.instance.lifecycleState!);
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        log('appLifeCycleState inactive');
+        break;
+      case AppLifecycleState.resumed:
+        SchedulerBinding.instance.addPostFrameCallback((_) async {
+          await homeController.activeStatusApi(AppString.online);
+        });
+        log('appLifeCycleState resumed');
+        break;
+      case AppLifecycleState.paused:
+        homeController.activeStatusApi(AppString.offline);
+        log('appLifeCycleState paused');
+        break;
+      case AppLifecycleState.hidden:
+        log('appLifeCycleState suspending');
+        break;
+      case AppLifecycleState.detached:
+        log('appLifeCycleState detached');
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -50,6 +97,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               controller.update();
               return false;
             }
+
+            /// Active Status Api
+            await homeController.activeStatusApi(AppString.offline);
             return true;
           },
           child: Scaffold(

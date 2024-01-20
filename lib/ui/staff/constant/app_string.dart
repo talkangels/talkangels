@@ -1,5 +1,8 @@
 class AppString {
   static const talkAngels = "TALK ANGELS";
+  static const online = "Online";
+  static const offline = "Offline";
+
   static const whatsappInstantLogin = "Whatsapp Instant login";
   static const haveA = "Have a ";
   static const anonymousChatCall = "Anonymous. Chat. Call.";
@@ -50,7 +53,6 @@ class AppString {
   static const cancel = "Cancel";
   static const profileDetails = "Profile Details";
   static const jeniltaylor28 = "@jeniltaylor28";
-  static const online = "Online";
   static const aboutMe = "About Me";
   static const aboutMeDescription =
       "I helped my friend to get out of a toxic marriage Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ";
@@ -86,9 +88,11 @@ class AppString {
   static const noReviewsYet = "No Reviews Yet!";
   static const perMin = "Per Min";
   static const back = "Back";
+  static const submit = "Submit";
   static const totalMoney = "Total Money";
   static const youHaveAlreadySentWithdrawRequest =
       "There are pending withdrawal requests. Please wait for approval or rejection";
+  static const pleaseEnterYourProblem = "Please Enter Your Problem";
 
   ///
   static const rupies = "₹574";

@@ -55,7 +55,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                 children: [
                                   AppShowProfilePic(
                                       image: controller.getStaffDetailResModel
-                                              .data!.image ??
+                                              .data?.image ??
                                           '',
                                       onTap: () {
                                         showDialog(
@@ -333,19 +333,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                           ("Gender : ${controller.getStaffDetailResModel.data?.gender ?? ""}")
                               .regularLeagueSpartan(
                                   fontColor: greyFontColor, fontSize: 15)
-                              .paddingOnly(
-                                left: w * 0.04,
-                                right: w * 0.04,
-                                bottom: h * 0.015,
-                              ),
-                          ("Age : ${controller.getStaffDetailResModel.data?.age ?? ''}")
+                              .paddingOnly(left: w * 0.04),
+                          ("Age       : ${controller.getStaffDetailResModel.data?.age ?? ''}")
                               .regularLeagueSpartan(
                                   fontColor: greyFontColor, fontSize: 15)
-                              .paddingOnly(
-                                left: w * 0.04,
-                                right: w * 0.04,
-                                bottom: h * 0.015,
-                              ),
+                              .paddingOnly(left: w * 0.04, bottom: h * 0.015),
                           1.0.appDivider(),
 
                           /// Customer Rating
@@ -396,9 +388,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                 ),
                                                 Row(
                                                   children: [
-                                                    ("${AppString.totalReviews} :   ")
+                                                    ("${AppString.totalReviews}      :   ")
                                                         .regularLeagueSpartan(),
-                                                    ("${(controller.getStaffDetailResModel.data?.reviews?.length ?? 0)} Reviews")
+                                                    ("${(controller.reviewList.length)} Reviews")
                                                         .regularLeagueSpartan(
                                                             fontWeight:
                                                                 FontWeight.w800)
@@ -423,17 +415,13 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                             greyFontColor),
                                               ),
                                             )
-                                          // : Text("Done"),
                                           : Expanded(
                                               child: ListView.builder(
                                                 physics:
                                                     const AlwaysScrollableScrollPhysics(),
                                                 shrinkWrap: true,
                                                 itemCount: controller
-                                                    .getStaffDetailResModel
-                                                    .data
-                                                    ?.reviews
-                                                    ?.length,
+                                                    .reviewList.length,
                                                 itemBuilder: (context, index) {
                                                   return Padding(
                                                     padding:
@@ -458,11 +446,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                                   width:
                                                                       w * 0.8,
                                                                   child: (controller
-                                                                              .getStaffDetailResModel
-                                                                              .data
-                                                                              ?.reviews?[
-                                                                                  index]
-                                                                              .userReviews![
+                                                                              .reviewList[
                                                                                   index]
                                                                               .comment ??
                                                                           "No Comment")
@@ -485,7 +469,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                                           .withOpacity(
                                                                               0.3),
                                                                     ),
-                                                                    ("${controller.getStaffDetailResModel.data?.reviews?[index].userReviews}").regularLeagueSpartan(
+                                                                    ("${controller.reviewList[index].rating}").regularLeagueSpartan(
                                                                         fontWeight:
                                                                             FontWeight
                                                                                 .w800,
@@ -528,11 +512,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                         .paddingOnly(right: w * 0.04),
                                   ],
                                 ),
-                                ("${controller.getStaffDetailResModel.data?.listingHours ?? ''} Listing")
+                                ("${controller.getStaffDetailResModel.data?.listing?.totalMinutes ?? ''} Listing")
                                     .regularLeagueSpartan(
                                         fontColor: greyFontColor, fontSize: 15)
                                     .paddingOnly(left: w * 0.04),
-                                ("${controller.getStaffDetailResModel.data?.reviews?.length ?? "0"} Reviews")
+                                ("${controller.reviewList.length} Reviews")
                                     .regularLeagueSpartan(
                                         fontColor: greyFontColor, fontSize: 15)
                                     .paddingOnly(

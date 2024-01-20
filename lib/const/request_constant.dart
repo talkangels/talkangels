@@ -20,4 +20,6 @@ class MethodNamesStaff {
   static const getStaffDetails = "staff/detail/";
   static const getStaffCallHistory = "staff/call-history/";
   static const sendWithdrawRequest = "staff/send-withdraw-request";
+  static const activeStatus = "staff/update-active-status/";
+  static const addCallHistory = "staff/save-call-history";
 }

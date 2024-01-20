@@ -107,10 +107,6 @@ class LoginScreenController extends GetxController {
             PreferenceManager().setRole(userRest.data!.role ?? '');
             log("userRest.data!.role----->${userRest.data!.role}");
             if (userRest.data!.role == "user") {
-              // Get.offAllNamed(Routes.homeScreen);
-
-              ///
-
               if (referCode == '') {
                 log("==1===homescreen===");
                 Get.offAllNamed(Routes.homeScreen);
@@ -130,9 +126,6 @@ class LoginScreenController extends GetxController {
               Get.offAllNamed(Routes.bottomBarScreen);
             }
             showAppSnackBar(AppString.loginSuccessfully);
-
-            ///input refer
-            // referralCodeController.referralCodeApi(referCode!);
 
             log("$result", name: "RESULT");
             log("${result.data}", name: "RESULT_DATA");
