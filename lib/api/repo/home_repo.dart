@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:talkangels/api/api_helper.dart';
 import 'package:talkangels/const/request_constant.dart';
 import 'package:talkangels/models/response_item.dart';
@@ -13,7 +11,6 @@ class HomeRepoAngels {
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getAngle;
 
     result = await BaseApiHelper.getRequest(requestUrl);
-    // log("result-----asasas------->${result}");
     return result;
   }
 
@@ -25,7 +22,6 @@ class HomeRepoAngels {
         AppUrls.BASE_URL + MethodNamesAngels.getSingleAngleDetails + angelId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
-    // log("result-----asasas------->${result}");
     return result;
   }
 
@@ -39,7 +35,6 @@ class HomeRepoAngels {
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.callAngle;
 
     result = await BaseApiHelper.postRequestToken(requestUrl, params);
-    // log("result------------>${result}");
     return result;
   }
 
@@ -51,7 +46,6 @@ class HomeRepoAngels {
       "amount": amount,
       "payment_id": paymentId,
     };
-    log("AAAAAAAAAAAAAAA   ${params}");
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.angleWallet;
 
@@ -68,7 +62,6 @@ class HomeRepoAngels {
         AppUrls.BASE_URL + MethodNamesAngels.getUserDetails + userId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
-    // log("result----getUserDetailsAPi-------->${result}");
     return result;
   }
 
@@ -78,7 +71,6 @@ class HomeRepoAngels {
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getRechargeList;
     result = await BaseApiHelper.getRequest(requestUrl);
-    // log("result----getAllRechargesApi-------->${result}");
     return result;
   }
 
@@ -88,7 +80,6 @@ class HomeRepoAngels {
     Map<String, dynamic> requestData = {
       "user_id": "${PreferenceManager().getId() ?? ''}",
       "refer_code": referCode,
-      // "refer_code": "Vul9Pygv"
     };
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.postReferralCode;
@@ -103,12 +94,24 @@ class HomeRepoAngels {
     Map<String, dynamic> requestData = {
       "user_id": "${PreferenceManager().getId() ?? ''}",
       "angel_id": angelId,
-      // "angel_id": "659cdf9a57a5087d111c47a4",
       "rating": rating,
       "comment": comment
     };
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.postRating;
+    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    return result;
+  }
+
+  /// Post Report a Problem
+  static Future<ResponseItem> postReportAProblemApi(String comment) async {
+    ResponseItem result;
+    Map<String, dynamic> requestData = {
+      "user": "${PreferenceManager().getId() ?? ''}",
+      "comment": comment,
+    };
+
+    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.postReportAProblem;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
     return result;
   }
@@ -154,9 +157,7 @@ class HomeRepoStaff {
     };
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.sendWithdrawRequest;
-
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
-
     return result;
   }
 
@@ -173,9 +174,7 @@ class HomeRepoStaff {
 
     String requestUrl =
         AppUrls.BASE_URL + MethodNamesStaff.activeStatus + userId;
-
     result = await BaseApiHelper.putActiveStatue(requestUrl, requestData);
-
     return result;
   }
 
@@ -193,9 +192,21 @@ class HomeRepoStaff {
       "minutes": minutes,
     };
     String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.addCallHistory;
-
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    return result;
+  }
 
+  /// Post Report a Problem _Staff
+  static Future<ResponseItem> postReportAProblemStaffApi(String comment) async {
+    ResponseItem result;
+    Map<String, dynamic> requestData = {
+      "user": "${PreferenceManager().getId() ?? ''}",
+      "comment": comment,
+    };
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.postReportProblemStaff;
+    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
     return result;
   }
 }

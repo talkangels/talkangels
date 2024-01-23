@@ -24,7 +24,6 @@ class MyWalletScreen extends StatefulWidget {
 class _MyWalletScreenState extends State<MyWalletScreen> {
   MyWalletScreenController myWalletScreenController =
       Get.put(MyWalletScreenController());
-  // TextEditingController textFieldController = TextEditingController(text: "₹");
   TextEditingController textFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var walletBallance = Get.arguments["walletBallance"] ?? '';
@@ -33,7 +32,6 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
   @override
   void initState() {
     super.initState();
-
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
@@ -41,7 +39,6 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     razorpay.clear();
     textFieldController;
@@ -247,8 +244,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                               child: myWalletScreenController.isLoading == true
                                   ? const Center(
                                       child: CircularProgressIndicator(
-                                          color: whiteColor),
-                                    )
+                                          color: whiteColor))
                                   : AppString.proceed.regularLeagueSpartan(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600),

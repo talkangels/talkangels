@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:talkangels/ui/angels/main/drawer_pages/my_wallet_pages/my_wallet_screen.dart';
 import 'package:talkangels/ui/angels/main/drawer_pages/profile_pages/profile_screen.dart';
 import 'package:talkangels/ui/angels/main/drawer_pages/refer_earn_pages/refer_earn_screen.dart';
+import 'package:talkangels/ui/angels/main/drawer_pages/report_problem_pages/report_problem_screen.dart';
 import 'package:talkangels/ui/angels/main/home_pages/calling_screen.dart';
 import 'package:talkangels/ui/angels/main/home_pages/home_screen.dart';
 import 'package:talkangels/ui/angels/main/home_pages/person_details_screen.dart';
@@ -35,6 +36,7 @@ class Routes {
   static String referEarnScreen = "/referEarnScreen";
   static String callingScreen = "/callingScreen";
   static String allChargesScreen = "/allChargesScreen";
+  static String reportAProblemScreen = "/reportAProblemScreen";
 
   ///staff routes
 
@@ -62,6 +64,8 @@ class Routes {
     GetPage(name: referEarnScreen, page: () => const ReferEarnScreen()),
     GetPage(name: callingScreen, page: () => const CallingScreen()),
     GetPage(name: allChargesScreen, page: () => const AllChargesScreen()),
+    GetPage(
+        name: reportAProblemScreen, page: () => const ReportAProblemScreen()),
 
     ///staff
 

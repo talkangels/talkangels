@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
 import 'package:talkangels/const/extentions.dart';
@@ -45,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   (h * 0.05).addHSpace(),
                   AppShowProfilePic(
-                    image: AppAssets.blankProfile,
+                    image: '',
                     radius: w * 0.35,
                     onTap: () {},
                   ),

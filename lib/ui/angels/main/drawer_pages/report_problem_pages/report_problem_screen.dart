@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/const/extentions.dart';
-import 'package:talkangels/ui/staff/constant/app_string.dart';
-import 'package:talkangels/ui/staff/main/report_problem_pages/report_problem_screen_controller.dart';
-import 'package:talkangels/ui/staff/widgets/app_appbar.dart';
-import 'package:talkangels/ui/staff/constant/app_color.dart';
-import 'package:talkangels/ui/staff/widgets/app_button.dart';
+import 'package:talkangels/ui/angels/constant/app_color.dart';
+import 'package:talkangels/ui/angels/constant/app_string.dart';
+import 'package:talkangels/ui/angels/main/drawer_pages/report_problem_pages/report_a_problem_screen_controller.dart';
+import 'package:talkangels/ui/angels/widgets/app_app_bar.dart';
+import 'package:talkangels/ui/angels/widgets/app_button.dart';
 
-class ReportProblemScreen extends StatefulWidget {
-  const ReportProblemScreen({Key? key}) : super(key: key);
+class ReportAProblemScreen extends StatefulWidget {
+  const ReportAProblemScreen({Key? key}) : super(key: key);
 
   @override
-  State<ReportProblemScreen> createState() => _ReportProblemScreenState();
+  State<ReportAProblemScreen> createState() => _ReportAProblemScreenState();
 }
 
-class _ReportProblemScreenState extends State<ReportProblemScreen> {
-  ReportProblemScreenController reportProblemScreenController =
-      Get.put(ReportProblemScreenController());
+class _ReportAProblemScreenState extends State<ReportAProblemScreen> {
+  ReportAProblemScreenController reportAProblemScreenController =
+      Get.put(ReportAProblemScreenController());
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    super.dispose();
+    reportAProblemScreenController.textFieldController;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,7 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
         bottom: PreferredSize(
             preferredSize: const Size(300, 50), child: 1.0.appDivider()),
       ),
-      body: GetBuilder<ReportProblemScreenController>(
+      body: GetBuilder<ReportAProblemScreenController>(
         builder: (controller) {
           return Container(
             height: h,
@@ -74,17 +80,22 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
                     ),
                     (h * 0.1).addHSpace(),
                     AppButton(
-                      color: appColorBlue,
+                      color: appColorGreen,
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
-                          ///  Post Report A Problem Api _STAFF
-                          controller.sendReportAProblem(
+                          ///  Post Report A Problem Api
+                          reportAProblemScreenController.sendReportAProblem(
                               controller.textFieldController.toString());
                           Get.back();
                         }
                       },
-                      child: AppString.submit.regularLeagueSpartan(
-                          fontSize: 14, fontWeight: FontWeight.w700),
+                      child: controller.isLoading == true
+                          ? const Center(
+                              child:
+                                  CircularProgressIndicator(color: whiteColor),
+                            )
+                          : AppString.submit.regularLeagueSpartan(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),

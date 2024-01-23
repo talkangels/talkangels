@@ -17,14 +17,10 @@ class PersonDetailsScreenController extends GetxController {
   getSingleAngelData(String angelId) async {
     isDetailsLoading = true;
     ResponseItem result = await HomeRepoAngels.getSingleAngleAPi(angelId);
-    // log("response=====>>   $result");
-    log("result.statusCode=====>>   ${result.statusCode}");
 
     if (result.status) {
       try {
         getSingleAngelResModel = GetSingleAngelResModel.fromJson(result.data);
-        log("SUCCESS===getAllRechargeResModel====>   ${getSingleAngelResModel.data}");
-
         isDetailsLoading = false;
         update();
       } catch (e) {
@@ -42,16 +38,10 @@ class PersonDetailsScreenController extends GetxController {
 
     ResponseItem result =
         await HomeRepoAngels.postRatingApi(angelId, rating, comment);
-
-    log("RESULT====== $result");
-    log("RESPONSE=====>>>>>   ${result.statusCode}");
     if (result.status) {
       try {
         addRatingResModel = AddRatingResModel.fromJson(result.data);
-        log("SUCCESS===getAllRechargeResModel====>   ${addRatingResModel.message}");
-
         await getSingleAngelData(angelId);
-        // homeController.homeAngleApi();
         Get.back();
         isLoading = false;
         update();

@@ -68,18 +68,15 @@ class BaseApiHelper {
         ResponseItem(status: false, message: "Something went wrong.");
 
     dynamic data = json.decode(response.body);
-    log("responseCode---: ${response.statusCode}", name: "response");
     if (response.statusCode == 200 || response.statusCode == 201) {
       result.status = true;
       result.data = data;
-      log("Success");
     } else if (response.statusCode == 400) {
       showAppSnackBar("Invalid Status");
       Get.back();
     } else {
       result.message = data["msg"] ?? "";
-      print("result.message --> ${result.message}");
-      log("response: $data");
+      log("result.message --> ${result.message}");
     }
 
     return result;

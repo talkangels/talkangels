@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 class AppUrls {
   static const BASE_URL = "https://talkangels-api.vercel.app/api/v1/";
 }
@@ -14,6 +12,7 @@ class MethodNamesAngels {
   static const getRechargeList = "user/all-recharge";
   static const postReferralCode = "user/apply-refer-code";
   static const postRating = "user/add-rating";
+  static const postReportAProblem = "user/add-report";
 }
 
 class MethodNamesStaff {
@@ -22,4 +21,5 @@ class MethodNamesStaff {
   static const sendWithdrawRequest = "staff/send-withdraw-request";
   static const activeStatus = "staff/update-active-status/";
   static const addCallHistory = "staff/save-call-history";
+  static const postReportProblemStaff = "staff/add-report";
 }

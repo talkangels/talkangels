@@ -66,24 +66,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 (h * 0.15).addHSpace(),
                 AppButton(
                   onTap: () async {
-                    // if (Get.arguments != null) {
-                    //   referCode = Get.arguments["refer_code"] ?? '';
-                    //   log("refer_code=====>>>    ${Get.arguments["refer_code"] ?? ''}");
-                    // }
-                    //
-                    // /// whatsapp login
-                    // await loginScreenController.startOtpless(referCode);
+                    if (Get.arguments != null) {
+                      referCode = Get.arguments["refer_code"] ?? '';
+                      log("refer_code=====>>>    ${Get.arguments["refer_code"] ?? ''}");
+                    }
+
+                    /// whatsapp login
+                    await loginScreenController.startOtpless(referCode);
 
                     ///
                     ///
                     /// API signIn _STAFF
-                    await loginScreenController.signIn(
-                        name: "Test11",
-                        mNo: "1234567890",
-                        cCode: "91",
-                        fcm:
-                            PreferenceManager().getFCMNotificationToken() ?? '',
-                        referCode: referCode);
+                    // await loginScreenController.signIn(
+                    //     name: "Test11",
+                    //     mNo: "1234567890",
+                    //     cCode: "91",
+                    //     fcm:
+                    //         PreferenceManager().getFCMNotificationToken() ?? '',
+                    //     referCode: referCode);
                   },
                   child: Row(
                     children: [

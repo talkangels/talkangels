@@ -4,8 +4,8 @@ import 'package:talkangels/ui/angels/constant/app_color.dart';
 class AppTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String? labelText;
-  final validator;
-  final onChanged;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
 
   const AppTextFormField({
     super.key,

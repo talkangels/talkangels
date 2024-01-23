@@ -1,5 +1,6 @@
 class AppString {
   static const talkAngels = "TALK ANGELS";
+  static const online = "Online";
   static const somethingWentWrong = "Something Went Wrong";
   static const loginSuccessfully = "Login Successfully";
   static const pleaseInstallTheWhatsapp = "Please install the whatsapp";
@@ -26,7 +27,6 @@ class AppString {
   static const logOut = "Log Out";
   static const cancel = "Cancel";
   static const myProfile = "My Profile";
-  static const editProfile = "Edit Profile";
   static const myWallet = "My Wallet";
   static const referEarn = "Refer & Earn";
   static const reportAProblem = "Report a Problem";
@@ -40,10 +40,7 @@ class AppString {
   static const personalDetails = "Personal Details";
   static const customerRating = "Customer Rating";
   static const charges = "Charges";
-  static const online = "Online";
   static const name = "Name";
-  static const mobileNumber = "Mobile Number";
-  static const saveChanges = "Save Changes";
   static const exploreTheFeaturesOfTALKANGELWallet =
       "Explore the features of TALKANGEL Wallet!";
   static const safetyOfPaymentTransfer = "Safety of Payment Transfer";
@@ -55,6 +52,7 @@ class AppString {
   static const enterAmount = "Enter Amount";
   static const proceed = "Proceed";
   static const success = "Success!";
+
   static const yourSelectedTalktimeRechargeIsDoneSuccessfullyContinueUsingyourFavouriteAppHaveaNiceDay =
       "Your selected Talktime recharge is done successfully! Continue using your favourite app. Have a Nice Day!";
   static const amountSuccessfullyAddedInWalletContinueUsingYourFavouriteAppHaveANiceDay =
@@ -62,7 +60,6 @@ class AppString {
   static const okayThanks = "Okay, Thanks!";
   static const together = "TOGETHER,";
   static const weAreGoingFurther = "WE ARE GOING FURTHER!";
-  static const referalCode_SpreadtheLove = "#SPRESDTHELOVE";
   static const shareThisLinkWithYourFriendAndAfterTheyInstallBothOfYouwillGet50CashRewards =
       "Share this link with your friend and after they install, both of you will get 50 cash rewards.";
   static const toUnderstandHowReferralWorksViewInvitationRules =
@@ -72,8 +69,6 @@ class AppString {
       "Friends registered\nsuccessfully";
   static const earnCashRewards = "Earn Cash\nRewards";
   static const referNow = "Refer Now!";
-  static const rechargeDescriptionRechargeDescriptionRechargeDescription =
-      "Recharge Description Recharge Description Recharge Description";
   static const sucess = "Success! 🥳";
   static const doYouWantToExit = "Do you want to exit?";
   static const areYouSureYouReallyWantToLogOutFromyourTalkAngelAccount =
@@ -85,8 +80,6 @@ class AppString {
       "Are you sure you really want to\nlog out from your TalkAngel\naccount?";
   static const deleteAccountDescription =
       "Do you really want to delete your TalkAngel account? If you do, all your current information will be gone forever, and you won't be able to get it back!";
-  static const yourSelectedTalktimeRechargeIsDoneSuccessfullyContinueUsingYourFavouriteAppHaveaNiceDay =
-      "Your selected Talktime recharge is done successfully! Continue using your favourite app. Have a Nice Day!";
   static const allRecharges = "All Recharges";
   static const apply = "Apply";
   static const add = "Add";
@@ -100,13 +93,11 @@ class AppString {
   static const offerTextLast = "% with this offer";
   static const accessingYourAccountHoldTight =
       "Accessing your account, hold tight...";
-  static const hazelKaur = "Hazel Kaur";
   static const calling = "Calling...";
   static const mute = "Mute";
   static const bluetooth = "Bluetooth";
   static const hold = "Hold";
   static const paymentFaild = "Payment Faild";
-  static const description = "description";
   static const pleaseRatingThisCall = "Please Rating This Call";
   static const submit = "Submit";
   static const noReviewsYet = "No reviews yet";
@@ -114,11 +105,12 @@ class AppString {
   static const perMin = "Per min";
   static const pleaseEnterAmount = "Please Enter Amount";
   static const noDataFound = "No Data Found!";
+  static const pleaseEnterYourProblem = "Please Enter Your Problem";
+  static const gender = "Gender";
+  static const age = "Age";
 
   ///
-  static const appLink =
-      "https://talkangel.app.link/ScdYnkIsx dfgb fgbh fgfgg fg fgg fg gfh fgh";
-  static const jeniliaCork = "Jenilia Cork";
+
   static const F25Yrs3yrsofExperience = "F-25 Yrs • 3 yrs of Experience";
   static const ratings = "4.2(1424 ratings)";
   static const rating = "4.9";

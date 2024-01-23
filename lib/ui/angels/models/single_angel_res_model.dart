@@ -46,7 +46,7 @@ class Data {
   int? charges;
   String? fcmToken;
   int? countryCode;
-  int? totalRating;
+  double? totalRating;
   String? listingHours;
   List<Review>? reviews;
 
@@ -85,7 +85,7 @@ class Data {
         charges: json["charges"],
         fcmToken: json["fcmToken"],
         countryCode: json["country_code"],
-        totalRating: json["total_rating"],
+        totalRating: json["total_rating"]?.toDouble(),
         listingHours: json["listing_hours"],
         reviews: json["reviews"] == null
             ? []

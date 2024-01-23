@@ -6,9 +6,9 @@ import 'package:talkangels/const/extentions.dart';
 showAppSnackBar(
   String tittle,
 ) {
-  return Get.showSnackbar(GetSnackBar(
+  return Get.showSnackbar(
+    GetSnackBar(
       messageText: Text(
-        // "Email or password is wrong",
         tittle,
         style: const TextStyle(color: Colors.white),
       ),
@@ -29,7 +29,9 @@ showAppSnackBar(
         ),
       ),
       backgroundColor: textFieldBorderColor,
-      duration: const Duration(seconds: 3)));
+      duration: const Duration(seconds: 3),
+    ),
+  );
 }
 
 showBottomSnackBar(String tittle) {

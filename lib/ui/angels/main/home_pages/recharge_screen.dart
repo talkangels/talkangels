@@ -23,15 +23,11 @@ class AllChargesScreen extends StatefulWidget {
 class _AllChargesScreenState extends State<AllChargesScreen> {
   RechargeScreenController rechargeScreenController =
       Get.put(RechargeScreenController());
-  TextEditingController searchController = TextEditingController();
-  List payment = [79, 129, 149, 179, 249];
-  List paymentDiscount = [49, 99, 119, 149, 219];
   int? indexC;
   Razorpay razorpay = Razorpay();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
@@ -41,7 +37,6 @@ class _AllChargesScreenState extends State<AllChargesScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     razorpay.clear();
   }
@@ -76,11 +71,10 @@ class _AllChargesScreenState extends State<AllChargesScreen> {
                     width: w,
                     decoration: const BoxDecoration(gradient: appGradient),
                     child: controller.getAllRechargeResModel.data!.isEmpty
-                        ? const Center(
-                            child: Text(
-                            'No Data Found! ',
-                            style: TextStyle(color: Colors.white),
-                          ))
+                        ? Center(
+                            child: AppString.noDataFound.leagueSpartanfs20w600(
+                                fontColor: greyFontColor,
+                                fontWeight: FontWeight.w700))
                         : SafeArea(
                             child: Column(
                               children: [
@@ -298,7 +292,6 @@ class _AllChargesScreenState extends State<AllChargesScreen> {
                                                                                 14,
                                                                             fontWeight:
                                                                                 FontWeight.w700),
-                                                                        // "${100 - (int.parse(controller.getAllRechargeResModel.data?[index].discountAmount! ?? '')) * 100 / (int.parse(controller.getAllRechargeResModel.data![index].amount ?? ''))}".regularLeagueSpartan(
                                                                         "${100 - (controller.getAllRechargeResModel.data?[index].discountAmount!)! * 100 / (controller.getAllRechargeResModel.data![index].amount!)}".regularLeagueSpartan(
                                                                             fontColor:
                                                                                 appColorGreen,
@@ -361,15 +354,6 @@ class _AllChargesScreenState extends State<AllChargesScreen> {
                                                                         } catch (e) {
                                                                           log("ERROR==RAZORPAY   $e");
                                                                         }
-
-                                                                        ///
-                                                                        // Get.back();
-                                                                        // appDialogBox(
-                                                                        //     context,
-                                                                        //     h: h,
-                                                                        //     w: w,
-                                                                        //     barrierDismissible:
-                                                                        //         false);
                                                                       },
                                                                       child: AppString.add.regularLeagueSpartan(
                                                                           fontSize:

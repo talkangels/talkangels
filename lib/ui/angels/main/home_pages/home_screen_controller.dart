@@ -31,7 +31,6 @@ class HomeScreenController extends GetxController {
     isLoading = true;
     update();
     ResponseItem item = await HomeRepoAngels.getAngleAPi();
-    log("item---------->${item.data}");
     if (item.status == true) {
       try {
         resModel = GetAngleListResModel.fromJson(item.data);
@@ -77,7 +76,7 @@ class HomeScreenController extends GetxController {
     update();
     log("angleId---------->$angleId");
     ResponseItem item = await HomeRepoAngels.callApi(angleId, userId);
-    log("item---------->${item.data}");
+    // log("item---------->${item.data}");
     if (item.status == true) {
       try {
         angleCallResModel = AngleCallResModel.fromJson(item.data);
@@ -96,8 +95,6 @@ class HomeScreenController extends GetxController {
         isCallLoading = false;
         update();
       }
-
-      // log("res----->${resModel.data}");
     } else {
       isCallLoading = false;
       update();
@@ -110,7 +107,6 @@ class HomeScreenController extends GetxController {
     isUserLoading = true;
     update();
     ResponseItem item = await HomeRepoAngels.getUserDetailsAPi();
-    log("item---------->${item.data}");
     if (item.status == true) {
       try {
         userDetailsResModel = UserDetailsResponseModel.fromJson(item.data);
@@ -121,8 +117,6 @@ class HomeScreenController extends GetxController {
         isUserLoading = false;
         update();
       }
-
-      // log("res----->${resModel.data}");
     } else {
       isUserLoading = false;
       update();

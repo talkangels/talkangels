@@ -1,24 +1,24 @@
 import 'dart:convert';
 
-AddRatingResModel addRatingResModelFromJson(String str) =>
-    AddRatingResModel.fromJson(json.decode(str));
+ReportAProblemResModel reportAProblemResModelFromJson(String str) =>
+    ReportAProblemResModel.fromJson(json.decode(str));
 
-String addRatingResModelToJson(AddRatingResModel data) =>
+String reportAProblemResModelToJson(ReportAProblemResModel data) =>
     json.encode(data.toJson());
 
-class AddRatingResModel {
+class ReportAProblemResModel {
   int? status;
   bool? success;
   String? message;
 
-  AddRatingResModel({
+  ReportAProblemResModel({
     this.status,
     this.success,
     this.message,
   });
 
-  factory AddRatingResModel.fromJson(Map<String, dynamic> json) =>
-      AddRatingResModel(
+  factory ReportAProblemResModel.fromJson(Map<String, dynamic> json) =>
+      ReportAProblemResModel(
         status: json["status"],
         success: json["success"],
         message: json["message"],

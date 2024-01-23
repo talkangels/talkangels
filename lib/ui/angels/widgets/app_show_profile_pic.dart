@@ -8,6 +8,7 @@ class AppShowProfilePic extends StatelessWidget {
   final double? radius;
   final bool? borderShow;
   final String image;
+  final bool? assets;
 
   const AppShowProfilePic({
     super.key,
@@ -16,6 +17,7 @@ class AppShowProfilePic extends StatelessWidget {
     this.radius,
     this.borderShow = true,
     required this.image,
+    this.assets = true,
   });
 
   @override
@@ -41,12 +43,14 @@ class AppShowProfilePic extends StatelessWidget {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: assetsImage2(image),
-                  fit: BoxFit.fill,
-                )),
+            decoration: const BoxDecoration(
+                color: containerColor, shape: BoxShape.circle),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(radius ?? 200),
+              child: image == "" || image == "0"
+                  ? assetImage(AppAssets.blankProfile)
+                  : Image.network(image, fit: BoxFit.cover),
+            ),
           ),
         ),
       ),

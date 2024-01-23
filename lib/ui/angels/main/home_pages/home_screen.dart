@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   titleSpacing: w * 0.06,
                   action: [
                     AppShowProfilePic(
-                      image: AppAssets.blankProfile,
+                      image: '',
                       onTap: () {
                         Get.toNamed(Routes.profileScreen);
                       },
@@ -112,9 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: controller.searchDataList.isEmpty
                             ? Center(
                                 child: AppString.noDataFound
-                                    .regularLeagueSpartan(
+                                    .leagueSpartanfs20w600(
                                         fontColor: greyFontColor,
-                                        fontSize: 20,
                                         fontWeight: FontWeight.w700))
                             : ListView.builder(
                                 shrinkWrap: true,
@@ -152,20 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               children: [
                                                 AppShowProfilePic(
                                                     image: controller
-                                                                    .searchDataList[
-                                                                        index]
-                                                                    .image ==
-                                                                null ||
-                                                            controller
-                                                                    .searchDataList[
-                                                                        index]
-                                                                    .image ==
-                                                                ""
-                                                        ? AppAssets.blankProfile
-                                                        : controller
                                                             .searchDataList[
                                                                 index]
-                                                            .image!,
+                                                            .image ??
+                                                        '',
                                                     onTap: () {
                                                       showDialog(
                                                         context: context,
@@ -331,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .searchDataList[
                                                                   index]
                                                               .activeStatus ==
-                                                          "Online"
+                                                          AppString.online
                                                       ? const CircleAvatar(
                                                           backgroundColor:
                                                               containerColor,
@@ -364,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontWeight:
                                                             FontWeight.w500),
                                                 (h * 0.005).addHSpace(),
-                                                AppString.F25Yrs3yrsofExperience
+                                                "${controller.searchDataList[index].gender?[0] ?? ''}-${controller.searchDataList[index].age ?? ''} Yrs • 0 yrs of Experience"
                                                     .regularLeagueSpartan(
                                                         fontColor: whiteColor,
                                                         fontSize: 10),
@@ -527,14 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: TextFormField(
                               cursorColor: blackColor,
                               keyboardType: TextInputType.number,
-                              // onChanged: (value) {
-                              //   setState(() {
-                              //     homeController.searchController.text = value;
-                              //   });
-                              // },
-                              // controller: homeController.searchController,
                               controller: talkTimeController,
-
                               style: const TextStyle(
                                   color: blackColor,
                                   fontSize: 16,
@@ -666,7 +648,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       AppShowProfilePic(
-                        image: AppAssets.blankProfile,
+                        image: '',
                         onTap: () {},
                         radius: w * 0.18,
                       ),
@@ -724,6 +706,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: AppString.reportAProblem,
                   onTap: () {
                     closeDrawer();
+                    Get.toNamed(Routes.reportAProblemScreen);
                   },
                   image: AppAssets.reportProblemIcon,
                 ),

@@ -12,14 +12,9 @@ class RechargeScreenController extends GetxController {
     isLoading = true;
 
     ResponseItem item = await HomeRepoAngels.getAllRechargesApi();
-    log("item---------->${item.status}");
-    log("item---------->${item.data}");
-
     if (item.status == true) {
       try {
         getAllRechargeResModel = GetAllRechargeResModel.fromJson(item.data);
-        // log("SUCCESS===getAllRechargeResModel====>   ${getAllRechargeResModel.data}");
-
         isLoading = false;
         update();
       } catch (e) {
