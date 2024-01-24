@@ -8,7 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:talkangels/const/app_routes.dart';
-import 'package:talkangels/ui/angels/utils/notification_service.dart';
+import 'package:talkangels/ui/staff/utils/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,12 +18,10 @@ void main() async {
   NotificationService().requestPermissions();
 
   NotificationService().getFCMToken();
-  FirebaseMessaging.onBackgroundMessage(
-      NotificationService.firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(NotificationService.firebaseMessagingBackgroundHandler);
 
   await NotificationService.flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(NotificationService().channel);
 
   NotificationService.getInitialMsg();
@@ -40,14 +38,12 @@ void main() async {
   );
 
   NotificationService.onMsgOpen();
-  NotificationService.flutterLocalNotificationsPlugin
-      .initialize(initializationSettings, onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
+  NotificationService.flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) {
     log('notificationResponse----- ${notificationResponse.payload}');
   });
 
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 
   runApp(const MyApp());
 }

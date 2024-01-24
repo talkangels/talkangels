@@ -20,8 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  LoginScreenController loginScreenController =
-      Get.put(LoginScreenController());
+  LoginScreenController loginScreenController = Get.put(LoginScreenController());
 
   String? phoneNumber;
   String? code;
@@ -55,14 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 (h * 0.09).addHSpace(),
-                svgAssetImage(AppAssets.appLogo,
-                    height: w * 0.25, width: w * 0.25),
+                svgAssetImage(AppAssets.appLogo, height: w * 0.25, width: w * 0.25),
                 AppString.talkToPeopleWithSimilar
-                    .regularLeagueSpartan(
-                        fontWeight: FontWeight.w300, fontSize: 18)
+                    .regularLeagueSpartan(fontWeight: FontWeight.w300, fontSize: 18)
                     .paddingOnly(top: h * 0.01),
-                AppString.experiences.regularLeagueSpartan(
-                    fontSize: 22, fontWeight: FontWeight.w600),
+                AppString.experiences.regularLeagueSpartan(fontSize: 22, fontWeight: FontWeight.w600),
                 (h * 0.15).addHSpace(),
                 AppButton(
                   onTap: () async {
@@ -77,12 +73,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     ///
                     ///
                     /// API signIn _STAFF
+                    // await loginScreenController.signIn(
+                    //     name: "Test11",
+                    //     mNo: "1234567890",
+                    //     cCode: "91",
+                    //     fcm:
+                    //         PreferenceManager().getFCMNotificationToken() ?? '',
+                    //     referCode: referCode);
+                    // await loginScreenController.signIn(
+                    //     name: "Ravina Savaliya",
+                    //     mNo: "9429089905",
+                    //     cCode: "91",
+                    //     fcm: PreferenceManager().getFCMNotificationToken() ?? '',
+                    //     referCode: referCode);
                     await loginScreenController.signIn(
-                        name: "Test11",
-                        mNo: "1234567890",
+                        name: "Codeline infotech",
+                        mNo: "8155017575",
                         cCode: "91",
-                        fcm:
-                            PreferenceManager().getFCMNotificationToken() ?? '',
+                        fcm: PreferenceManager().getFCMNotificationToken() ?? '',
                         referCode: referCode);
                   },
                   child: Row(
@@ -97,14 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    AppString.haveA
-                        .regularLeagueSpartan(fontWeight: FontWeight.w200),
+                    AppString.haveA.regularLeagueSpartan(fontWeight: FontWeight.w200),
                     InkWell(
                       onTap: () {
                         Get.toNamed(Routes.referralCodeScreen);
                       },
-                      child: AppString.referralCode_
-                          .regularLeagueSpartan(fontColor: appColorGreen),
+                      child: AppString.referralCode_.regularLeagueSpartan(fontColor: appColorGreen),
                     ),
                   ],
                 ),
@@ -112,21 +118,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AppString.byClickingIAcceptThe
-                        .regularLeagueSpartan(fontWeight: FontWeight.w200),
+                    AppString.byClickingIAcceptThe.regularLeagueSpartan(fontWeight: FontWeight.w200),
                     InkWell(
                       onTap: () {},
-                      child: AppString.tAndC.regularLeagueSpartan(
-                          fontColor: appColorGreen,
-                          textDecoration: TextDecoration.underline),
+                      child: AppString.tAndC
+                          .regularLeagueSpartan(fontColor: appColorGreen, textDecoration: TextDecoration.underline),
                     ),
-                    AppString.and
-                        .regularLeagueSpartan(fontWeight: FontWeight.w200),
+                    AppString.and.regularLeagueSpartan(fontWeight: FontWeight.w200),
                     InkWell(
                       onTap: () {},
-                      child: AppString.privacyPolicy.regularLeagueSpartan(
-                          fontColor: appColorGreen,
-                          textDecoration: TextDecoration.underline),
+                      child: AppString.privacyPolicy
+                          .regularLeagueSpartan(fontColor: appColorGreen, textDecoration: TextDecoration.underline),
                     ),
                   ],
                 ),
@@ -169,9 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: svgAssetImage(AppAssets.appLogo,
-                                color: appColorGreen,
-                                height: w * 0.25,
-                                width: w * 0.25),
+                                color: appColorGreen, height: w * 0.25, width: w * 0.25),
                           ),
                         ),
                         Positioned(
@@ -182,8 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: SizedBox(
                               height: 100,
                               width: 100,
-                              child: Lottie.asset(AppAssets.animationLoading,
-                                  height: 200, width: 200, fit: BoxFit.cover)),
+                              child:
+                                  Lottie.asset(AppAssets.animationLoading, height: 200, width: 200, fit: BoxFit.cover)),
                         ),
                       ],
                     ),
@@ -194,14 +194,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: h * 0.06,
                       width: w * 0.65,
                       padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-                      decoration: BoxDecoration(
-                          color: logInButtonColor,
-                          borderRadius: BorderRadius.circular(60)),
+                      decoration: BoxDecoration(color: logInButtonColor, borderRadius: BorderRadius.circular(60)),
                       child: Center(
                         child: AppString.accessingYourAccountHoldTight
-                            .regularLeagueSpartan(
-                                fontSize: 14,
-                                textOverflow: TextOverflow.ellipsis),
+                            .regularLeagueSpartan(fontSize: 14, textOverflow: TextOverflow.ellipsis),
                       ),
                     ),
                   ),

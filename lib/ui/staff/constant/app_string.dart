@@ -41,6 +41,11 @@ class AppString {
   static const reportAProblem = "Report a Problem";
   static const deleteAccount = "Delete Account";
   static const logOut = "Log Out";
+  static const areYouSure = "Are you sure?";
+  static const deleteAccountDescription =
+      "Do you really want to delete your TalkAngel account? If you do, all your current information will be gone forever, and you won't be able to get it back!";
+  static const yesImSure = "Yes, I’m Sure";
+  static const noGoBack = "No, Go back";
   static const doYouWantToExit = "Do you want to exit?";
   static const areYouSureYouReallyWantToLOgOutFromyourTalkAngelAaccount =
       "Are you sure you really want to log out from\nyour TalkAngel account?";
@@ -88,7 +93,6 @@ class AppString {
   static const youHaveAlreadySentWithdrawRequest =
       "There are pending withdrawal requests. Please wait for approval or rejection";
   static const pleaseEnterYourProblem = "Please Enter Your Problem";
-  static const unknownError = "Unknown Error";
 
   ///
   static const rupies = "₹574";

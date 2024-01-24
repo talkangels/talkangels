@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -7,51 +8,95 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talkangels/const/extentions.dart';
+import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
 import 'package:talkangels/ui/angels/main/home_pages/person_details_screen_controller.dart';
 import 'package:talkangels/ui/angels/models/angle_list_res_model.dart';
 import 'package:talkangels/ui/angels/widgets/app_button.dart';
+import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
 
 class CallingScreenController extends GetxController {
-  late final RtcEngine engine;
+  RtcEngine? engine;
   String channelId = "";
   String appId = "";
   String token = "";
+  String staffId = "";
   AngleData? selectedAngle;
+  Timer? timer;
+  bool isUserJoined = false;
+  static HomeController homeController = Get.put(HomeController());
+
   setAngle(AngleData value) {
     selectedAngle = value;
     update();
   }
 
-  setAgoraDetails(String channellId, String apppId, String tokenn) {
+  setCallRecieveOrNot() {
+    timer = Timer(
+      Duration(seconds: 35),
+      () async {
+        if (isUserJoined == true) {
+          timer!.cancel();
+        } else {
+          rejectCall();
+          leaveChannel();
+          Get.back();
+        }
+      },
+    );
+  }
+
+  rejectCall() async {
+    await homeController.rejectCall(selectedAngle!.id!, PreferenceManager().getId(), 'staff');
+    await homeController.addCallHistory(PreferenceManager().getId(), selectedAngle!.id!, 'reject', '0');
+  }
+
+  setAgoraDetails(
+    String channellId,
+    String apppId,
+    String tokenn,
+  ) {
     channelId = channellId;
     appId = apppId;
     token = tokenn;
+
+    setCallRecieveOrNot();
     update();
   }
 
-  bool isJoined = false,
-      isConnect = false,
-      openMicrophone = true,
-      enableSpeakerphone = false,
-      playEffect = false;
+  bool isJoined = false, isConnect = false, openMicrophone = true, enableSpeakerphone = false, playEffect = false;
   bool enableInEarMonitoring = false;
-  double recordingVolume = 100,
-      playbackVolume = 100,
-      inEarMonitoringVolume = 100;
+  double recordingVolume = 100, playbackVolume = 100, inEarMonitoringVolume = 100;
   TextEditingController channelIdController = TextEditingController();
-  ChannelProfileType channelProfileType =
-      ChannelProfileType.channelProfileCommunication;
+  ChannelProfileType channelProfileType = ChannelProfileType.channelProfileCommunication;
   late final RtcEngineEventHandler rtcEngineEventHandler;
 
   Future<void> initEngine() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await Permission.microphone.request();
+    }
     engine = createAgoraRtcEngine();
-    await engine.initialize(RtcEngineContext(
+    await engine!.initialize(RtcEngineContext(
       appId: appId,
+      channelProfile: ChannelProfileType.channelProfileCommunication,
     ));
-    joinChannel();
+    await engine!.enableAudio();
+    // await engine!.setEnableSpeakerphone(false);
+    await engine!.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await engine!.setAudioProfile(
+      profile: AudioProfileType.audioProfileDefault,
+      scenario: AudioScenarioType.audioScenarioGameStreaming,
+    );
+    await engine!.joinChannel(
+        token: token,
+        channelId: channelId,
+        uid: 0,
+        options: const ChannelMediaOptions(
+          channelProfile: ChannelProfileType.channelProfileCommunication,
+          clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        ));
     rtcEngineEventHandler = RtcEngineEventHandler(
       onError: (ErrorCodeType err, String msg) {
         log("err----->$err  $msg");
@@ -64,14 +109,21 @@ class CallingScreenController extends GetxController {
       },
       onLeaveChannel: (RtcConnection connection, RtcStats stats) {
         isJoined = false;
-
+        leaveChannel();
+        Get.back();
+        log('remove----111');
         update();
+      },
+      onUserOffline: (connection, remoteUid, reason) {
+        log('remove----222');
+        leaveChannel();
+        Get.back();
       },
       onUserJoined: (connection, remoteUid, elapsed) async {
         log('user join  ${remoteUid}');
-
-        DeviceInfo info = await engine.getAudioDeviceInfo();
-        log("info----->${info.isLowLatencyAudioSupported}");
+        isUserJoined = true;
+        update();
+        log('localUid----${connection.localUid}');
       }, /*onAudioDeviceVolumeChanged: (deviceType, volume, muted) {
         log("muted----->${muted}");
         log("deviceType----->${deviceType}");
@@ -79,34 +131,15 @@ class CallingScreenController extends GetxController {
       },*/
     );
 
-    engine.registerEventHandler(rtcEngineEventHandler);
+    engine!.registerEventHandler(rtcEngineEventHandler);
 
-    await engine.enableAudio();
-    // await engine!.setEnableSpeakerphone(false);
-    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await engine.setAudioProfile(
-      profile: AudioProfileType.audioProfileDefault,
-      scenario: AudioScenarioType.audioScenarioGameStreaming,
-    );
     // update();
   }
 
   joinChannel() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      await Permission.microphone.request();
-    }
-    if (defaultTargetPlatform == TargetPlatform.android) {
       await Permission.camera.request();
     }
-    await engine.joinChannel(
-        token: token,
-        channelId: channelId,
-        uid: 0,
-        options: ChannelMediaOptions(
-          channelProfile: channelProfileType,
-          enableAudioRecordingOrPlayout: true,
-          clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        ));
   }
 
   @override
@@ -116,13 +149,13 @@ class CallingScreenController extends GetxController {
   }
 
   leaveChannel() async {
-    PersonDetailsScreenController personDetailsScreenController =
-        Get.put(PersonDetailsScreenController());
+    PersonDetailsScreenController personDetailsScreenController = Get.put(PersonDetailsScreenController());
 
     TextEditingController ratingController = TextEditingController();
     String? rating;
 
-    await engine.leaveChannel();
+    // await engine!.release();
+    await engine!.leaveChannel();
 
     isJoined = false;
     isConnect = false;
@@ -150,10 +183,8 @@ class CallingScreenController extends GetxController {
               width: Get.width * 0.9,
               child: Column(
                 children: [
-                  AppString.pleaseRatingThisCall.regularLeagueSpartan(
-                      fontColor: blackColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800),
+                  AppString.pleaseRatingThisCall
+                      .regularLeagueSpartan(fontColor: blackColor, fontSize: 24, fontWeight: FontWeight.w800),
                   (Get.height * 0.03).addHSpace(),
                   RatingBar.builder(
                     initialRating: 0,
@@ -162,8 +193,7 @@ class CallingScreenController extends GetxController {
                     allowHalfRating: false,
                     itemCount: 5,
                     itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) =>
-                        const Icon(Icons.star, color: Colors.amber),
+                    itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.amber),
                     onRatingUpdate: (ratingValue) {
                       rating = ratingValue.toString().split('.').first;
                       log("$rating");
@@ -206,10 +236,8 @@ class CallingScreenController extends GetxController {
                             Get.back();
                             log("RATING_SKIP");
                           },
-                          child: AppString.skip.regularLeagueSpartan(
-                              fontColor: blackColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700),
+                          child: AppString.skip
+                              .regularLeagueSpartan(fontColor: blackColor, fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
                       (Get.width * 0.02).addWSpace(),
@@ -220,8 +248,7 @@ class CallingScreenController extends GetxController {
                           border: Border.all(color: redFontColor),
                           color: redFontColor,
                           onTap: () {
-                            if (rating != null ||
-                                ratingController.text.isNotEmpty) {
+                            if (rating != null || ratingController.text.isNotEmpty) {
                               /// Post Rating Api
                               personDetailsScreenController.addRatingApi(
                                 "${personDetailsScreenController.getSingleAngelResModel.data?.id}",
@@ -234,8 +261,7 @@ class CallingScreenController extends GetxController {
                               showAppSnackBar("Please Select Require Fields");
                             }
                           },
-                          child: AppString.submit.regularLeagueSpartan(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+                          child: AppString.submit.regularLeagueSpartan(fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       )
                     ],
@@ -251,56 +277,15 @@ class CallingScreenController extends GetxController {
 
   switchMicrophone() async {
     // await  engine.muteLocalAudioStream(!openMicrophone);
-    await engine.enableLocalAudio(!openMicrophone);
+    await engine!.enableLocalAudio(!openMicrophone);
     openMicrophone = !openMicrophone;
     update();
   }
 
   switchSpeakerphone() async {
-    await engine.setEnableSpeakerphone(!enableSpeakerphone);
+    await engine!.setEnableSpeakerphone(!enableSpeakerphone);
     enableSpeakerphone = !enableSpeakerphone;
     update();
-  }
-
-  switchEffect() async {
-    if (playEffect) {
-      await engine.stopEffect(1);
-      playEffect = false;
-      update();
-    } else {
-      final path =
-          (await engine.getAssetAbsolutePath("assets/Sound_Horizon.mp3"))!;
-      await engine.playEffect(
-          soundId: 1,
-          filePath: path,
-          loopCount: 0,
-          pitch: 1,
-          pan: 1,
-          gain: 100,
-          publish: true);
-      // .then((value) {
-
-      playEffect = true;
-      update();
-    }
-  }
-
-  onChangeInEarMonitoringVolume(double value) async {
-    inEarMonitoringVolume = value;
-    await engine.setInEarMonitoringVolume(inEarMonitoringVolume.toInt());
-    update();
-  }
-
-  toggleInEarMonitoring(value) async {
-    try {
-      await engine.enableInEarMonitoring(
-          enabled: value,
-          includeAudioFilters: EarMonitoringFilterType.earMonitoringFilterNone);
-      enableInEarMonitoring = value;
-      update();
-    } catch (e) {
-      // Do nothing
-    }
   }
 
   ///

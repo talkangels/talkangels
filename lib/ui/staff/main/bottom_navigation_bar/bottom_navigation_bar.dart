@@ -23,7 +23,7 @@ class _BottomBarScreenState extends State<BottomBarScreen>
   BottomBarController bottomBarController = Get.put(BottomBarController());
   HomeController homeController = Get.put(HomeController());
 
-  bool isActive = true;
+  final List<AppLifecycleState> _stateHistoryList = <AppLifecycleState>[];
 
   @override
   void initState() {
@@ -34,9 +34,15 @@ class _BottomBarScreenState extends State<BottomBarScreen>
       await homeController.activeStatusApi(AppString.online);
       await homeController.getStaffDetailApi();
     });
+
     WidgetsBinding.instance.addObserver(this);
+    if (WidgetsBinding.instance.lifecycleState != null) {
+      _stateHistoryList.add(WidgetsBinding.instance.lifecycleState!);
+    }
   }
 
+  /// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdDExIiwibW9iaWxlX251bWJlciI6MTIzNDU2Nzg5MCwicm9sZSI6InN0YWZmIiwic3RhdHVzIjoxLCJpYXQiOjE3MDU5ODgwMDh9.qRrkD1rr-KzmFDGkeJ7uXA0MYaaUzUFj_kBxRRqXJjU
+  /// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdDExIiwibW9iaWxlX251bWJlciI6MTIzNDU2Nzg5MCwicm9sZSI6InN0YWZmIiwic3RhdHVzIjoxLCJpYXQiOjE3MDU3NTExOTJ9.J6kvPNPcIZO5BOrq_ztm5Aqg-_K5_QJpq894Fnd8Xoo
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -45,33 +51,19 @@ class _BottomBarScreenState extends State<BottomBarScreen>
         log('appLifeCycleState inactive');
         break;
       case AppLifecycleState.resumed:
-        if (isActive == false) {
-          SchedulerBinding.instance.addPostFrameCallback((_) async {
-            await homeController.activeStatusApi(AppString.online);
-          });
-          setState(() {
-            isActive = true;
-          });
-        }
+        SchedulerBinding.instance.addPostFrameCallback((_) async {
+          await homeController.activeStatusApi(AppString.online);
+        });
         log('appLifeCycleState resumed');
         break;
       case AppLifecycleState.paused:
-        setState(() {
-          isActive = false;
-        });
         homeController.activeStatusApi(AppString.offline);
         log('appLifeCycleState paused');
         break;
       case AppLifecycleState.hidden:
-        setState(() {
-          isActive = false;
-        });
         log('appLifeCycleState suspending');
         break;
       case AppLifecycleState.detached:
-        setState(() {
-          isActive = false;
-        });
         log('appLifeCycleState detached');
         break;
     }
@@ -109,9 +101,6 @@ class _BottomBarScreenState extends State<BottomBarScreen>
             }
 
             /// Active Status Api
-            setState(() {
-              isActive = false;
-            });
             await homeController.activeStatusApi(AppString.offline);
             return true;
           },
