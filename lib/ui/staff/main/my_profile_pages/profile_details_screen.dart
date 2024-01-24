@@ -37,7 +37,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   width: w,
                   decoration: const BoxDecoration(gradient: appGradient),
                   child: const Center(
-                      child: CircularProgressIndicator(color: whiteColor)),
+                      child: CircularProgressIndicator(color: Colors.white)),
                 )
               : Container(
                   height: h,
@@ -97,19 +97,17 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                                     .getStaffDetailResModel
                                                                     .data!
                                                                     .image!
-                                                                    .isEmpty ||
-                                                                controller
-                                                                        .getStaffDetailResModel
-                                                                        .data
-                                                                        ?.image ==
-                                                                    "0"
+                                                                    .isEmpty
                                                             ? assetImage(
                                                                 AppAssets
                                                                     .blankProfile,
                                                                 fit: BoxFit
                                                                     .cover)
                                                             : Image.network(
-                                                                "${controller.getStaffDetailResModel.data?.image!}",
+                                                                controller
+                                                                    .getStaffDetailResModel
+                                                                    .data!
+                                                                    .image!,
                                                                 fit: BoxFit
                                                                     .cover),
                                                       ),

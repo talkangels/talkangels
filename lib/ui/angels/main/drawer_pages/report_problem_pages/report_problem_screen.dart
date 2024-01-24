@@ -60,7 +60,7 @@ class _ReportAProblemScreenState extends State<ReportAProblemScreen> {
                           fontWeight: FontWeight.w500,
                           fontFamily: 'League Spartan'),
                       decoration: InputDecoration(
-                        hintText: AppString.enterYourProblem,
+                        hintText: "Comments",
                         hintStyle: const TextStyle(
                             color: greyFontColor,
                             fontSize: 16,

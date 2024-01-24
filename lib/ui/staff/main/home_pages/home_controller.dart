@@ -9,6 +9,8 @@ import 'package:talkangels/ui/staff/models/add_call_history_res_model.dart';
 import 'package:talkangels/ui/staff/models/get_staff_detail_res_model.dart';
 import 'package:talkangels/ui/staff/models/send_withdraw_req_res_model.dart';
 
+import '../../../../models/reject_call_res_model.dart';
+
 class HomeController extends GetxController {
   bool isLoading = false;
   GetStaffDetailResModel getStaffDetailResModel = GetStaffDetailResModel();
@@ -16,20 +18,21 @@ class HomeController extends GetxController {
   bool isRequestLoading = false;
   SendWithdrawReqResModel sendWithdrawReqResModel = SendWithdrawReqResModel();
   TextEditingController withdrawController = TextEditingController();
-  List<dynamic> reviewList = [];
+  List<UserReview> reviewList = [];
 
   bool isStatusLoading = false;
   ActiveStatusResModel activeStatusResModel = ActiveStatusResModel();
 
   bool isAddHistoryLoading = false;
   AddCallHistoryResModel addCallHistoryResModel = AddCallHistoryResModel();
+  RejectCallResModel rejectCallResModel = RejectCallResModel();
 
   /// Get Staff Details
   getStaffDetailApi() async {
     isLoading = true;
 
     ResponseItem result = await HomeRepoStaff.getStaffDetail();
-    // log("result---1-------> ${result.data}");
+    log("result---1-------> ${result.data}");
     reviewList = [];
     if (result.status) {
       try {
@@ -62,7 +65,7 @@ class HomeController extends GetxController {
     isRequestLoading = true;
 
     ResponseItem result = await HomeRepoStaff.sendWithdrawRequest(amount);
-    // log("result---2-------> ${result.data}");
+    log("result---2-------> ${result.data}");
 
     if (result.status) {
       try {
@@ -89,7 +92,7 @@ class HomeController extends GetxController {
     isStatusLoading = true;
     update();
     ResponseItem item = await HomeRepoStaff.activeStatusUpdate(status);
-    // log("item---3------->${item.data}");
+    log("item---3------->${item.data}");
     if (item.status == true) {
       try {
         activeStatusResModel = ActiveStatusResModel.fromJson(item.data);
@@ -108,12 +111,11 @@ class HomeController extends GetxController {
   }
 
   /// Add Call History Api
-  addCallHistory(String angelId, String callType, String minutes) async {
+  addCallHistory(String angelId, String staffId, String callType, String minutes) async {
     isAddHistoryLoading = true;
     update();
-    ResponseItem item =
-        await HomeRepoStaff.addCallHistory(angelId, callType, minutes);
-    // log("item---4------->${item.data}");
+    ResponseItem item = await HomeRepoStaff.addCallHistory(angelId, staffId, callType, minutes);
+    log("item---4------->${item.data}");
     if (item.status == true) {
       try {
         addCallHistoryResModel = AddCallHistoryResModel.fromJson(item.data);
@@ -127,6 +129,26 @@ class HomeController extends GetxController {
       }
     } else {
       isAddHistoryLoading = false;
+      update();
+    }
+  }
+
+  ///rejectCall
+  rejectCall(String angelId, String userId, String type) async {
+    update();
+    ResponseItem item = await HomeRepoStaff.callReject(angelId, userId, type);
+    log("item---4------->${item.data}");
+    if (item.status == true) {
+      try {
+        rejectCallResModel = RejectCallResModel.fromJson(item.data);
+
+        update();
+      } catch (e) {
+        log("e=======reject=======>$e");
+
+        update();
+      }
+    } else {
       update();
     }
   }

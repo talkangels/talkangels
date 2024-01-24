@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -28,15 +27,15 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _HomeScreenState extends State<HomeScreen> {
   HomeScreenController homeController = Get.put(HomeScreenController());
   TextEditingController talkTimeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Razorpay razorpay = Razorpay();
-  Timer? timer;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
@@ -45,61 +44,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       DynamicLinkService().handleDynamicLinks();
       await homeController.userDetailsApi();
+      homeController.homeAngleApi();
     });
-
-    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      if (homeController.isSearch == false) {
-        homeController.homeAngleApi();
-      } else {
-        homeController.homeAngleApi(
-            isSearched: homeController.isSearch,
-            value: homeController.searchValue);
-      }
-    });
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.inactive:
-        timer!.cancel();
-        log('appLifeCycleState inactive');
-        break;
-      case AppLifecycleState.resumed:
-        timer = Timer.periodic(const Duration(seconds: 15), (timer) {
-          if (homeController.isSearch == false) {
-            homeController.homeAngleApi();
-          } else {
-            homeController.homeAngleApi(
-                isSearched: homeController.isSearch,
-                value: homeController.searchValue);
-          }
-        });
-        log('appLifeCycleState resumed');
-        break;
-      case AppLifecycleState.paused:
-        timer!.cancel();
-        log('appLifeCycleState paused');
-        break;
-      case AppLifecycleState.hidden:
-        timer!.cancel();
-        log('appLifeCycleState suspending');
-        break;
-      case AppLifecycleState.detached:
-        timer!.cancel();
-        log('appLifeCycleState detached');
-        break;
-    }
+    // HomeRepo.getAngleAPi();
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     super.dispose();
     razorpay.clear();
-    timer!.cancel();
-    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -116,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
-
     return GetBuilder<HomeScreenController>(
       builder: (controller) {
         return Stack(
@@ -131,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   //   child: svgAssetImage(AppAssets.menuBar),
                   // ),
                   // leadingWidth: w * 0.125,
-                  titleSpacing: w * 0.03,
+                  titleSpacing: w * 0.06,
                   action: [
                     AppShowProfilePic(
                       image: '',
@@ -143,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ],
                   bottom: bottom(),
                 ),
-                body: controller.resModel.data == null
+                body: controller.isLoading == true
                     ? Container(
                         height: h,
                         width: w,
@@ -156,300 +109,328 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         height: h,
                         width: w,
                         decoration: const BoxDecoration(gradient: appGradient),
-                        child:
-                            controller.resModel.data == [] ||
-                                    controller.resModel.data!.length <= 0
-                                ? Center(
-                                    child: AppString.noDataFound
-                                        .leagueSpartanfs20w600(
-                                            fontColor: greyFontColor,
-                                            fontWeight: FontWeight.w700))
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: controller.resModel.data!.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            top: index == 0 ? h * 0.02 : 0,
-                                            left: w * 0.04,
-                                            right: w * 0.04,
-                                            bottom: h * 0.02),
-                                        child: InkWell(
-                                          onTap: () {
-                                            controller.setAngle(controller
-                                                .resModel.data![index]);
-                                            Get.toNamed(
-                                                Routes.personDetailScreen,
-                                                arguments: {
-                                                  "angel_id": controller
-                                                      .resModel.data![index].id
-                                                });
-                                          },
-                                          child: Container(
-                                            height: h * 0.13,
-                                            width: w,
-                                            decoration: BoxDecoration(
-                                                color: containerColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                        child: controller.searchDataList.isEmpty
+                            ? Center(
+                                child: AppString.noDataFound
+                                    .leagueSpartanfs20w600(
+                                        fontColor: greyFontColor,
+                                        fontWeight: FontWeight.w700))
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: controller.searchDataList.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        top: index == 0 ? h * 0.02 : 0,
+                                        left: w * 0.04,
+                                        right: w * 0.04,
+                                        bottom: h * 0.02),
+                                    child: InkWell(
+                                      onTap: () {
+                                        controller.setAngle(
+                                            controller.searchDataList[index]);
+                                        Get.toNamed(Routes.personDetailScreen,
+                                            arguments: {
+                                              "angel_id": controller
+                                                  .searchDataList[index].id
+                                            });
+                                      },
+                                      child: Container(
+                                        height: h * 0.13,
+                                        width: w,
+                                        decoration: BoxDecoration(
+                                            color: containerColor,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            (w * 0.04).addWSpace(),
+                                            Stack(
                                               children: [
-                                                (w * 0.04).addWSpace(),
-                                                Stack(
-                                                  children: [
-                                                    AppShowProfilePic(
-                                                        image: controller
-                                                                .resModel
-                                                                .data![index]
-                                                                .image ??
-                                                            '',
-                                                        onTap: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (_) =>
-                                                                AlertDialog(
-                                                              insetPadding:
-                                                                  EdgeInsets.only(
-                                                                      left: w *
-                                                                          0.06,
-                                                                      right: w *
-                                                                          0.3),
-                                                              contentPadding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              clipBehavior: Clip
-                                                                  .antiAliasWithSaveLayer,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10)),
-                                                              content:
-                                                                  Container(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                height:
-                                                                    h * 0.35,
-                                                                width: w * 0.9,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      height: h *
-                                                                          0.29,
-                                                                      width: w *
-                                                                          0.9,
-                                                                      decoration:
-                                                                          const BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.vertical(top: Radius.circular(10)),
-                                                                      ),
-                                                                      child: controller.resModel.data![index].image == "" || controller.resModel.data![index].image!.isEmpty
-                                                                          ? assetImage(AppAssets.blankProfile,
-                                                                              fit: BoxFit
-                                                                                  .cover)
-                                                                          : Image.network(
-                                                                              controller.resModel.data![index].image!,
-                                                                              fit: BoxFit.cover),
-                                                                    ),
-                                                                    Container(
-                                                                      height: h *
-                                                                          0.06,
-                                                                      width: w *
-                                                                          0.9,
-                                                                      decoration:
-                                                                          const BoxDecoration(
-                                                                        color:
-                                                                            whiteColor,
-                                                                        borderRadius:
-                                                                            BorderRadius.vertical(bottom: Radius.circular(10)),
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.symmetric(horizontal: w * 0.03),
-                                                                        child:
-                                                                            Row(
-                                                                          children: [
-                                                                            InkWell(
-                                                                              onTap: () {},
-                                                                              child: const CircleAvatar(
-                                                                                backgroundColor: appColorGreen,
-                                                                                radius: 15,
-                                                                                child: Icon(Icons.phone, color: whiteColor, size: 18),
-                                                                              ),
-                                                                            ),
-                                                                            (w * 0.02).addWSpace(),
-                                                                            AppString.talkNow.regularLeagueSpartan(
-                                                                                fontColor: appColorGreen,
-                                                                                fontSize: 15,
-                                                                                fontWeight: FontWeight.w900),
-                                                                            const Spacer(),
-                                                                            InkWell(
-                                                                              onTap: () async {
-                                                                                String url = await DynamicLinkService().createShareProfileLink(angelId: controller.resModel.data![index].id.toString());
-                                                                                Share.share(url);
-                                                                              },
-                                                                              child: Container(
-                                                                                height: w * 0.08,
-                                                                                width: w * 0.08,
-                                                                                decoration: BoxDecoration(
-                                                                                  shape: BoxShape.circle,
-                                                                                  border: Border.all(color: greyFontColor),
-                                                                                ),
-                                                                                child: const Icon(Icons.share, color: greyFontColor, size: 18),
-                                                                              ),
-                                                                            ),
-                                                                            (w * 0.03).addWSpace(),
-                                                                            InkWell(
-                                                                              onTap: () {},
-                                                                              child: Container(
-                                                                                height: w * 0.08,
-                                                                                width: w * 0.08,
-                                                                                decoration: BoxDecoration(
-                                                                                  shape: BoxShape.circle,
-                                                                                  border: Border.all(color: greyFontColor),
-                                                                                ),
-                                                                                child: svgAssetImage(AppAssets.whatsAppLogo, color: greyFontColor).paddingAll(6),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
+                                                AppShowProfilePic(
+                                                    image: controller
+                                                            .searchDataList[
+                                                                index]
+                                                            .image ??
+                                                        '',
+                                                    onTap: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            AlertDialog(
+                                                          insetPadding:
+                                                              EdgeInsets.only(
+                                                                  left:
+                                                                      w * 0.06,
+                                                                  right:
+                                                                      w * 0.3),
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          content: Container(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            height: h * 0.35,
+                                                            width: w * 0.9,
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                  height:
+                                                                      h * 0.29,
+                                                                  width:
+                                                                      w * 0.9,
+                                                                  decoration:
+                                                                      const BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.vertical(
+                                                                            top:
+                                                                                Radius.circular(10)),
+                                                                  ),
+                                                                  child: controller.searchDataList[index].image ==
+                                                                              "" ||
+                                                                          controller
+                                                                              .searchDataList[
+                                                                                  index]
+                                                                              .image!
+                                                                              .isEmpty
+                                                                      ? assetImage(
+                                                                          AppAssets
+                                                                              .blankProfile,
+                                                                          fit: BoxFit
+                                                                              .cover)
+                                                                      : Image.network(
+                                                                          controller
+                                                                              .searchDataList[index]
+                                                                              .image!,
+                                                                          fit: BoxFit.cover),
                                                                 ),
-                                                              ),
+                                                                Container(
+                                                                  height:
+                                                                      h * 0.06,
+                                                                  width:
+                                                                      w * 0.9,
+                                                                  decoration:
+                                                                      const BoxDecoration(
+                                                                    color:
+                                                                        whiteColor,
+                                                                    borderRadius:
+                                                                        BorderRadius.vertical(
+                                                                            bottom:
+                                                                                Radius.circular(10)),
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            w * 0.03),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        InkWell(
+                                                                          onTap:
+                                                                              () {},
+                                                                          child:
+                                                                              const CircleAvatar(
+                                                                            backgroundColor:
+                                                                                appColorGreen,
+                                                                            radius:
+                                                                                15,
+                                                                            child: Icon(Icons.phone,
+                                                                                color: whiteColor,
+                                                                                size: 18),
+                                                                          ),
+                                                                        ),
+                                                                        (w * 0.02)
+                                                                            .addWSpace(),
+                                                                        AppString.talkNow.regularLeagueSpartan(
+                                                                            fontColor:
+                                                                                appColorGreen,
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.w900),
+                                                                        const Spacer(),
+                                                                        InkWell(
+                                                                          onTap:
+                                                                              () async {
+                                                                            String
+                                                                                url =
+                                                                                await DynamicLinkService().createShareProfileLink(angelId: controller.searchDataList[index].id.toString());
+                                                                            Share.share(url);
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                w * 0.08,
+                                                                            width:
+                                                                                w * 0.08,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              shape: BoxShape.circle,
+                                                                              border: Border.all(color: greyFontColor),
+                                                                            ),
+                                                                            child: const Icon(Icons.share,
+                                                                                color: greyFontColor,
+                                                                                size: 18),
+                                                                          ),
+                                                                        ),
+                                                                        (w * 0.03)
+                                                                            .addWSpace(),
+                                                                        InkWell(
+                                                                          onTap:
+                                                                              () {},
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                w * 0.08,
+                                                                            width:
+                                                                                w * 0.08,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              shape: BoxShape.circle,
+                                                                              border: Border.all(color: greyFontColor),
+                                                                            ),
+                                                                            child:
+                                                                                svgAssetImage(AppAssets.whatsAppLogo, color: greyFontColor).paddingAll(6),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                          );
-                                                        },
-                                                        borderShow: false,
-                                                        radius: 62),
-                                                    Positioned(
-                                                      right: 6,
-                                                      bottom: 6,
-                                                      child: controller
-                                                                  .resModel
-                                                                  .data![index]
-                                                                  .activeStatus ==
-                                                              AppString.online
-                                                          ? const CircleAvatar(
-                                                              backgroundColor:
-                                                                  containerColor,
-                                                              radius: 7,
-                                                              child:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    greenColor,
-                                                                radius: 4.5,
-                                                              ),
-                                                            )
-                                                          : const SizedBox(),
-                                                    ),
-                                                  ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    borderShow: false,
+                                                    radius: 62),
+                                                Positioned(
+                                                  right: 6,
+                                                  bottom: 6,
+                                                  child: controller
+                                                              .searchDataList[
+                                                                  index]
+                                                              .activeStatus ==
+                                                          AppString.online
+                                                      ? const CircleAvatar(
+                                                          backgroundColor:
+                                                              containerColor,
+                                                          radius: 7,
+                                                          child: CircleAvatar(
+                                                            backgroundColor:
+                                                                greenColor,
+                                                            radius: 4.5,
+                                                          ),
+                                                        )
+                                                      : const SizedBox(),
                                                 ),
-                                                (w * 0.03).addWSpace(),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                              ],
+                                            ),
+                                            (w * 0.03).addWSpace(),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                (controller
+                                                            .searchDataList[
+                                                                index]
+                                                            .name ??
+                                                        '')
+                                                    .regularLeagueSpartan(
+                                                        fontColor: whiteColor,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                (h * 0.005).addHSpace(),
+                                                "${controller.searchDataList[index].gender?[0] ?? ''}-${controller.searchDataList[index].age ?? ''} Yrs • 0 yrs of Experience"
+                                                    .regularLeagueSpartan(
+                                                        fontColor: whiteColor,
+                                                        fontSize: 10),
+                                                Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
                                                   children: [
-                                                    (controller
-                                                                .resModel
-                                                                .data![index]
-                                                                .name ??
-                                                            '')
+                                                    const Icon(Icons.star,
+                                                        size: 11,
+                                                        color: yellowColor),
+                                                    (w * 0.01).addWSpace(),
+                                                    ("${controller.searchDataList[index].totalRating}  (${controller.searchDataList[index].reviews?.length} Rating)")
                                                         .regularLeagueSpartan(
                                                             fontColor:
-                                                                whiteColor,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                    (h * 0.005).addHSpace(),
-                                                    "${controller.resModel.data![index].gender?[0] ?? ''}-${controller.resModel.data![index].age ?? ''} Yrs • 0 yrs of Experience"
-                                                        .regularLeagueSpartan(
-                                                            fontColor:
-                                                                whiteColor,
+                                                                yellowColor,
                                                             fontSize: 10),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        const Icon(Icons.star,
-                                                            size: 11,
-                                                            color: yellowColor),
-                                                        (w * 0.01).addWSpace(),
-                                                        ("${controller.resModel.data![index].totalRating}  (${controller.resModel.data![index].reviews?.length} Rating)")
-                                                            .regularLeagueSpartan(
-                                                                fontColor:
-                                                                    yellowColor,
-                                                                fontSize: 10),
-                                                      ],
-                                                    ),
                                                   ],
                                                 ),
-                                                const Spacer(),
-                                                InkWell(
-                                                  onTap: () {
-                                                    // log(",PreferenceManager().getId()-------1----${PreferenceManager().getId()}");
-                                                    // log(",PreferenceManager().getId()------2-----${PreferenceManager().getToken()}");
-                                                    // log(",PreferenceManager().getId()-----3------${controller.resModel.data![index].id!}");
-                                                    controller.setAngle(
-                                                        controller.resModel
-                                                            .data![index]);
+                                              ],
+                                            ),
+                                            const Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                // log(",PreferenceManager().getId()-------1----${PreferenceManager().getId()}");
+                                                // log(",PreferenceManager().getId()------2-----${PreferenceManager().getToken()}");
+                                                // log(",PreferenceManager().getId()-----3------${controller.resModel.data![index].id!}");
+                                                controller.setAngle(controller
+                                                    .searchDataList[index]);
 
-                                                    if (controller
-                                                            .resModel
-                                                            .data![index]
-                                                            .callStatus ==
-                                                        "Busy") {
-                                                    } else {
-                                                      controller.angleCallingApi(
-                                                          controller.resModel
-                                                              .data![index].id!,
-                                                          PreferenceManager()
-                                                              .getId());
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                      height: h * 0.045,
-                                                      width: w * 0.2,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          border: Border.all(
-                                                              color:
-                                                                  textFieldBorderColor)),
-                                                      child: Center(
-                                                          child: controller.resModel.data![index].callStatus ==
-                                                                  "Busy"
-                                                              ? AppString.busy.regularLeagueSpartan(
+                                                if (controller
+                                                        .searchDataList[index]
+                                                        .callStatus ==
+                                                    "Busy") {
+                                                } else {
+                                                  controller.angleCallingApi(
+                                                      controller
+                                                          .searchDataList[index]
+                                                          .id!,
+                                                      PreferenceManager()
+                                                          .getId());
+                                                }
+                                              },
+                                              child: Container(
+                                                  height: h * 0.045,
+                                                  width: w * 0.2,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          color:
+                                                              textFieldBorderColor)),
+                                                  child: Center(
+                                                      child: controller.searchDataList[index].callStatus ==
+                                                              "Busy"
+                                                          ? AppString.busy
+                                                              .regularLeagueSpartan(
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500)
-                                                              : AppString.talkNow
-                                                                  .regularLeagueSpartan(
-                                                                      fontSize: 14,
-                                                                      fontWeight: FontWeight.w500))),
-                                                ),
-                                                (w * 0.04).addWSpace(),
-                                              ],
+                                                          : AppString.talkNow
+                                                              .regularLeagueSpartan(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight.w500))),
                                             ),
-                                          ),
+                                            (w * 0.04).addWSpace(),
+                                          ],
                                         ),
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                       )),
             controller.isCallLoading == true
                 ? Container(
@@ -477,18 +458,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           labelText: AppString.searchTalkAngelHere,
           prefixIcon: Icon(Icons.search, color: whiteColor.withOpacity(0.5)),
           onChanged: (p0) {
-            controller.searchValue = p0;
-            controller.update();
-            if (p0.isEmpty || p0 == '') {
-              controller.isSearch = false;
-              controller.update();
-              controller.homeAngleApi();
-            } else {
-              controller.isSearch = true;
-              controller.update();
-              controller.homeAngleApi(
-                  isSearched: controller.isSearch, value: p0);
-            }
+            controller.searchData(p0);
           },
           suffixIcon: InkWell(
             onTap: () {
@@ -746,7 +716,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   onTap: () {
                     closeDrawer();
 
-                    /// Delete Account
+                    ///
                     showDialog(
                       barrierDismissible: false,
                       context: context,
@@ -757,67 +727,72 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         // clipBehavior: Clip.antiAliasWithSaveLayer,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
-                        content: Container(
-                          padding: EdgeInsets.zero,
-                          height: h * 0.4,
-                          width: w * 0.9,
-                          child: Column(
-                            children: [
-                              const Spacer(),
-                              SizedBox(
-                                  height: h * 0.13,
-                                  width: w * 0.26,
-                                  child: assetImage(
-                                      AppAssets.sureAnimationAssets,
-                                      fit: BoxFit.cover)),
-                              const Spacer(),
-                              AppString.areYouSure.regularLeagueSpartan(
-                                  fontColor: blackColor,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800),
-                              AppString.deleteAccountDescription
-                                  .regularLeagueSpartan(
-                                      fontColor: greyFontColor,
-                                      fontSize: 15,
-                                      textAlign: TextAlign.center),
-                              (h * 0.04).addHSpace(),
-                              Row(
+                        content: Builder(
+                          builder: (context) {
+                            return Container(
+                              padding: EdgeInsets.zero,
+                              height: h * 0.4,
+                              width: w * 0.9,
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: AppButton(
-                                      height: h * 0.06,
-                                      color: Colors.transparent,
-                                      onTap: () async {
-                                        await homeController.deleteAccountApi();
-                                      },
-                                      child: AppString.yesImSure
-                                          .regularLeagueSpartan(
-                                              fontColor: blackColor,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700),
-                                    ),
+                                  const Spacer(),
+                                  SizedBox(
+                                      height: h * 0.13,
+                                      width: w * 0.26,
+                                      child: assetImage(
+                                          AppAssets.sureAnimationAssets,
+                                          fit: BoxFit.cover)),
+                                  const Spacer(),
+                                  AppString.areYouSure.regularLeagueSpartan(
+                                      fontColor: blackColor,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800),
+                                  AppString.deleteAccountDescription
+                                      .regularLeagueSpartan(
+                                          fontColor: greyFontColor,
+                                          fontSize: 15,
+                                          textAlign: TextAlign.center),
+                                  (h * 0.04).addHSpace(),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: AppButton(
+                                          height: h * 0.06,
+                                          color: Colors.transparent,
+                                          onTap: () {
+                                            Get.offAllNamed(Routes.loginScreen);
+                                          },
+                                          child: AppString.yesImSure
+                                              .regularLeagueSpartan(
+                                                  fontColor: blackColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                      (w * 0.02).addWSpace(),
+                                      Expanded(
+                                        flex: 1,
+                                        child: AppButton(
+                                          height: h * 0.06,
+                                          border:
+                                              Border.all(color: redFontColor),
+                                          color: redFontColor,
+                                          onTap: () {
+                                            Get.back();
+                                          },
+                                          child: AppString.noGoBack
+                                              .regularLeagueSpartan(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  (w * 0.02).addWSpace(),
-                                  Expanded(
-                                    flex: 1,
-                                    child: AppButton(
-                                      height: h * 0.06,
-                                      border: Border.all(color: redFontColor),
-                                      color: redFontColor,
-                                      onTap: () {
-                                        Get.back();
-                                      },
-                                      child: AppString.noGoBack
-                                          .regularLeagueSpartan(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700),
-                                    ),
-                                  )
                                 ],
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       ),
                     );

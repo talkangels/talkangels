@@ -83,12 +83,8 @@ class _ReportProblemScreenState extends State<ReportProblemScreen> {
                           Get.back();
                         }
                       },
-                      child: controller.isLoading == true
-                          ? const Center(
-                              child:
-                                  CircularProgressIndicator(color: whiteColor))
-                          : AppString.submit.regularLeagueSpartan(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+                      child: AppString.submit.regularLeagueSpartan(
+                          fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
