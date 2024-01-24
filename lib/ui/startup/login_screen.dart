@@ -72,18 +72,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
 
                     /// whatsapp login
-                    await loginScreenController.startOtpless(referCode);
+                    // await loginScreenController.startOtpless(referCode);
 
                     ///
                     ///
                     /// API signIn _STAFF
-                    // await loginScreenController.signIn(
-                    //     name: "Test11",
-                    //     mNo: "1234567890",
-                    //     cCode: "91",
-                    //     fcm:
-                    //         PreferenceManager().getFCMNotificationToken() ?? '',
-                    //     referCode: referCode);
+                    await loginScreenController.signIn(
+                        name: "Test11",
+                        mNo: "1234567890",
+                        cCode: "91",
+                        fcm:
+                            PreferenceManager().getFCMNotificationToken() ?? '',
+                        referCode: referCode);
                   },
                   child: Row(
                     children: [

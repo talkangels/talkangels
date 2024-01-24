@@ -16,7 +16,7 @@ class HomeController extends GetxController {
   bool isRequestLoading = false;
   SendWithdrawReqResModel sendWithdrawReqResModel = SendWithdrawReqResModel();
   TextEditingController withdrawController = TextEditingController();
-  List<UserReview> reviewList = [];
+  List<dynamic> reviewList = [];
 
   bool isStatusLoading = false;
   ActiveStatusResModel activeStatusResModel = ActiveStatusResModel();
@@ -29,7 +29,7 @@ class HomeController extends GetxController {
     isLoading = true;
 
     ResponseItem result = await HomeRepoStaff.getStaffDetail();
-    log("result---1-------> ${result.data}");
+    // log("result---1-------> ${result.data}");
     reviewList = [];
     if (result.status) {
       try {
@@ -62,7 +62,7 @@ class HomeController extends GetxController {
     isRequestLoading = true;
 
     ResponseItem result = await HomeRepoStaff.sendWithdrawRequest(amount);
-    log("result---2-------> ${result.data}");
+    // log("result---2-------> ${result.data}");
 
     if (result.status) {
       try {
@@ -89,7 +89,7 @@ class HomeController extends GetxController {
     isStatusLoading = true;
     update();
     ResponseItem item = await HomeRepoStaff.activeStatusUpdate(status);
-    log("item---3------->${item.data}");
+    // log("item---3------->${item.data}");
     if (item.status == true) {
       try {
         activeStatusResModel = ActiveStatusResModel.fromJson(item.data);
@@ -113,7 +113,7 @@ class HomeController extends GetxController {
     update();
     ResponseItem item =
         await HomeRepoStaff.addCallHistory(angelId, callType, minutes);
-    log("item---4------->${item.data}");
+    // log("item---4------->${item.data}");
     if (item.status == true) {
       try {
         addCallHistoryResModel = AddCallHistoryResModel.fromJson(item.data);

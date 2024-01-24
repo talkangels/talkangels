@@ -10,12 +10,9 @@ class GetCallHistoryResModel {
   int? status;
   bool? success;
   List<CallHistory>? data;
+  String? message;
 
-  GetCallHistoryResModel({
-    this.status,
-    this.success,
-    this.data,
-  });
+  GetCallHistoryResModel({this.status, this.success, this.data, this.message});
 
   factory GetCallHistoryResModel.fromJson(Map<String, dynamic> json) =>
       GetCallHistoryResModel(
@@ -25,6 +22,7 @@ class GetCallHistoryResModel {
             ? []
             : List<CallHistory>.from(
                 json["data"]!.map((x) => CallHistory.fromJson(x))),
+        message: json["message"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -33,6 +31,7 @@ class GetCallHistoryResModel {
         "data": data == null
             ? []
             : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "message": message,
       };
 }
 

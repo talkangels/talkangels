@@ -49,8 +49,8 @@ class Data {
   int? status;
   int? charges;
   String? role;
-  double? totalRating;
-  List<Review>? reviews;
+  int? totalRating;
+  List<dynamic>? reviews;
   DateTime? updatedAt;
   int? v;
   String? fcmToken;
@@ -104,8 +104,7 @@ class Data {
         totalRating: json["total_rating"],
         reviews: json["reviews"] == null
             ? []
-            : List<Review>.from(
-                json["reviews"]!.map((x) => Review.fromJson(x))),
+            : List<dynamic>.from(json["reviews"]!.map((x) => x)),
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
@@ -132,9 +131,8 @@ class Data {
         "charges": charges,
         "role": role,
         "total_rating": totalRating,
-        "reviews": reviews == null
-            ? []
-            : List<dynamic>.from(reviews!.map((x) => x.toJson())),
+        "reviews":
+            reviews == null ? [] : List<dynamic>.from(reviews!.map((x) => x)),
         "updated_at": updatedAt?.toIso8601String(),
         "__v": v,
         "fcmToken": fcmToken,
@@ -171,7 +169,7 @@ class Earnings {
 
 class Listing {
   String? totalMinutes;
-  List<CallHistory>? callHistory;
+  List<dynamic>? callHistory;
 
   Listing({
     this.totalMinutes,
@@ -182,128 +180,13 @@ class Listing {
         totalMinutes: json["total_minutes"],
         callHistory: json["call_history"] == null
             ? []
-            : List<CallHistory>.from(
-                json["call_history"]!.map((x) => CallHistory.fromJson(x))),
+            : List<dynamic>.from(json["call_history"]!.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
         "total_minutes": totalMinutes,
         "call_history": callHistory == null
             ? []
-            : List<dynamic>.from(callHistory!.map((x) => x.toJson())),
-      };
-}
-
-class CallHistory {
-  String? user;
-  List<History>? history;
-  String? id;
-
-  CallHistory({
-    this.user,
-    this.history,
-    this.id,
-  });
-
-  factory CallHistory.fromJson(Map<String, dynamic> json) => CallHistory(
-        user: json["user"],
-        history: json["history"] == null
-            ? []
-            : List<History>.from(
-                json["history"]!.map((x) => History.fromJson(x))),
-        id: json["_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "user": user,
-        "history": history == null
-            ? []
-            : List<dynamic>.from(history!.map((x) => x.toJson())),
-        "_id": id,
-      };
-}
-
-class History {
-  DateTime? date;
-  String? callType;
-  String? minutes;
-  String? id;
-
-  History({
-    this.date,
-    this.callType,
-    this.minutes,
-    this.id,
-  });
-
-  factory History.fromJson(Map<String, dynamic> json) => History(
-        date: json["date"] == null ? null : DateTime.parse(json["date"]),
-        callType: json["call_type"],
-        minutes: json["minutes"],
-        id: json["_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "date": date?.toIso8601String(),
-        "call_type": callType,
-        "minutes": minutes,
-        "_id": id,
-      };
-}
-
-class Review {
-  String? user;
-  List<UserReview>? userReviews;
-  String? id;
-
-  Review({
-    this.user,
-    this.userReviews,
-    this.id,
-  });
-
-  factory Review.fromJson(Map<String, dynamic> json) => Review(
-        user: json["user"],
-        userReviews: json["user_reviews"] == null
-            ? []
-            : List<UserReview>.from(
-                json["user_reviews"]!.map((x) => UserReview.fromJson(x))),
-        id: json["_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "user": user,
-        "user_reviews": userReviews == null
-            ? []
-            : List<dynamic>.from(userReviews!.map((x) => x.toJson())),
-        "_id": id,
-      };
-}
-
-class UserReview {
-  int? rating;
-  String? comment;
-  DateTime? date;
-  String? id;
-
-  UserReview({
-    this.rating,
-    this.comment,
-    this.date,
-    this.id,
-  });
-
-  factory UserReview.fromJson(Map<String, dynamic> json) => UserReview(
-        rating: json["rating"],
-        comment: json["comment"],
-        date: json["date"] == null ? null : DateTime.parse(json["date"]),
-        id: json["_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "rating": rating,
-        "comment": comment,
-        "date": date?.toIso8601String(),
-        "_id": id,
+            : List<dynamic>.from(callHistory!.map((x) => x)),
       };
 }

@@ -5,12 +5,16 @@ import 'package:talkangels/const/shared_prefs.dart';
 
 ///Angels
 class HomeRepoAngels {
-  static Future<ResponseItem> getAngleAPi() async {
+  static Future<ResponseItem> getAngleAPi(
+      {bool? isSearched, required String value}) async {
     ResponseItem result;
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getAngle;
+    String requestUrl1 =
+        AppUrls.BASE_URL + MethodNamesAngels.searchAngels + value;
 
-    result = await BaseApiHelper.getRequest(requestUrl);
+    result = await BaseApiHelper.getRequest(
+        isSearched == true ? requestUrl1 : requestUrl);
     return result;
   }
 
@@ -113,6 +117,17 @@ class HomeRepoAngels {
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.postReportAProblem;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    return result;
+  }
+
+  /// Delete Angel Account
+  static Future<ResponseItem> deleteAngelApi() async {
+    ResponseItem result;
+    String userId = PreferenceManager().getId();
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesAngels.deleteAngel + userId;
+    result = await BaseApiHelper.deleteAngel(requestUrl);
     return result;
   }
 }

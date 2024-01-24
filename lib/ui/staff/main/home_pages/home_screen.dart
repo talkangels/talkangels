@@ -313,11 +313,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       .isEmpty) {
                                                                     return "Please Enter Amount";
                                                                   } else if (controller
-                                                                          .getStaffDetailResModel
-                                                                          .data!
-                                                                          .earnings!
-                                                                          .totalPendingMoney! <
-                                                                      amounts!) {
+                                                                              .getStaffDetailResModel
+                                                                              .data!
+                                                                              .earnings!
+                                                                              .totalPendingMoney! <
+                                                                          amounts! ||
+                                                                      amounts! <=
+                                                                          0) {
                                                                     return "Please Enter Valid Amount";
                                                                   }
                                                                   return null;
@@ -523,97 +525,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Get.toNamed(Routes.reportProblemScreen);
                       },
                       image: AppAssets.reportProblemIcon,
-                    ),
-                    1.0.appDivider(),
-                    drawerListTile(
-                      title: AppString.deleteAccount,
-                      onTap: () {
-                        closeDrawer();
-
-                        /// Delete Account
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            insetPadding:
-                                EdgeInsets.symmetric(horizontal: w * 0.08),
-                            contentPadding: EdgeInsets.all(w * 0.05),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            content: Builder(
-                              builder: (context) {
-                                return Container(
-                                  padding: EdgeInsets.zero,
-                                  height: h * 0.4,
-                                  width: w * 0.9,
-                                  child: Column(
-                                    children: [
-                                      const Spacer(),
-                                      SizedBox(
-                                          height: h * 0.13,
-                                          width: w * 0.26,
-                                          child: assetImage(
-                                              AppAssets.sureAnimationAssets,
-                                              fit: BoxFit.contain)),
-                                      const Spacer(),
-                                      AppString.areYouSure
-                                          .leagueSpartanfs20w600(
-                                              fontColor: blackColor,
-                                              fontSize: 24),
-                                      AppString.deleteAccountDescription
-                                          .regularLeagueSpartan(
-                                              fontColor: greyFontColor,
-                                              fontSize: 15,
-                                              textAlign: TextAlign.center),
-                                      (h * 0.04).addHSpace(),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: AppButton(
-                                              height: h * 0.06,
-                                              color: Colors.transparent,
-                                              onTap: () {
-                                                PreferenceManager()
-                                                    .setClearALlPref();
-                                                Get.offAllNamed(
-                                                    Routes.loginScreen);
-                                              },
-                                              child: AppString.yesImSure
-                                                  .regularLeagueSpartan(
-                                                      fontColor: blackColor,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                            ),
-                                          ),
-                                          (w * 0.02).addWSpace(),
-                                          Expanded(
-                                            flex: 1,
-                                            child: AppButton(
-                                              height: h * 0.06,
-                                              color: appColorBlue,
-                                              onTap: () {
-                                                Get.back();
-                                              },
-                                              child: AppString.noGoBack
-                                                  .regularLeagueSpartan(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      image: AppAssets.deleteAccountIcon,
                     ),
                     1.0.appDivider(),
                     drawerListTile(

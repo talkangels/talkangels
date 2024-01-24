@@ -13,6 +13,8 @@ class MethodNamesAngels {
   static const postReferralCode = "user/apply-refer-code";
   static const postRating = "user/add-rating";
   static const postReportAProblem = "user/add-report";
+  static const deleteAngel = "user/delete/";
+  static const searchAngels = "user/all-angels?search_text=";
 }
 
 class MethodNamesStaff {

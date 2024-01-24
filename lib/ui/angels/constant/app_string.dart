@@ -52,6 +52,7 @@ class AppString {
   static const enterAmount = "Enter Amount";
   static const proceed = "Proceed";
   static const success = "Success!";
+  static const enterYourProblem = "Enter Your Problem";
 
   static const yourSelectedTalktimeRechargeIsDoneSuccessfullyContinueUsingyourFavouriteAppHaveaNiceDay =
       "Your selected Talktime recharge is done successfully! Continue using your favourite app. Have a Nice Day!";

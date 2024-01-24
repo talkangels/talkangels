@@ -14,7 +14,7 @@ class CallHistoryController extends GetxController {
     isLoading = true;
 
     ResponseItem result = await HomeRepoStaff.getCallHistory();
-    log("result---5------>${result.data}");
+    // log("result---5------>${result.data}");
 
     if (result.status) {
       try {
