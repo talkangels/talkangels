@@ -50,128 +50,141 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : controller.getCallHistoryResModel.data!.isEmpty
+                  : controller.getCallHistoryResModel.status != 200
                       ? Center(
-                          child: AppString.noDataFound.regularLeagueSpartan(
-                              fontColor: greyFontColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700))
-                      : ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: reverseData!.length,
-                          itemBuilder: (context, index) {
-                            int lastIndex =
-                                reverseData[index].history!.length - 1;
+                          child: AppString.unknownError.regularLeagueSpartan(
+                              fontSize: 18, fontColor: greyFontColor),
+                        )
+                      : controller.getCallHistoryResModel.data!.isEmpty
+                          ? Center(
+                              child: AppString.noDataFound.regularLeagueSpartan(
+                                  fontColor: greyFontColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700))
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: reverseData!.length,
+                              itemBuilder: (context, index) {
+                                int lastIndex =
+                                    reverseData[index].history!.length - 1;
 
-                            DateTime myDateTime = DateTime.parse(
-                                "${reverseData[index].history?[lastIndex].date}");
+                                DateTime myDateTime = DateTime.parse(
+                                    "${reverseData[index].history?[lastIndex].date}");
 
-                            String formattedDate =
-                                DateFormat('MMM d').format(myDateTime);
-                            String formattedTime =
-                                DateFormat('hh:mm a').format(myDateTime);
+                                String formattedDate =
+                                    DateFormat('MMM d').format(myDateTime);
+                                String formattedTime =
+                                    DateFormat('hh:mm a').format(myDateTime);
 
-                            return InkWell(
-                              onTap: () {
-                                Get.toNamed(Routes.moreCallInfoScreen,
-                                    arguments: {
-                                      "call_history": reverseData[index]
-                                    });
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: w * 0.05, vertical: h * 0.015),
-                                child: Row(
-                                  children: [
-                                    AppShowProfilePic(
-                                        onTap: () {},
-                                        image: reverseData[index].user?.image ??
-                                            "",
-                                        borderShow: false),
-                                    (w * 0.02).addWSpace(),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                return InkWell(
+                                  onTap: () {
+                                    Get.toNamed(Routes.moreCallInfoScreen,
+                                        arguments: {
+                                          "call_history": reverseData[index]
+                                        });
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: w * 0.05,
+                                        vertical: h * 0.015),
+                                    child: Row(
                                       children: [
-                                        Row(
+                                        AppShowProfilePic(
+                                            onTap: () {},
+                                            image: reverseData[index]
+                                                    .user
+                                                    ?.image ??
+                                                "",
+                                            borderShow: false),
+                                        (w * 0.02).addWSpace(),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            (reverseData[index]
-                                                        .user
-                                                        ?.userName ??
-                                                    '')
-                                                .regularLeagueSpartan(
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                            (w * 0.02).addWSpace(),
-                                            reverseData[index]
-                                                        .history?[lastIndex]
-                                                        .callType ==
-                                                    "outgoing"
-                                                ? const CircleAvatar(
-                                                    radius: 8,
-                                                    backgroundColor:
-                                                        appColorBlue,
-                                                    child: Icon(
-                                                      Icons.phone_forwarded,
-                                                      size: 10,
-                                                      color: whiteColor,
-                                                    ),
-                                                  )
-                                                : reverseData[index]
+                                            Row(
+                                              children: [
+                                                (reverseData[index]
+                                                            .user
+                                                            ?.userName ??
+                                                        '')
+                                                    .regularLeagueSpartan(
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                (w * 0.02).addWSpace(),
+                                                reverseData[index]
                                                             .history?[lastIndex]
                                                             .callType ==
-                                                        "incoming"
+                                                        "outgoing"
                                                     ? const CircleAvatar(
                                                         radius: 8,
                                                         backgroundColor:
-                                                            appColorGreen,
+                                                            appColorBlue,
                                                         child: Icon(
-                                                          Icons.phone_callback,
+                                                          Icons.phone_forwarded,
                                                           size: 10,
                                                           color: whiteColor,
                                                         ),
                                                       )
-                                                    : const CircleAvatar(
-                                                        radius: 8,
-                                                        backgroundColor:
-                                                            redColor,
-                                                        child: Icon(
-                                                          Icons.phone_missed,
-                                                          size: 10,
-                                                          color: whiteColor,
-                                                        ),
-                                                      ),
+                                                    : reverseData[index]
+                                                                .history?[
+                                                                    lastIndex]
+                                                                .callType ==
+                                                            "incoming"
+                                                        ? const CircleAvatar(
+                                                            radius: 8,
+                                                            backgroundColor:
+                                                                appColorGreen,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .phone_callback,
+                                                              size: 10,
+                                                              color: whiteColor,
+                                                            ),
+                                                          )
+                                                        : const CircleAvatar(
+                                                            radius: 8,
+                                                            backgroundColor:
+                                                                redColor,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .phone_missed,
+                                                              size: 10,
+                                                              color: whiteColor,
+                                                            ),
+                                                          ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              width: w * 0.65,
+                                              child:
+                                                  "${reverseData[index].user?.mobileNumber ?? ''} • $formattedDate •${reverseData[index].history?[lastIndex].callType} call at $formattedTime"
+                                                      .regularLeagueSpartan(
+                                                          fontColor:
+                                                              greyFontColor,
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w300,
+                                                          textOverflow:
+                                                              TextOverflow
+                                                                  .ellipsis),
+                                            ),
                                           ],
                                         ),
-                                        SizedBox(
-                                          width: w * 0.65,
-                                          child:
-                                              "${reverseData[index].user?.mobileNumber ?? ''} • $formattedDate •${reverseData[index].history?[lastIndex].callType} call at $formattedTime"
-                                                  .regularLeagueSpartan(
-                                                      fontColor: greyFontColor,
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      textOverflow: TextOverflow
-                                                          .ellipsis),
+                                        const Spacer(),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 12,
+                                          color: whiteColor.withOpacity(0.5),
                                         ),
                                       ],
                                     ),
-                                    const Spacer(),
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 12,
-                                      color: whiteColor.withOpacity(0.5),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return 1.0.appDivider();
-                          },
-                        ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return 1.0.appDivider();
+                              },
+                            ),
             ),
           );
         },

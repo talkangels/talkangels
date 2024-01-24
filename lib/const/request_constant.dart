@@ -13,6 +13,8 @@ class MethodNamesAngels {
   static const postReferralCode = "user/apply-refer-code";
   static const postRating = "user/add-rating";
   static const postReportAProblem = "user/add-report";
+  static const deleteAngel = "user/delete/";
+  static const searchAngels = "user/all-angels?search_text=";
 }
 
 class MethodNamesStaff {
@@ -22,8 +24,4 @@ class MethodNamesStaff {
   static const activeStatus = "staff/update-active-status/";
   static const addCallHistory = "staff/save-call-history";
   static const postReportProblemStaff = "staff/add-report";
-}
-
-class CommonApis {
-  static const rejectCall = "call-reject";
 }

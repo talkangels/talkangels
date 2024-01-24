@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -28,10 +29,20 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
       Get.put(PersonDetailsScreenController());
 
   String angelId = Get.arguments["angel_id"];
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
+    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      if (homeController.isSearch == false) {
+        homeController.homeAngleApi();
+      } else {
+        homeController.homeAngleApi(
+            isSearched: homeController.isSearch,
+            value: homeController.searchValue);
+      }
+    });
     personDetailsScreenController.getSingleAngelData(angelId);
   }
 
@@ -267,40 +278,44 @@ class _PersonDetailScreenState extends State<PersonDetailScreen> {
                                 ],
                               ),
                               (w * 0.03).addWSpace(),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  (controller.getSingleAngelResModel.data
-                                              ?.name ??
-                                          "")
-                                      .regularLeagueSpartan(
-                                          fontColor: whiteColor,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500),
-                                  (controller.getSingleAngelResModel.data
-                                              ?.userName ??
-                                          "")
-                                      .regularLeagueSpartan(
-                                          fontColor:
-                                              whiteColor.withOpacity(0.4),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                  (controller.getSingleAngelResModel.data
-                                              ?.activeStatus ??
-                                          "")
-                                      .regularLeagueSpartan(
-                                          fontColor: controller
-                                                      .getSingleAngelResModel
-                                                      .data
-                                                      ?.activeStatus ==
-                                                  AppString.online
-                                              ? greenColor
-                                              : yellowColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    (controller.getSingleAngelResModel.data
+                                                ?.name ??
+                                            "")
+                                        .regularLeagueSpartan(
+                                      fontColor: whiteColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      textOverflow: TextOverflow.ellipsis,
+                                    ),
+                                    (controller.getSingleAngelResModel.data
+                                                ?.userName ??
+                                            "")
+                                        .regularLeagueSpartan(
+                                      fontColor: whiteColor.withOpacity(0.4),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      textOverflow: TextOverflow.ellipsis,
+                                    ),
+                                    (controller.getSingleAngelResModel.data
+                                                ?.activeStatus ??
+                                            "")
+                                        .regularLeagueSpartan(
+                                            fontColor: controller
+                                                        .getSingleAngelResModel
+                                                        .data
+                                                        ?.activeStatus ==
+                                                    AppString.online
+                                                ? greenColor
+                                                : yellowColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500),
+                                  ],
+                                ),
                               ),
-                              const Spacer(),
                               InkWell(
                                 onTap: () async {
                                   String url = await DynamicLinkService()

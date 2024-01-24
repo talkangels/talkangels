@@ -58,6 +58,15 @@ class BaseApiHelper {
         .onError((error, stackTrace) => onError(error));
   }
 
+  /// Delete Angel
+  static Future<ResponseItem> deleteAngel(String requestUrl) async {
+    String token = PreferenceManager().getToken().toString();
+    return await http
+        .delete(Uri.parse(requestUrl), headers: {"Authorization": token})
+        .then((response) => onValue(response))
+        .onError((error, stackTrace) => onError(error));
+  }
+
   ///
   ///===========
   static Future onValue(http.Response response) async {

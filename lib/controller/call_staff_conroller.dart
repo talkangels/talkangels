@@ -1,61 +1,43 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:talkangels/const/shared_prefs.dart';
-import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
 
 class CallingScreenController extends GetxController {
-  RtcEngine? engine;
+  late final RtcEngine engine;
   String channelId = "";
   String appId = "";
   String token = "";
-  String angleId = "";
-  Timer? timer;
-  int secondCount = 0;
-  setAgoraDetails(String channellId, String apppId, String tokenn, String angleIdd) {
+
+  setAgoraDetails(String channellId, String apppId, String tokenn) {
     channelId = channellId;
     appId = apppId;
     token = tokenn;
-    angleId = angleIdd;
     update();
   }
 
-  bool isJoined = false, isConnect = false, openMicrophone = true, enableSpeakerphone = false, playEffect = false;
+  bool isJoined = false,
+      isConnect = false,
+      openMicrophone = true,
+      enableSpeakerphone = false,
+      playEffect = false;
   bool enableInEarMonitoring = false;
-  double recordingVolume = 100, playbackVolume = 100, inEarMonitoringVolume = 100;
+  double recordingVolume = 100,
+      playbackVolume = 100,
+      inEarMonitoringVolume = 100;
   // TextEditingController channelIdController = TextEditingController();
-  ChannelProfileType channelProfileType = ChannelProfileType.channelProfileLiveBroadcasting;
+  ChannelProfileType channelProfileType =
+      ChannelProfileType.channelProfileLiveBroadcasting;
   late final RtcEngineEventHandler rtcEngineEventHandler;
-  HomeController homeController = Get.put(HomeController());
   // Map<int, String> userMap = {};
   Future<void> initEngine() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      await Permission.microphone.request();
-    }
     engine = createAgoraRtcEngine();
-    await engine!.initialize(RtcEngineContext(
+    await engine.initialize(RtcEngineContext(
       appId: appId,
-      channelProfile: ChannelProfileType.channelProfileCommunication,
     ));
-    await engine!.enableAudio();
-    // await engine!.setEnableSpeakerphone(false);
-    await engine!.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await engine!.setAudioProfile(
-      profile: AudioProfileType.audioProfileDefault,
-      scenario: AudioScenarioType.audioScenarioGameStreaming,
-    );
-    await engine!.joinChannel(
-        token: token,
-        channelId: channelId,
-        uid: 0,
-        options: const ChannelMediaOptions(
-          channelProfile: ChannelProfileType.channelProfileCommunication,
-          clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        ));
+    joinChannel();
     rtcEngineEventHandler = RtcEngineEventHandler(
       onError: (ErrorCodeType err, String msg) {
         log("err----->${err}  $msg");
@@ -65,28 +47,14 @@ class CallingScreenController extends GetxController {
         log('join----');
         isConnect = true;
         isJoined = true;
-
-        timer = Timer.periodic(Duration(seconds: 1), (timer) {
-          secondCount = secondCount + 1;
-          update();
-          log("secondCount--------------> ${secondCount}");
-        });
         update();
       },
       onLeaveChannel: (RtcConnection connection, RtcStats stats) {
         isJoined = false;
-        timer!.cancel();
 
-        leaveChannel();
-        Get.back();
-        log('remove----');
         update();
       },
-      onUserOffline: (connection, remoteUid, reason) {
-        log('remove----222');
-        leaveChannel();
-        Get.back();
-      },
+
       // onAudioDeviceVolumeChanged: (deviceType, volume, muted) {
       //   log("muted----->${muted}");
       //   log("deviceType----->${deviceType}");
@@ -97,7 +65,35 @@ class CallingScreenController extends GetxController {
       },
     );
 
-    engine!.registerEventHandler(rtcEngineEventHandler);
+    engine.registerEventHandler(rtcEngineEventHandler);
+
+    await engine.enableAudio();
+    // await engine!.setEnableSpeakerphone(false);
+    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await engine.setAudioProfile(
+      profile: AudioProfileType.audioProfileDefault,
+      scenario: AudioScenarioType.audioScenarioGameStreaming,
+    );
+    // update();
+  }
+
+  joinChannel() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await Permission.microphone.request();
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await Permission.camera.request();
+    }
+    log("token----->${token}");
+    await engine.joinChannel(
+        token: token,
+        channelId: channelId,
+        uid: 0,
+        options: ChannelMediaOptions(
+          channelProfile: channelProfileType,
+          enableAudioRecordingOrPlayout: true,
+          clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        ));
   }
 
   @override
@@ -107,9 +103,8 @@ class CallingScreenController extends GetxController {
   }
 
   leaveChannel() async {
-    // await engine!.release();
-    await engine!.leaveChannel();
-    await homeController.addCallHistory(angleId, PreferenceManager().getId(), "outgoing", secondCount.toString());
+    await engine.leaveChannel();
+
     isJoined = false;
     isConnect = false;
     openMicrophone = true;
@@ -119,21 +114,61 @@ class CallingScreenController extends GetxController {
     recordingVolume = 100;
     playbackVolume = 100;
     inEarMonitoringVolume = 100;
-    secondCount = 0;
     update();
   }
 
   switchMicrophone() async {
     // await  engine.muteLocalAudioStream(!openMicrophone);
-    await engine!.enableLocalAudio(!openMicrophone);
+    await engine.enableLocalAudio(!openMicrophone);
     openMicrophone = !openMicrophone;
     update();
   }
 
   switchSpeakerphone() async {
-    await engine!.setEnableSpeakerphone(!enableSpeakerphone);
+    await engine.setEnableSpeakerphone(!enableSpeakerphone);
     enableSpeakerphone = !enableSpeakerphone;
     update();
+  }
+
+  switchEffect() async {
+    if (playEffect) {
+      await engine.stopEffect(1);
+      playEffect = false;
+      update();
+    } else {
+      final path =
+          (await engine.getAssetAbsolutePath("assets/Sound_Horizon.mp3"))!;
+      await engine.playEffect(
+          soundId: 1,
+          filePath: path,
+          loopCount: 0,
+          pitch: 1,
+          pan: 1,
+          gain: 100,
+          publish: true);
+      // .then((value) {
+
+      playEffect = true;
+      update();
+    }
+  }
+
+  onChangeInEarMonitoringVolume(double value) async {
+    inEarMonitoringVolume = value;
+    await engine.setInEarMonitoringVolume(inEarMonitoringVolume.toInt());
+    update();
+  }
+
+  toggleInEarMonitoring(value) async {
+    try {
+      await engine.enableInEarMonitoring(
+          enabled: value,
+          includeAudioFilters: EarMonitoringFilterType.earMonitoringFilterNone);
+      enableInEarMonitoring = value;
+      update();
+    } catch (e) {
+      // Do nothing
+    }
   }
 
   ///

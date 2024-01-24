@@ -73,7 +73,8 @@ class _CallingScreenState extends State<CallingScreen> {
                 child: Column(
                   children: [
                     const Spacer(),
-                    homeController.selectedAngle!.name!.regularLeagueSpartan(fontSize: 34, fontWeight: FontWeight.w800),
+                    homeController.selectedAngle!.name!.regularLeagueSpartan(
+                        fontSize: 34, fontWeight: FontWeight.w800),
                     AppString.calling.regularLeagueSpartan(fontSize: 14),
                     const Spacer(),
                     RippleAnimation(
@@ -85,17 +86,23 @@ class _CallingScreenState extends State<CallingScreen> {
                         duration: const Duration(milliseconds: 6 * 300),
                         child: homeController.selectedAngle!.image == ""
                             ? const CircleAvatar(
-                                minRadius: 75, maxRadius: 75, backgroundImage: AssetImage(AppAssets.blankProfile))
+                                minRadius: 75,
+                                maxRadius: 75,
+                                backgroundImage:
+                                    AssetImage(AppAssets.blankProfile))
                             : CircleAvatar(
                                 minRadius: 75,
                                 maxRadius: 75,
-                                backgroundImage: NetworkImage(homeController.selectedAngle!.image!))),
+                                backgroundImage: NetworkImage(
+                                    homeController.selectedAngle!.image!))),
                     const Spacer(),
                     (h * 0.06).addHSpace(),
                     Container(
                       height: h * 0.17,
                       width: w,
-                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(
+                          color: blueColor,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -111,11 +118,15 @@ class _CallingScreenState extends State<CallingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   svgAssetImage(AppAssets.muteIcon,
-                                      color: controller.openMicrophone ? whiteColor.withOpacity(0.5) : whiteColor,
+                                      color: controller.openMicrophone
+                                          ? whiteColor.withOpacity(0.5)
+                                          : whiteColor,
                                       height: h * 0.045),
                                   (h * 0.01).addHSpace(),
                                   AppString.mute.regularLeagueSpartan(
-                                      fontColor: controller.openMicrophone ? whiteColor.withOpacity(0.5) : whiteColor,
+                                      fontColor: controller.openMicrophone
+                                          ? whiteColor.withOpacity(0.5)
+                                          : whiteColor,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
                                 ],
@@ -136,10 +147,15 @@ class _CallingScreenState extends State<CallingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   svgAssetImage(AppAssets.bluetoothIcon,
-                                      color: isBluetooth ? whiteColor : whiteColor.withOpacity(0.5), height: h * 0.045),
+                                      color: isBluetooth
+                                          ? whiteColor
+                                          : whiteColor.withOpacity(0.5),
+                                      height: h * 0.045),
                                   (h * 0.01).addHSpace(),
                                   AppString.bluetooth.regularLeagueSpartan(
-                                      fontColor: isBluetooth ? whiteColor : whiteColor.withOpacity(0.5),
+                                      fontColor: isBluetooth
+                                          ? whiteColor
+                                          : whiteColor.withOpacity(0.5),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
                                 ],
@@ -160,10 +176,15 @@ class _CallingScreenState extends State<CallingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   svgAssetImage(AppAssets.holdIcon,
-                                      color: isHold ? whiteColor : whiteColor.withOpacity(0.5), height: h * 0.045),
+                                      color: isHold
+                                          ? whiteColor
+                                          : whiteColor.withOpacity(0.5),
+                                      height: h * 0.045),
                                   (h * 0.01).addHSpace(),
                                   AppString.hold.regularLeagueSpartan(
-                                      fontColor: isHold ? whiteColor : whiteColor.withOpacity(0.5),
+                                      fontColor: isHold
+                                          ? whiteColor
+                                          : whiteColor.withOpacity(0.5),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
                                 ],
@@ -188,24 +209,27 @@ class _CallingScreenState extends State<CallingScreen> {
                             child: Center(
                               child: svgAssetImage(
                                 AppAssets.volumeIcon,
-                                color: controller.enableSpeakerphone ? whiteColor : whiteColor.withOpacity(0.5),
+                                color: controller.enableSpeakerphone
+                                    ? whiteColor
+                                    : whiteColor.withOpacity(0.5),
                               ),
                             ),
                           ),
                         ),
                         GestureDetector(
                           onTap: () async {
-                            if (controller.isUserJoined == true) {
-                            } else {
-                              controller.rejectCall();
-                            }
+                            // if (controller.isUserJoined == true) {
+                            // } else {
+                            //   controller.rejectCall();
+                            // }
                             controller.leaveChannel();
                             Get.back();
                           },
                           child: const CircleAvatar(
                             radius: 33,
                             backgroundColor: redFontColor,
-                            child: Icon(Icons.call_end, color: whiteColor, size: 28),
+                            child: Icon(Icons.call_end,
+                                color: whiteColor, size: 28),
                           ),
                         ),
                         GestureDetector(
@@ -221,7 +245,9 @@ class _CallingScreenState extends State<CallingScreen> {
                             child: Center(
                                 child: svgAssetImage(
                               AppAssets.gridIcon,
-                              color: isDialer ? whiteColor : whiteColor.withOpacity(0.5),
+                              color: isDialer
+                                  ? whiteColor
+                                  : whiteColor.withOpacity(0.5),
                             )),
                           ),
                         ),

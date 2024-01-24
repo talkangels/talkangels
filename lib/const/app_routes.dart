@@ -21,7 +21,8 @@ import 'package:talkangels/ui/staff/main/call_history_pages/more_call_info_scree
 import 'package:talkangels/ui/staff/main/my_profile_pages/profile_details_screen.dart';
 import 'package:talkangels/ui/staff/main/setting_pages/setting_screen.dart';
 import 'package:talkangels/ui/staff/main/report_problem_pages/report_problem_screen.dart';
-import 'package:talkangels/ui/staff/main/calling_pages/calling_screen.dart' as staff;
+import 'package:talkangels/ui/staff/main/calling_pages/calling_screen.dart'
+    as staff;
 import 'package:talkangels/ui/staff/main/home_pages/home_screen.dart' as staff;
 
 class Routes {
@@ -63,15 +64,25 @@ class Routes {
     GetPage(name: referEarnScreen, page: () => const ReferEarnScreen()),
     GetPage(name: callingScreen, page: () => const CallingScreen()),
     GetPage(name: allChargesScreen, page: () => const AllChargesScreen()),
-    GetPage(name: reportAProblemScreen, page: () => const ReportAProblemScreen()),
+    GetPage(
+        name: reportAProblemScreen, page: () => const ReportAProblemScreen()),
 
     ///staff
 
-    GetPage(name: verificationSuccessScreen, page: () => const VerificationSuccessScreen()),
-    GetPage(name: verificationErrorScreen, page: () => const VerificationErrorScreen()),
+    GetPage(
+        name: verificationSuccessScreen,
+        page: () => const VerificationSuccessScreen()),
+    GetPage(
+        name: verificationErrorScreen,
+        page: () => const VerificationErrorScreen()),
     GetPage(name: homeScreenStaff, page: () => const staff.HomeScreen()),
-    GetPage(name: profileDetailsScreen, page: () => const ProfileDetailsScreen()),
-    GetPage(name: callingScreenStaff, page: () => staff.CallingScreen()),
+    GetPage(
+        name: profileDetailsScreen, page: () => const ProfileDetailsScreen()),
+    GetPage(
+        name: callingScreenStaff,
+        page: () => staff.CallingScreen(
+              message: RemoteMessage(),
+            )),
     GetPage(name: callHistoryScreen, page: () => const CallHistoryScreen()),
     GetPage(name: moreCallInfoScreen, page: () => const MoreCallInfoScreen()),
     GetPage(name: bottomBarScreen, page: () => const BottomBarScreen()),

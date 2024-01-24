@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:talkangels/api/api_helper.dart';
 import 'package:talkangels/const/request_constant.dart';
 import 'package:talkangels/models/response_item.dart';
@@ -7,12 +5,16 @@ import 'package:talkangels/const/shared_prefs.dart';
 
 ///Angels
 class HomeRepoAngels {
-  static Future<ResponseItem> getAngleAPi() async {
+  static Future<ResponseItem> getAngleAPi(
+      {bool? isSearched, required String value}) async {
     ResponseItem result;
 
     String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getAngle;
+    String requestUrl1 =
+        AppUrls.BASE_URL + MethodNamesAngels.searchAngels + value;
 
-    result = await BaseApiHelper.getRequest(requestUrl);
+    result = await BaseApiHelper.getRequest(
+        isSearched == true ? requestUrl1 : requestUrl);
     return result;
   }
 
@@ -20,7 +22,8 @@ class HomeRepoAngels {
   static Future<ResponseItem> getSingleAngleAPi(String angelId) async {
     ResponseItem result;
 
-    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getSingleAngleDetails + angelId;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesAngels.getSingleAngleDetails + angelId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
     return result;
@@ -59,7 +62,8 @@ class HomeRepoAngels {
     ResponseItem result;
     String userId = PreferenceManager().getId();
 
-    String requestUrl = AppUrls.BASE_URL + MethodNamesAngels.getUserDetails + userId;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesAngels.getUserDetails + userId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
     return result;
@@ -88,7 +92,8 @@ class HomeRepoAngels {
   }
 
   /// post Rating code
-  static Future<ResponseItem> postRatingApi(String angelId, String rating, String comment) async {
+  static Future<ResponseItem> postRatingApi(
+      String angelId, String rating, String comment) async {
     ResponseItem result;
     Map<String, dynamic> requestData = {
       "user_id": "${PreferenceManager().getId() ?? ''}",
@@ -114,6 +119,17 @@ class HomeRepoAngels {
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
     return result;
   }
+
+  /// Delete Angel Account
+  static Future<ResponseItem> deleteAngelApi() async {
+    ResponseItem result;
+    String userId = PreferenceManager().getId();
+
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesAngels.deleteAngel + userId;
+    result = await BaseApiHelper.deleteAngel(requestUrl);
+    return result;
+  }
 }
 
 ///Staff
@@ -123,7 +139,8 @@ class HomeRepoStaff {
     ResponseItem result;
     String userId = PreferenceManager().getId().toString();
 
-    String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.getStaffDetails + userId;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.getStaffDetails + userId;
     result = await BaseApiHelper.getRequest(requestUrl);
 
     return result;
@@ -136,7 +153,8 @@ class HomeRepoStaff {
 
     String userId = PreferenceManager().getId().toString();
 
-    String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.getStaffCallHistory + userId;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.getStaffCallHistory + userId;
 
     result = await BaseApiHelper.getRequest(requestUrl);
 
@@ -169,43 +187,27 @@ class HomeRepoStaff {
       // "Online", "Offline"
     };
 
-    String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.activeStatus + userId;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.activeStatus + userId;
     result = await BaseApiHelper.putActiveStatue(requestUrl, requestData);
     return result;
   }
 
   /// Add Call History
 
-  static Future<ResponseItem> addCallHistory(String angelId, String staffId, String callType, String minutes) async {
+  static Future<ResponseItem> addCallHistory(
+      String angelId, String callType, String minutes) async {
     ResponseItem result;
     String userId = PreferenceManager().getId().toString();
 
     Map<String, dynamic> requestData = {
-      "staff_id": staffId,
+      "staff_id": userId,
       "user_id": angelId,
       "call_type": callType,
-      "seconds": minutes,
+      "minutes": minutes,
     };
-    log("requestData--------------> ${requestData}");
-
     String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.addCallHistory;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
-    log("result--------------> ${result.data}");
-    return result;
-  }
-
-  ///call reject
-  ///
-  static Future<ResponseItem> callReject(String angelId, String userId, String type) async {
-    ResponseItem result;
-
-    Map<String, dynamic> requestData = {"angel_id": angelId, "user_id": userId, "type": type};
-    log("requestData--------------> ${requestData}");
-
-    String requestUrl = AppUrls.BASE_URL + CommonApis.rejectCall;
-    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
-    log("result--------------> ${result.data}");
-
     return result;
   }
 
@@ -217,7 +219,8 @@ class HomeRepoStaff {
       "comment": comment,
     };
 
-    String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.postReportProblemStaff;
+    String requestUrl =
+        AppUrls.BASE_URL + MethodNamesStaff.postReportProblemStaff;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
     return result;
   }
