@@ -45,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       DynamicLinkService().handleDynamicLinks();
       await homeController.userDetailsApi();
+
+      log("message");
     });
 
     timer = Timer.periodic(const Duration(seconds: 15), (timer) {
