@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/api/repo/home_repo.dart';
+import 'package:talkangels/models/reject_call_res_model.dart';
 import 'package:talkangels/models/response_item.dart';
 import 'package:talkangels/ui/staff/models/active_status_res_model.dart';
 import 'package:talkangels/ui/staff/models/add_call_history_res_model.dart';
@@ -23,6 +24,8 @@ class HomeController extends GetxController {
 
   bool isAddHistoryLoading = false;
   AddCallHistoryResModel addCallHistoryResModel = AddCallHistoryResModel();
+
+  RejectCallResModel rejectCallResModel = RejectCallResModel();
 
   /// Get Staff Details
   getStaffDetailApi() async {
@@ -108,12 +111,13 @@ class HomeController extends GetxController {
   }
 
   /// Add Call History Api
-  addCallHistory(String angelId, String callType, String minutes) async {
+  addCallHistory(
+      String angelId, String staffId, String callType, String minutes) async {
     isAddHistoryLoading = true;
     update();
     ResponseItem item =
-        await HomeRepoStaff.addCallHistory(angelId, callType, minutes);
-    // log("item---4------->${item.data}");
+        await HomeRepoStaff.addCallHistory(angelId, staffId, callType, minutes);
+    log("item---4------->${item.data}");
     if (item.status == true) {
       try {
         addCallHistoryResModel = AddCallHistoryResModel.fromJson(item.data);
@@ -127,6 +131,26 @@ class HomeController extends GetxController {
       }
     } else {
       isAddHistoryLoading = false;
+      update();
+    }
+  }
+
+  ///rejectCall
+  rejectCall(String angelId, String userId, String type) async {
+    update();
+    ResponseItem item = await HomeRepoStaff.callReject(angelId, userId, type);
+    log("item---4------->${item.data}");
+    if (item.status == true) {
+      try {
+        rejectCallResModel = RejectCallResModel.fromJson(item.data);
+
+        update();
+      } catch (e) {
+        log("e=======reject=======>$e");
+
+        update();
+      }
+    } else {
       update();
     }
   }

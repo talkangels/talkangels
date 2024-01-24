@@ -25,3 +25,7 @@ class MethodNamesStaff {
   static const addCallHistory = "staff/save-call-history";
   static const postReportProblemStaff = "staff/add-report";
 }
+
+class CommonApis {
+  static const rejectCall = "call-reject";
+}

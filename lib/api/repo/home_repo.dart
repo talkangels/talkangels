@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:talkangels/api/api_helper.dart';
 import 'package:talkangels/const/request_constant.dart';
 import 'package:talkangels/models/response_item.dart';
@@ -196,18 +198,41 @@ class HomeRepoStaff {
   /// Add Call History
 
   static Future<ResponseItem> addCallHistory(
-      String angelId, String callType, String minutes) async {
+      String angelId, String staffId, String callType, String minutes) async {
     ResponseItem result;
     String userId = PreferenceManager().getId().toString();
 
     Map<String, dynamic> requestData = {
-      "staff_id": userId,
+      "staff_id": staffId,
       "user_id": angelId,
       "call_type": callType,
-      "minutes": minutes,
+      "seconds": minutes,
     };
+    log("requestData--------------> ${requestData}");
+
     String requestUrl = AppUrls.BASE_URL + MethodNamesStaff.addCallHistory;
     result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    log("result--------------> ${result.data}");
+    return result;
+  }
+
+  ///call reject
+  ///
+  static Future<ResponseItem> callReject(
+      String angelId, String userId, String type) async {
+    ResponseItem result;
+
+    Map<String, dynamic> requestData = {
+      "angel_id": angelId,
+      "user_id": userId,
+      "type": type
+    };
+    log("requestData--------------> ${requestData}");
+
+    String requestUrl = AppUrls.BASE_URL + CommonApis.rejectCall;
+    result = await BaseApiHelper.postRequestToken(requestUrl, requestData);
+    log("result--------------> ${result.data}");
+
     return result;
   }
 

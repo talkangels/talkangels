@@ -218,10 +218,10 @@ class _CallingScreenState extends State<CallingScreen> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            // if (controller.isUserJoined == true) {
-                            // } else {
-                            //   controller.rejectCall();
-                            // }
+                            if (controller.isUserJoined == true) {
+                            } else {
+                              controller.rejectCall();
+                            }
                             controller.leaveChannel();
                             Get.back();
                           },

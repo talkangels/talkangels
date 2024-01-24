@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/ui/angels/main/drawer_pages/my_wallet_pages/my_wallet_screen.dart';
 import 'package:talkangels/ui/angels/main/drawer_pages/profile_pages/profile_screen.dart';
@@ -78,11 +77,7 @@ class Routes {
     GetPage(name: homeScreenStaff, page: () => const staff.HomeScreen()),
     GetPage(
         name: profileDetailsScreen, page: () => const ProfileDetailsScreen()),
-    GetPage(
-        name: callingScreenStaff,
-        page: () => staff.CallingScreen(
-              message: RemoteMessage(),
-            )),
+    GetPage(name: callingScreenStaff, page: () => staff.CallingScreen()),
     GetPage(name: callHistoryScreen, page: () => const CallHistoryScreen()),
     GetPage(name: moreCallInfoScreen, page: () => const MoreCallInfoScreen()),
     GetPage(name: bottomBarScreen, page: () => const BottomBarScreen()),
