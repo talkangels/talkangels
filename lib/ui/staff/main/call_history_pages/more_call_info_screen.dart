@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -168,7 +166,7 @@ class _MoreCallInfoScreenState extends State<MoreCallInfoScreen> {
                                   children: [
                                     formattedDate.regularLeagueSpartan(
                                         fontWeight: FontWeight.w700),
-                                    (w * 0.02).addWSpace(),
+                                    (h * 0.003).addHSpace(),
                                     "${reverseData[index].callType ?? ''} Call, ${reverseData[index].minutes ?? ''}"
                                         .regularLeagueSpartan(
                                             fontColor: greyFontColor,

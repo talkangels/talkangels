@@ -7,6 +7,7 @@ import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
+import 'package:talkangels/ui/angels/main/home_pages/home_screen_controller.dart';
 import 'package:talkangels/ui/angels/widgets/app_button.dart';
 import 'package:talkangels/ui/startup/login_screen_controller.dart';
 import 'package:talkangels/const/app_routes.dart';
@@ -20,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  HomeScreenController homeScreenController = Get.put(HomeScreenController());
   LoginScreenController loginScreenController =
       Get.put(LoginScreenController());
 
@@ -72,18 +74,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
 
                     /// whatsapp login
-                    // await loginScreenController.startOtpless(referCode);
+                    await loginScreenController.startOtpless(referCode);
 
                     ///
+                    /// API signIn _ANGELS
+                    // await loginScreenController.signIn(
+                    //     name: "Test22",
+                    //     mNo: "1111111111",
+                    //     cCode: "91",
+                    //     fcm:
+                    //         PreferenceManager().getFCMNotificationToken() ?? '',
+                    //     referCode: referCode);
+
                     ///
                     /// API signIn _STAFF
-                    await loginScreenController.signIn(
-                        name: "Test11",
-                        mNo: "1234567890",
-                        cCode: "91",
-                        fcm:
-                            PreferenceManager().getFCMNotificationToken() ?? '',
-                        referCode: referCode);
+                    // await loginScreenController.signIn(
+                    //     name: "Demo test",
+                    //     mNo: "9510624645",
+                    //     cCode: "91",
+                    //     fcm:
+                    //         PreferenceManager().getFCMNotificationToken() ?? '',
+                    //     referCode: referCode);
                   },
                   child: Row(
                     children: [

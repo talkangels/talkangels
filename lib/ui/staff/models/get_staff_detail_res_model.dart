@@ -50,7 +50,7 @@ class Data {
   int? charges;
   String? role;
   int? totalRating;
-  List<dynamic>? reviews;
+  List<Review>? reviews;
   DateTime? updatedAt;
   int? v;
   String? fcmToken;
@@ -104,7 +104,8 @@ class Data {
         totalRating: json["total_rating"],
         reviews: json["reviews"] == null
             ? []
-            : List<dynamic>.from(json["reviews"]!.map((x) => x)),
+            : List<Review>.from(
+                json["reviews"]!.map((x) => Review.fromJson(x))),
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
@@ -131,8 +132,9 @@ class Data {
         "charges": charges,
         "role": role,
         "total_rating": totalRating,
-        "reviews":
-            reviews == null ? [] : List<dynamic>.from(reviews!.map((x) => x)),
+        "reviews": reviews == null
+            ? []
+            : List<dynamic>.from(reviews!.map((x) => x.toJson())),
         "updated_at": updatedAt?.toIso8601String(),
         "__v": v,
         "fcmToken": fcmToken,
@@ -140,9 +142,9 @@ class Data {
 }
 
 class Earnings {
-  int? currentEarnings;
+  double? currentEarnings;
   int? totalMoneyWithdraws;
-  int? totalPendingMoney;
+  double? totalPendingMoney;
   int? sentWithdrawRequest;
 
   Earnings({
@@ -153,9 +155,9 @@ class Earnings {
   });
 
   factory Earnings.fromJson(Map<String, dynamic> json) => Earnings(
-        currentEarnings: json["current_earnings"],
+        currentEarnings: json["current_earnings"]?.toDouble(),
         totalMoneyWithdraws: json["total_money_withdraws"],
-        totalPendingMoney: json["total_pending_money"],
+        totalPendingMoney: json["total_pending_money"]?.toDouble(),
         sentWithdrawRequest: json["sent_withdraw_request"],
       );
 
@@ -168,25 +170,144 @@ class Earnings {
 }
 
 class Listing {
+  List<CallHistory>? callHistory;
   String? totalMinutes;
-  List<dynamic>? callHistory;
 
   Listing({
-    this.totalMinutes,
     this.callHistory,
+    this.totalMinutes,
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) => Listing(
-        totalMinutes: json["total_minutes"],
         callHistory: json["call_history"] == null
             ? []
-            : List<dynamic>.from(json["call_history"]!.map((x) => x)),
+            : List<CallHistory>.from(
+                json["call_history"]!.map((x) => CallHistory.fromJson(x))),
+        totalMinutes: json["total_minutes"],
       );
 
   Map<String, dynamic> toJson() => {
-        "total_minutes": totalMinutes,
         "call_history": callHistory == null
             ? []
-            : List<dynamic>.from(callHistory!.map((x) => x)),
+            : List<dynamic>.from(callHistory!.map((x) => x.toJson())),
+        "total_minutes": totalMinutes,
+      };
+}
+
+class CallHistory {
+  String? user;
+  List<History>? history;
+  String? id;
+
+  CallHistory({
+    this.user,
+    this.history,
+    this.id,
+  });
+
+  factory CallHistory.fromJson(Map<String, dynamic> json) => CallHistory(
+        user: json["user"],
+        history: json["history"] == null
+            ? []
+            : List<History>.from(
+                json["history"]!.map((x) => History.fromJson(x))),
+        id: json["_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "user": user,
+        "history": history == null
+            ? []
+            : List<dynamic>.from(history!.map((x) => x.toJson())),
+        "_id": id,
+      };
+}
+
+class History {
+  DateTime? date;
+  String? callType;
+  int? mobileNumber;
+  String? minutes;
+  String? id;
+
+  History({
+    this.date,
+    this.callType,
+    this.mobileNumber,
+    this.minutes,
+    this.id,
+  });
+
+  factory History.fromJson(Map<String, dynamic> json) => History(
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        callType: json["call_type"],
+        mobileNumber: json["mobile_number"],
+        minutes: json["minutes"],
+        id: json["_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "date": date?.toIso8601String(),
+        "call_type": callType,
+        "mobile_number": mobileNumber,
+        "minutes": minutes,
+        "_id": id,
+      };
+}
+
+class Review {
+  String? user;
+  List<UserReview>? userReviews;
+  String? id;
+
+  Review({
+    this.user,
+    this.userReviews,
+    this.id,
+  });
+
+  factory Review.fromJson(Map<String, dynamic> json) => Review(
+        user: json["user"],
+        userReviews: json["user_reviews"] == null
+            ? []
+            : List<UserReview>.from(
+                json["user_reviews"]!.map((x) => UserReview.fromJson(x))),
+        id: json["_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "user": user,
+        "user_reviews": userReviews == null
+            ? []
+            : List<dynamic>.from(userReviews!.map((x) => x.toJson())),
+        "_id": id,
+      };
+}
+
+class UserReview {
+  int? rating;
+  String? comment;
+  DateTime? date;
+  String? id;
+
+  UserReview({
+    this.rating,
+    this.comment,
+    this.date,
+    this.id,
+  });
+
+  factory UserReview.fromJson(Map<String, dynamic> json) => UserReview(
+        rating: json["rating"],
+        comment: json["comment"],
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        id: json["_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "rating": rating,
+        "comment": comment,
+        "date": date?.toIso8601String(),
+        "_id": id,
       };
 }

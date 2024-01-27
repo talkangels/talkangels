@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:talkangels/const/extentions.dart';
-import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/models/angle_call_res_model.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
@@ -51,6 +52,7 @@ class _CallingScreenState extends State<CallingScreen> {
 
   @override
   void dispose() {
+    log("LEAVE==staff_callingScreen_dispose");
     callingScreenController.leaveChannel();
     // TODO: implement dispose
     super.dispose();
@@ -222,6 +224,7 @@ class _CallingScreenState extends State<CallingScreen> {
                             } else {
                               controller.rejectCall();
                             }
+                            log("LEAVE==Staff_callingScreen_CallEnd");
                             controller.leaveChannel();
                             Get.back();
                           },

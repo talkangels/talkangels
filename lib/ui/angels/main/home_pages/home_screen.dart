@@ -10,6 +10,7 @@ import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/ui/angels/constant/app_assets.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
+import 'package:talkangels/ui/angels/main/drawer_pages/my_wallet_pages/my_wallet_screen_controller.dart';
 import 'package:talkangels/ui/angels/main/home_pages/home_screen_controller.dart';
 import 'package:talkangels/const/app_routes.dart';
 import 'package:talkangels/const/extentions.dart';
@@ -30,6 +31,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   HomeScreenController homeController = Get.put(HomeScreenController());
+  MyWalletScreenController myWalletScreenController =
+      Get.put(MyWalletScreenController());
   TextEditingController talkTimeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Razorpay razorpay = Razorpay();
@@ -43,11 +46,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      DynamicLinkService().handleDynamicLinks();
       await homeController.userDetailsApi();
     });
-
-    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+    log("HOMESCREEN______");
+    homeController.homeAngleApi();
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (homeController.isSearch == false) {
         homeController.homeAngleApi();
       } else {
@@ -64,11 +67,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
-        timer!.cancel();
+        setState(() {
+          timer!.cancel();
+        });
         log('appLifeCycleState inactive');
         break;
       case AppLifecycleState.resumed:
-        timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+        timer = Timer.periodic(const Duration(seconds: 30), (timer) {
           if (homeController.isSearch == false) {
             homeController.homeAngleApi();
           } else {
@@ -80,15 +85,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         log('appLifeCycleState resumed');
         break;
       case AppLifecycleState.paused:
-        timer!.cancel();
+        setState(() {
+          timer!.cancel();
+        });
         log('appLifeCycleState paused');
         break;
       case AppLifecycleState.hidden:
-        timer!.cancel();
+        setState(() {
+          timer!.cancel();
+        });
         log('appLifeCycleState suspending');
         break;
       case AppLifecycleState.detached:
-        timer!.cancel();
+        setState(() {
+          timer!.cancel();
+        });
         log('appLifeCycleState detached');
         break;
     }
@@ -143,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ],
                   bottom: bottom(),
                 ),
-                body: controller.resModel.data == null
+                body: controller.isLoading == true
                     ? Container(
                         height: h,
                         width: w,
@@ -399,9 +410,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                 const Spacer(),
                                                 InkWell(
                                                   onTap: () {
-                                                    // log(",PreferenceManager().getId()-------1----${PreferenceManager().getId()}");
-                                                    // log(",PreferenceManager().getId()------2-----${PreferenceManager().getToken()}");
-                                                    // log(",PreferenceManager().getId()-----3------${controller.resModel.data![index].id!}");
                                                     controller.setAngle(
                                                         controller.resModel
                                                             .data![index]);
@@ -556,6 +564,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 suffixIcon: TextButton(
                                     onPressed: () {
                                       Get.back();
+
                                       Get.toNamed(Routes.allChargesScreen);
                                     },
                                     child: AppString.seeOffer
@@ -588,7 +597,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   'amount':
                                       100 * int.parse(talkTimeController.text),
                                   'name': 'Acme Corp.',
-                                  'description': 'Fine T-Shirt',
+                                  'description': 'Recharge',
                                   'retry': {'enabled': true, 'max_count': 1},
                                   'send_sms_hash': true,
                                   'prefill': {
@@ -603,7 +612,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 try {
                                   Get.back();
                                   razorpay.open(options);
-                                  log("SUCCESS======>>>>>");
                                 } catch (e) {
                                   log("ERROR==RAZORPAY   $e");
                                 }
@@ -754,7 +762,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         insetPadding:
                             EdgeInsets.symmetric(horizontal: w * 0.08),
                         contentPadding: EdgeInsets.all(w * 0.05),
-                        // clipBehavior: Clip.antiAliasWithSaveLayer,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         content: Container(
@@ -789,6 +796,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                       height: h * 0.06,
                                       color: Colors.transparent,
                                       onTap: () async {
+                                        setState(() {
+                                          timer!.cancel();
+                                        });
                                         await homeController.deleteAccountApi();
                                       },
                                       child: AppString.yesImSure
@@ -944,6 +954,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                                     color: Colors
                                                                         .transparent,
                                                                     onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        timer!
+                                                                            .cancel();
+                                                                      });
                                                                       PreferenceManager()
                                                                           .setClearALlPref();
                                                                       Get.back();
@@ -1098,6 +1113,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
     log(response.data.toString(), name: "SUCCESS");
 
+    ///API calling _Add wallet Amount
+    myWalletScreenController.addMyWalletAmountApi(
+      talkTimeController.text,
+      response.paymentId.toString(),
+    );
+
+    Get.back();
     appDialogBox(
       context,
       h: MediaQuery.of(context).size.height,

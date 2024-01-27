@@ -10,7 +10,7 @@ class RechargeScreenController extends GetxController {
   bool isLoading = false;
   getAllRecharge() async {
     isLoading = true;
-
+    update();
     ResponseItem item = await HomeRepoAngels.getAllRechargesApi();
     if (item.status == true) {
       try {
@@ -22,6 +22,10 @@ class RechargeScreenController extends GetxController {
         isLoading = false;
         update();
       }
+    } else {
+      isLoading = false;
+      update();
     }
+    return getAllRechargeResModel;
   }
 }

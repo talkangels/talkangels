@@ -109,22 +109,7 @@ class AppString {
   static const pleaseEnterYourProblem = "Please Enter Your Problem";
   static const gender = "Gender";
   static const age = "Age";
-
-  ///
-
-  static const F25Yrs3yrsofExperience = "F-25 Yrs • 3 yrs of Experience";
-  static const ratings = "4.2(1424 ratings)";
   static const rating = "4.9";
   static const totalReviews = "Total Reviews";
-  static const reviews = "8.5K+ Reviews";
-  static const phoneNumber = "+ 91 1234567890";
-  static const walletAmount = "₹300.00";
-  static const chargesValue = "₹ 16.0  ₹ 8.0 Per min";
-  static const hazelkaur12 = "@hazelkaur12";
-  static const customerRatingValue = "2k+ Listing Hours";
-  static const languageValue = "English, Hindi, malayalam, kannada";
-  static const genderFemale = "Gender : Female,";
   static const comment = "Comments";
-  static const aboutMeValue =
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ";
 }

@@ -25,8 +25,7 @@ class _ReferEarnScreenState extends State<ReferEarnScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      url = await DynamicShareAppLinkService()
-          .createShareAppLink(referCode: referCode);
+      url = await DynamicLinkService().createShareAppLink(referCode: referCode);
       setState(() {});
     });
   }

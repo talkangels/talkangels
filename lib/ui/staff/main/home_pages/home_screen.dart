@@ -474,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           AppShowProfilePic(
                             image: homeController
-                                    .getStaffDetailResModel.data!.image ??
+                                    .getStaffDetailResModel.data?.image ??
                                 '',
                             onTap: () {},
                             radius: w * 0.18,
@@ -563,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       (h * 0.01).addHSpace(),
                                       AppString
-                                          .areYouSureYouReallyWantToLOgOutFromyourTalkAngelAaccount
+                                          .areYouSureYouReallyWantToLOgOutFromyourTalkAngelAccount
                                           .regularLeagueSpartan(
                                               fontColor: greyFontColor,
                                               fontSize: 14,
@@ -622,7 +622,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       fontSize:
                                                                           24),
                                                               AppString
-                                                                  .areYouSureYouReallyWantToLOgOutFromyourTalkAngelAaccount
+                                                                  .areYouSureYouReallyWantToLOgOutFromyourTalkAngelAccount
                                                                   .regularLeagueSpartan(
                                                                       fontColor:
                                                                           greyFontColor,

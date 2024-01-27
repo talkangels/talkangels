@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -71,6 +73,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                     BorderRadius.circular(10)),
                                             content: Builder(
                                               builder: (context) {
+                                                log("wqwqwqwqw  = ${controller.getStaffDetailResModel.data?.image}");
                                                 return Container(
                                                   padding: EdgeInsets.zero,
                                                   height: h * 0.35,
@@ -89,29 +92,32 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                                           10)),
                                                         ),
                                                         child: controller
-                                                                        .getStaffDetailResModel
-                                                                        .data
-                                                                        ?.image ==
-                                                                    "" ||
-                                                                controller
-                                                                    .getStaffDetailResModel
-                                                                    .data!
-                                                                    .image!
-                                                                    .isEmpty ||
+                                                                        .getStaffDetailResModel.data?.image ==
+                                                                    '' ||
                                                                 controller
                                                                         .getStaffDetailResModel
                                                                         .data
                                                                         ?.image ==
-                                                                    "0"
+                                                                    "0" ||
+                                                                controller
+                                                                        .getStaffDetailResModel
+                                                                        .data
+                                                                        ?.image ==
+                                                                    "file:///null" ||
+                                                                controller
+                                                                        .getStaffDetailResModel
+                                                                        .data
+                                                                        ?.image ==
+                                                                    null
                                                             ? assetImage(
                                                                 AppAssets
                                                                     .blankProfile,
                                                                 fit: BoxFit
                                                                     .cover)
                                                             : Image.network(
-                                                                "${controller.getStaffDetailResModel.data?.image!}",
-                                                                fit: BoxFit
-                                                                    .cover),
+                                                                "${controller.getStaffDetailResModel.data?.image}",
+                                                                fit:
+                                                                    BoxFit.cover),
                                                       ),
                                                       Container(
                                                         height: h * 0.06,
@@ -447,11 +453,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                                                 SizedBox(
                                                                   width:
                                                                       w * 0.8,
-                                                                  child: (controller
-                                                                              .reviewList[
-                                                                                  index]
-                                                                              .comment ??
-                                                                          "No Comment")
+                                                                  child: ("${controller.reviewList[index].comment ?? "No Comment"}")
                                                                       .regularLeagueSpartan(
                                                                           fontColor:
                                                                               greyFontColor),

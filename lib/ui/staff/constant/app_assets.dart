@@ -4,15 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AppAssets {
   static const imagePath = "assets/images/";
 
-  static const appLogo = "${imagePath}img_app_logo.svg";
   static const whatsAppLogo = "${imagePath}whatsapp_logo.svg";
   // static const menuBar = "${imagePath}menubar.svg";
   static const myProfileIcon = "${imagePath}my_profile_icon.svg";
   static const myWalletIcon = "${imagePath}my_wallet_icon.svg";
   static const reportProblemIcon = "${imagePath}report_problem_icon.svg";
-  static const deleteAccountIcon = "${imagePath}delete_account_icon.svg";
   static const logOutIcon = "${imagePath}log_out_icon.svg";
-  static const profiles = "${imagePath}profiles.png";
   static const muteIcon = "${imagePath}mute_icon.svg";
   static const bluetoothIcon = "${imagePath}bluetooth_icon.svg";
   static const holdIcon = "${imagePath}hold_icon.svg";
@@ -58,9 +55,4 @@ Widget assetImage(String image,
     color: color,
     fit: fit,
   );
-}
-
-AssetImage assetsImage2(String image,
-    {double? height, double? width, Color? color}) {
-  return AssetImage(image);
 }

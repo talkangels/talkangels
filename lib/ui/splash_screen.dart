@@ -22,14 +22,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   _onInit() {
     Future.delayed(const Duration(seconds: 6), () {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await DynamicLinkService().handleDynamicLinks();
+      });
       if (PreferenceManager().getLogin() == true) {
-        log("PreferenceManager().getRole()=>${PreferenceManager().getRole()}");
+        log("PreferenceManager().getRole()=>  ${PreferenceManager().getRole()}");
         if (PreferenceManager().getRole() == "user") {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            await DynamicShareAppLinkService().handleDynamicShareAppLinks();
-            await DynamicLinkService().handleDynamicLinks();
-          });
-
           Get.offAllNamed(Routes.homeScreen);
         } else {
           log("userRest.data!.role----dss->${PreferenceManager().getRole()}");
@@ -39,17 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAllNamed(Routes.loginScreen);
       }
     });
-
-    ///old Data
-    // Future.delayed(const Duration(seconds: 6), () {
-    //   // Get.offAllNamed(Routes.loginScreen);
-    //
-    //   if (PreferenceManager().getLogin() == true) {
-    //     Get.offAllNamed(Routes.homeScreen);
-    //   } else {
-    //     Get.offAllNamed(Routes.loginScreen);
-    //   }
-    // });
   }
 
   @override

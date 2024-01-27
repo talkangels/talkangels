@@ -96,6 +96,10 @@ class HomeRepoAngels {
   /// post Rating code
   static Future<ResponseItem> postRatingApi(
       String angelId, String rating, String comment) async {
+    log("ID==1===  ${PreferenceManager().getId()}");
+    log("ID===2==  ${angelId}");
+    log("ID===3==  ${rating}");
+    log("ID===4==  ${comment}");
     ResponseItem result;
     Map<String, dynamic> requestData = {
       "user_id": "${PreferenceManager().getId() ?? ''}",

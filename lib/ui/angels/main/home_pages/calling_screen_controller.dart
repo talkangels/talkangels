@@ -12,7 +12,7 @@ import 'package:talkangels/const/shared_prefs.dart';
 import 'package:talkangels/theme/app_layout.dart';
 import 'package:talkangels/ui/angels/constant/app_color.dart';
 import 'package:talkangels/ui/angels/constant/app_string.dart';
-import 'package:talkangels/ui/angels/main/home_pages/person_details_screen_controller.dart';
+import 'package:talkangels/ui/angels/main/home_pages/home_screen_controller.dart';
 import 'package:talkangels/ui/angels/models/angle_list_res_model.dart';
 import 'package:talkangels/ui/angels/widgets/app_button.dart';
 import 'package:talkangels/ui/staff/main/home_pages/home_controller.dart';
@@ -27,6 +27,7 @@ class CallingScreenController extends GetxController {
   Timer? timer;
   bool isUserJoined = false;
   static HomeController homeController = Get.put(HomeController());
+  int secondCount = 0;
 
   setAngle(AngleData value) {
     selectedAngle = value;
@@ -40,6 +41,8 @@ class CallingScreenController extends GetxController {
         if (isUserJoined == true) {
           timer!.cancel();
         } else {
+          log("LEAVE==Angels_callingScreenController_TimeOut");
+
           rejectCall();
           leaveChannel();
           Get.back();
@@ -118,6 +121,8 @@ class CallingScreenController extends GetxController {
       },
       onLeaveChannel: (RtcConnection connection, RtcStats stats) {
         isJoined = false;
+        log("LEAVE==Angels_callingScreenController_OnLeaveChannel");
+
         leaveChannel();
         Get.back();
         log('remove----111');
@@ -125,12 +130,19 @@ class CallingScreenController extends GetxController {
       },
       onUserOffline: (connection, remoteUid, reason) {
         log('remove----222');
+        log("LEAVE==Angels_callingScreenController_OnUserOffline");
+
         leaveChannel();
         Get.back();
       },
       onUserJoined: (connection, remoteUid, elapsed) async {
         log('user join  $remoteUid');
         isUserJoined = true;
+        timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          secondCount = secondCount + 1;
+          update();
+          log("secondCount--------------> ${secondCount}");
+        });
         update();
         log('localUid----${connection.localUid}');
       }, /*onAudioDeviceVolumeChanged: (deviceType, volume, muted) {
@@ -153,19 +165,136 @@ class CallingScreenController extends GetxController {
 
   @override
   void onClose() {
+    log("LEAVE==Angels_callingScreenController_OnClose");
     leaveChannel();
     super.onClose();
   }
 
   leaveChannel() async {
-    PersonDetailsScreenController personDetailsScreenController =
-        Get.put(PersonDetailsScreenController());
+    log("LEAVECHANNELS");
 
+    HomeScreenController angelHomeScreenController =
+        Get.put(HomeScreenController());
     TextEditingController ratingController = TextEditingController();
     String? rating;
 
     // await engine!.release();
     await engine!.leaveChannel();
+
+    /// call Rating API
+    if (secondCount > 10) {
+      log("LEAVECHANNELS10");
+      Get.dialog(
+        AlertDialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: Get.width * 0.08),
+          contentPadding: EdgeInsets.all(Get.width * 0.05),
+          // clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          content: Builder(
+            builder: (context) {
+              return Container(
+                padding: EdgeInsets.zero,
+                height: Get.height * 0.5,
+                width: Get.width * 0.9,
+                child: Column(
+                  children: [
+                    AppString.pleaseRatingThisCall.regularLeagueSpartan(
+                        fontColor: blackColor,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800),
+                    (Get.height * 0.03).addHSpace(),
+                    RatingBar.builder(
+                      initialRating: 0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: false,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) =>
+                          const Icon(Icons.star, color: Colors.amber),
+                      onRatingUpdate: (ratingValue) {
+                        rating = ratingValue.toString().split('.').first;
+                        log("$rating");
+                      },
+                    ),
+                    (Get.height * 0.03).addHSpace(),
+                    TextField(
+                      maxLines: 6,
+                      minLines: 5,
+                      onChanged: (value) {},
+                      controller: ratingController,
+                      style: const TextStyle(
+                          color: blackColor,
+                          fontSize: 16,
+                          height: 1.2,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'League Spartan'),
+                      decoration: InputDecoration(
+                        hintText: "Comments",
+                        hintStyle: TextStyle(
+                            color: blackColor.withOpacity(0.5),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            fontFamily: 'League Spartan'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: const BorderSide(color: appBarColor),
+                        ),
+                      ),
+                    ),
+                    (Get.height * 0.04).addHSpace(),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: AppButton(
+                            height: Get.height * 0.06,
+                            color: Colors.transparent,
+                            onTap: () {
+                              Get.back();
+                              log("RATING_SKIP");
+                            },
+                            child: AppString.skip.regularLeagueSpartan(
+                                fontColor: blackColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        (Get.width * 0.02).addWSpace(),
+                        Expanded(
+                          flex: 1,
+                          child: AppButton(
+                            height: Get.height * 0.06,
+                            border: Border.all(color: redFontColor),
+                            color: redFontColor,
+                            onTap: () {
+                              if (rating != null ||
+                                  ratingController.text.isNotEmpty) {
+                                /// Post Rating Api
+                                angelHomeScreenController.addRatingApi(
+                                  "${selectedAngle?.id.toString()}", // null
+                                  rating!,
+                                  ratingController.text,
+                                );
+                              } else {
+                                showAppSnackBar("Please Select Require Fields");
+                              }
+                            },
+                            child: AppString.submit.regularLeagueSpartan(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
 
     isJoined = false;
     isConnect = false;
@@ -176,120 +305,8 @@ class CallingScreenController extends GetxController {
     recordingVolume = 100;
     playbackVolume = 100;
     inEarMonitoringVolume = 100;
+    secondCount = 0;
     update();
-
-    /// call Rating API
-    Get.dialog(
-      AlertDialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: Get.width * 0.08),
-        contentPadding: EdgeInsets.all(Get.width * 0.05),
-        // clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: Builder(
-          builder: (context) {
-            return Container(
-              padding: EdgeInsets.zero,
-              height: Get.height * 0.5,
-              width: Get.width * 0.9,
-              child: Column(
-                children: [
-                  AppString.pleaseRatingThisCall.regularLeagueSpartan(
-                      fontColor: blackColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800),
-                  (Get.height * 0.03).addHSpace(),
-                  RatingBar.builder(
-                    initialRating: 0,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: false,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) =>
-                        const Icon(Icons.star, color: Colors.amber),
-                    onRatingUpdate: (ratingValue) {
-                      rating = ratingValue.toString().split('.').first;
-                      log("$rating");
-                    },
-                  ),
-                  (Get.height * 0.03).addHSpace(),
-                  TextField(
-                    maxLines: 6,
-                    minLines: 5,
-                    onChanged: (value) {},
-                    controller: ratingController,
-                    style: const TextStyle(
-                        color: blackColor,
-                        fontSize: 16,
-                        height: 1.2,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'League Spartan'),
-                    decoration: InputDecoration(
-                      hintText: "Comments",
-                      hintStyle: TextStyle(
-                          color: blackColor.withOpacity(0.5),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          fontFamily: 'League Spartan'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: const BorderSide(color: appBarColor),
-                      ),
-                    ),
-                  ),
-                  (Get.height * 0.04).addHSpace(),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: AppButton(
-                          height: Get.height * 0.06,
-                          color: Colors.transparent,
-                          onTap: () {
-                            Get.back();
-                            log("RATING_SKIP");
-                          },
-                          child: AppString.skip.regularLeagueSpartan(
-                              fontColor: blackColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      (Get.width * 0.02).addWSpace(),
-                      Expanded(
-                        flex: 1,
-                        child: AppButton(
-                          height: Get.height * 0.06,
-                          border: Border.all(color: redFontColor),
-                          color: redFontColor,
-                          onTap: () {
-                            if (rating != null ||
-                                ratingController.text.isNotEmpty) {
-                              /// Post Rating Api
-                              personDetailsScreenController.addRatingApi(
-                                "${personDetailsScreenController.getSingleAngelResModel.data?.id}",
-                                rating!,
-                                ratingController.text,
-                              );
-
-                              log("DDDDDOOOONNNNEEE   $rating  :  ${ratingController.text}");
-                            } else {
-                              showAppSnackBar("Please Select Require Fields");
-                            }
-                          },
-                          child: AppString.submit.regularLeagueSpartan(
-                              fontSize: 14, fontWeight: FontWeight.w700),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-    );
   }
 
   switchMicrophone() async {

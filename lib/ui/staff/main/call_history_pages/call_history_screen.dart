@@ -154,6 +154,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                           ),
                                               ],
                                             ),
+                                            (h * 0.005).addHSpace(),
                                             SizedBox(
                                               width: w * 0.65,
                                               child:

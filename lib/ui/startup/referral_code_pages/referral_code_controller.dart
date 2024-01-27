@@ -29,7 +29,7 @@ class ReferralCodeController extends GetxController {
 
           if (referralCodeResponseModel.status == 200) {
             ///API calling _Add wallet Amount
-            myWalletScreenController.addMyWalletAmountApi(
+            await myWalletScreenController.addMyWalletAmountApi(
               "50",
               "REFER_$referCode",
             );

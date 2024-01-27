@@ -69,6 +69,7 @@ class NotificationService {
         } else {
           CallingScreenController callingScreenController =
               Get.put(CallingScreenController());
+          log("LEAVE==Staff_NotificationService_Reject_User");
 
           callingScreenController.leaveChannel();
           Get.back();
@@ -253,6 +254,8 @@ class NotificationService {
         CallingScreenController callingScreenController =
             Get.put(CallingScreenController());
         callingScreenController.rejectCall();
+        log("LEAVE==Staff_NotificationService_Reject_User_Background_notification_handler");
+
         callingScreenController.leaveChannel();
         Get.back();
       }

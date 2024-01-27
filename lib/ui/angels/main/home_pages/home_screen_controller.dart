@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/api/repo/home_repo.dart';
 import 'package:talkangels/models/angle_call_res_model.dart';
+import 'package:talkangels/theme/app_layout.dart';
+import 'package:talkangels/ui/angels/models/add_rating_res_model.dart';
 import 'package:talkangels/ui/angels/models/angle_list_res_model.dart';
 import 'package:talkangels/models/response_item.dart';
 import 'package:talkangels/ui/angels/models/delete_user_res_model.dart';
@@ -25,6 +27,8 @@ class HomeScreenController extends GetxController {
   DeleteAngelsResModel deleteAngelsResModel = DeleteAngelsResModel();
   bool isSearch = false;
   String? searchValue;
+  bool isRatingLoading = false;
+  AddRatingResModel addRatingResModel = AddRatingResModel();
 
   AngleData? selectedAngle;
   setAngle(AngleData value) {
@@ -34,7 +38,7 @@ class HomeScreenController extends GetxController {
 
   homeAngleApi({bool isSearched = false, String? value}) async {
     isLoading = true;
-    update();
+
     ResponseItem item = await HomeRepoAngels.getAngleAPi(
         isSearched: isSearched, value: value.toString());
     if (item.status == true) {
@@ -102,7 +106,7 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  ///
+  /// Get User Detail Api
 
   userDetailsApi() async {
     isUserLoading = true;
@@ -143,6 +147,29 @@ class HomeScreenController extends GetxController {
     } else {
       isDelete = false;
       update();
+    }
+  }
+
+  /// Add Rating Api
+  addRatingApi(String angelId, String rating, String comment) async {
+    isRatingLoading = true;
+
+    ResponseItem result =
+        await HomeRepoAngels.postRatingApi(angelId, rating, comment);
+    if (result.status) {
+      try {
+        addRatingResModel = AddRatingResModel.fromJson(result.data);
+
+        Get.back();
+        isRatingLoading = false;
+        update();
+      } catch (e) {
+        log("e----------   $e");
+        isRatingLoading = false;
+        update();
+      }
+    } else {
+      showAppSnackBar("${result.message}");
     }
   }
 }

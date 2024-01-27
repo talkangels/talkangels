@@ -77,7 +77,7 @@ class Routes {
     GetPage(name: homeScreenStaff, page: () => const staff.HomeScreen()),
     GetPage(
         name: profileDetailsScreen, page: () => const ProfileDetailsScreen()),
-    GetPage(name: callingScreenStaff, page: () => staff.CallingScreen()),
+    GetPage(name: callingScreenStaff, page: () => const staff.CallingScreen()),
     GetPage(name: callHistoryScreen, page: () => const CallHistoryScreen()),
     GetPage(name: moreCallInfoScreen, page: () => const MoreCallInfoScreen()),
     GetPage(name: bottomBarScreen, page: () => const BottomBarScreen()),

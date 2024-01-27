@@ -6,14 +6,13 @@ class AppAssets {
 
   static const appLogo = "${imagePath}img_app_logo.svg";
   static const whatsAppLogo = "${imagePath}whatsapp_logo.svg";
-  static const menuBar = "${imagePath}menubar.svg";
+  // static const menuBar = "${imagePath}menubar.svg";
   static const myProfileIcon = "${imagePath}my_profile_icon.svg";
   static const myWalletIcon = "${imagePath}my_wallet_icon.svg";
   static const referEarnIcon = "${imagePath}refer_earn_icon.svg";
   static const reportProblemIcon = "${imagePath}report_problem_icon.svg";
   static const deleteAccountIcon = "${imagePath}delete_account_icon.svg";
   static const logOutIcon = "${imagePath}log_out_icon.svg";
-  static const profiles = "${imagePath}profiles.png";
   static const percentage = "${imagePath}persentage.svg";
   static const emoji = "${imagePath}emoji.svg";
   static const girl = "${imagePath}girl.png";
@@ -53,11 +52,6 @@ Widget svgAssetImage(String image,
     color: color,
     allowDrawingOutsideViewBox: false,
   );
-}
-
-SvgPicture svgSAssetsImage2(String image,
-    {double? height, double? width, Color? color}) {
-  return SvgPicture.asset(image);
 }
 
 Widget assetImage(String image,

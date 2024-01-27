@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:talkangels/const/extentions.dart';
 import 'package:talkangels/ui/staff/constant/app_color.dart';
 
@@ -65,15 +65,11 @@ class CommonContainer extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Row(
-            children: [
-              bottomChild.regularLeagueSpartan(
-                fontColor: yellowColor,
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
-              ),
-            ],
-          ),
+          bottomChild.regularLeagueSpartan(
+              fontColor: yellowColor,
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+              textOverflow: TextOverflow.ellipsis),
         ],
       ),
     );

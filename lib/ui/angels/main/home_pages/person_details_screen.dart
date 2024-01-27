@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -24,26 +23,16 @@ class PersonDetailScreen extends StatefulWidget {
 }
 
 class _PersonDetailScreenState extends State<PersonDetailScreen> {
-  HomeScreenController homeController = Get.find();
+  HomeScreenController homeController = Get.put(HomeScreenController());
   PersonDetailsScreenController personDetailsScreenController =
       Get.put(PersonDetailsScreenController());
 
   String angelId = Get.arguments["angel_id"];
-  Timer? timer;
 
   @override
   void initState() {
-    super.initState();
-    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      if (homeController.isSearch == false) {
-        homeController.homeAngleApi();
-      } else {
-        homeController.homeAngleApi(
-            isSearched: homeController.isSearch,
-            value: homeController.searchValue);
-      }
-    });
     personDetailsScreenController.getSingleAngelData(angelId);
+    super.initState();
   }
 
   @override

@@ -50,7 +50,6 @@ dependencies:
   get_storage: ^2.1.1
   lottie: ^2.7.0
   simple_ripple_animation: ^0.0.8
-  fluttertoast: ^8.2.4
   #  WhatsApp Login
   otpless_flutter: ^2.1.0
   #  Voice Calling

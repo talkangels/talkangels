@@ -4,6 +4,11 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:talkangels/const/app_routes.dart';
+import 'package:talkangels/const/shared_prefs.dart';
+import 'package:talkangels/theme/app_layout.dart';
+import 'package:talkangels/ui/angels/main/home_pages/home_screen.dart';
+import 'package:talkangels/ui/angels/main/home_pages/person_details_screen.dart';
+import 'package:talkangels/ui/startup/login_screen.dart';
 
 class DynamicLinkService {
   final firebaseDynamicLinks = FirebaseDynamicLinks.instance;
@@ -37,70 +42,7 @@ class DynamicLinkService {
     return dynamicLink.shortUrl.toString();
   }
 
-  Future handleDynamicLinks() async {
-    final data = await firebaseDynamicLinks.getInitialLink();
-    _handleDeepLink(data);
-
-    firebaseDynamicLinks.onLink.listen((dynamicLinkData) {
-      _handleDeepLink(dynamicLinkData);
-    });
-  }
-
-  Future<void> _handleDeepLink(PendingDynamicLinkData? data) async {
-    final Uri? deepLink = data?.link;
-    if (deepLink != null) {
-      debugPrint('_handleDeepLink | deeplink: $deepLink');
-      log("DEEPLINK===>>>   $deepLink");
-
-      /// Profile Details
-      var isProfile = deepLink.pathSegments.contains('shareProfile');
-      if (isProfile) {
-        var angelIdStr = deepLink.queryParameters['angelId'];
-
-        String? angelIds =
-            (angelIdStr?.isNotEmpty ?? false) ? angelIdStr : null;
-        if (angelIds != null) {
-          Get.toNamed(
-            Routes.personDetailScreen,
-            arguments: {
-              "angel_id": angelIds,
-            },
-          );
-        }
-      }
-    }
-  }
-
-  Uri urlWithQueryParams({
-    required String url,
-    Map<String, dynamic>? params,
-  }) {
-    if (params?.isNotEmpty ?? false) {
-      var queryString = Uri(
-        queryParameters: params!.map(
-          (key, value) => MapEntry(key, "$value"),
-        ),
-      ).query;
-
-      return Uri.parse("$url?$queryString");
-    }
-    return Uri.parse(url);
-  }
-}
-
-/// App Link
-class DynamicShareAppLinkService {
-  final firebaseDynamicLinks = FirebaseDynamicLinks.instance;
-  // String? shortLink;
-  final androidParameters = const AndroidParameters(
-    packageName: "com.example.talkangels",
-  );
-  final iosParameters = const IOSParameters(
-    bundleId: "",
-    appStoreId: "",
-  );
-
-  final uriPrefix = "https://talkangels.page.link";
+  /// App Link
   Future<String> createShareAppLink({required String? referCode}) async {
     const socialMetaTagParameters = SocialMetaTagParameters(
       title: "",
@@ -119,38 +61,94 @@ class DynamicShareAppLinkService {
       shortLinkType: ShortDynamicLinkType.unguessable,
     );
     // shortLink = dynamicLink.shortUrl.toString();
-    log("DYNAMIC_LINKS_PROFILE=====>>>>   ${dynamicShareAppLink.shortUrl.toString()}");
+    log("DYNAMIC_LINKS_REFER=====>>>>   ${dynamicShareAppLink.shortUrl.toString()}");
     return dynamicShareAppLink.shortUrl.toString();
   }
 
-  Future handleDynamicShareAppLinks() async {
+  Future handleDynamicLinks() async {
     final data = await firebaseDynamicLinks.getInitialLink();
-    _handleDeepShareAppLink(data);
+    _handleDeepLink(data);
 
-    firebaseDynamicLinks.onLink.listen((dynamicShareAppLinkData) {
-      _handleDeepShareAppLink(dynamicShareAppLinkData);
+    firebaseDynamicLinks.onLink.listen((dynamicLinkData) {
+      _handleDeepLink(dynamicLinkData);
     });
   }
 
-  Future<void> _handleDeepShareAppLink(PendingDynamicLinkData? data) async {
+  Future<void> _handleDeepLink(PendingDynamicLinkData? data) async {
     final Uri? deepLink = data?.link;
     if (deepLink != null) {
       debugPrint('_handleDeepLink | deeplink: $deepLink');
       log("DEEPLINK===>>>   $deepLink");
 
       /// Profile Details
-      var isRefer = deepLink.pathSegments.contains('referCode');
+      var isProfile = deepLink.pathSegments.contains('shareProfile');
+
+      if (isProfile) {
+        var angelIdStr = deepLink.queryParameters['angelId'];
+
+        String? angelIds =
+            (angelIdStr?.isNotEmpty ?? false) ? angelIdStr : null;
+
+        log("angelIds=====$angelIds");
+        if (angelIds != null) {
+          // Get.offAllNamed(Routes.homeScreen);
+          // Get.to(
+          //   () => const PersonDetailScreen(),
+          //   arguments: {
+          //     "angel_id": angelIds,
+          //   },
+          // );
+
+          if (PreferenceManager().getLogin() == true) {
+            if (PreferenceManager().getRole() == "user") {
+              Get.offAll(() => const HomeScreen());
+
+              Get.to(
+                () => const PersonDetailScreen(),
+                arguments: {
+                  "angel_id": angelIds,
+                },
+              );
+              log("USER===Home");
+            } else {
+              showAppSnackBar("You Have Not Show This Profile");
+              Get.offAllNamed(Routes.bottomBarScreen);
+              log("STAFF===Bottom");
+            }
+          } else {
+            Get.offAll(() => const LoginScreen());
+          }
+        }
+      }
+
+      /// App Link
+      var isRefer = deepLink.pathSegments.contains('refer');
+
       if (isRefer) {
         var referStr = deepLink.queryParameters['referCode'];
 
         String? referCode = (referStr?.isNotEmpty ?? false) ? referStr : null;
+        log("referCode===$referCode");
         if (referCode != null) {
-          Get.toNamed(
-            Routes.loginScreen,
-            arguments: {
-              "refer_code": referCode,
-            },
-          );
+          if (PreferenceManager().getLogin() == true) {
+            if (PreferenceManager().getRole() == "user") {
+              showAppSnackBar("You Have Already Registered!");
+              Get.offAllNamed(Routes.homeScreen);
+              log("USER===Home");
+            } else {
+              showAppSnackBar("You Have Already Registered!");
+              Get.offAllNamed(Routes.bottomBarScreen);
+              log("STAFF===Bottom");
+            }
+          } else {
+            Get.offAll(
+              () => const LoginScreen(),
+              arguments: {
+                "refer_code": referCode,
+              },
+            );
+            log("LOGIN====>>>   $referCode");
+          }
         }
       }
     }
