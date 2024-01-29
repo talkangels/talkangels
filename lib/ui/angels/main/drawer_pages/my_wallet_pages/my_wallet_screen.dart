@@ -203,8 +203,15 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                               height: 55,
                               keyboardType: TextInputType.number,
                               validator: (text) {
+                                const pattern = r'^[0-9]+$';
+                                final regex = RegExp(pattern);
+
                                 if (text == null || text.isEmpty) {
-                                  return "Please Enter Amount";
+                                  return AppString.pleaseEnterAmount;
+                                } else if (!regex.hasMatch(text)) {
+                                  return AppString.pleaseEnterValidNumbers;
+                                } else if (int.parse(text) <= 0) {
+                                  return AppString.pleaseEnterValidAmount;
                                 }
                                 return null;
                               },
@@ -218,7 +225,7 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                                   var options = {
                                     'key': 'rzp_test_EM5urUrcGkdJvm',
                                     'amount': 100 *
-                                        int.parse(textFieldController.text),
+                                        double.parse(textFieldController.text),
                                     'name': 'Acme Corp.',
                                     'description': 'Fine T-Shirt',
                                     'retry': {'enabled': true, 'max_count': 1},

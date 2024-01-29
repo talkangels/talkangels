@@ -28,14 +28,8 @@ class ReferralCodeController extends GetxController {
               ReferralCodeResponseModel.fromJson(result.data);
 
           if (referralCodeResponseModel.status == 200) {
-            ///API calling _Add wallet Amount
-            await myWalletScreenController.addMyWalletAmountApi(
-              "50",
-              "REFER_$referCode",
-            );
-            Get.offAllNamed(Routes.homeScreen);
-
             showAppSnackBar(AppString.referralCodeApplied);
+            Get.offAllNamed(Routes.homeScreen);
           } else if (referralCodeResponseModel.status == 400) {
             showAppSnackBar(referralCodeResponseModel.message ?? '');
             Get.offAllNamed(Routes.homeScreen);

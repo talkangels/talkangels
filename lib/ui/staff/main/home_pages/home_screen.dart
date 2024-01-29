@@ -231,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }),
                                           value: requestStatus,
                                           onChanged: (value) {
-                                            /// call Rating API
+                                            /// Sent Withdraw Request API
                                             if (requestStatus == false) {
                                               Get.dialog(
                                                 barrierDismissible: false,
@@ -297,6 +297,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         .withdrawController,
                                                                 validator:
                                                                     (value) {
+                                                                  const pattern =
+                                                                      r'^[0-9]+$';
+                                                                  final regex =
+                                                                      RegExp(
+                                                                          pattern);
                                                                   if (controller
                                                                       .withdrawController
                                                                       .text
@@ -320,6 +325,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           amounts! ||
                                                                       amounts! <=
                                                                           0) {
+                                                                    return "Please Enter Valid Amount";
+                                                                  } else if (!regex.hasMatch(
+                                                                      controller
+                                                                          .withdrawController
+                                                                          .text)) {
                                                                     return "Please Enter Valid Amount";
                                                                   }
                                                                   return null;

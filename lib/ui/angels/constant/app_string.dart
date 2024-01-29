@@ -112,4 +112,6 @@ class AppString {
   static const rating = "4.9";
   static const totalReviews = "Total Reviews";
   static const comment = "Comments";
+  static const pleaseEnterValidNumbers = "Please Enter Valid Numbers";
+  static const pleaseEnterValidAmount = "Please Enter Valid Amount";
 }

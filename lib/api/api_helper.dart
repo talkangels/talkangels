@@ -38,6 +38,7 @@ class BaseApiHelper {
   ///===========
   static Future<ResponseItem> postRequestToken(
       String requestUrl, Map<String, dynamic> requestData) async {
+    log("request:$requestUrl");
     String token = PreferenceManager().getToken().toString();
 
     return await http
@@ -50,6 +51,7 @@ class BaseApiHelper {
   /// Put Active Status
   static Future<ResponseItem> putActiveStatue(
       String requestUrl, Map<String, dynamic> requestData) async {
+    log("request:$requestUrl");
     String token = PreferenceManager().getToken().toString();
     return await http
         .put(Uri.parse(requestUrl),
@@ -60,6 +62,7 @@ class BaseApiHelper {
 
   /// Delete Angel
   static Future<ResponseItem> deleteAngel(String requestUrl) async {
+    log("request:$requestUrl");
     String token = PreferenceManager().getToken().toString();
     return await http
         .delete(Uri.parse(requestUrl), headers: {"Authorization": token})

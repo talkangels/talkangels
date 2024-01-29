@@ -37,6 +37,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   Razorpay razorpay = Razorpay();
   Timer? timer;
+  int error = 0;
+  bool emptyAmountError = false;
+  bool wrongAmountError = false;
 
   @override
   void initState() {
@@ -144,6 +147,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   // leadingWidth: w * 0.125,
                   titleSpacing: w * 0.03,
                   action: [
+                    // GestureDetector(
+                    //     onTap: () {},
+                    //     child: Container(
+                    //         height: h * 0.14,
+                    //         width: w * 0.14,
+                    //         decoration: BoxDecoration(
+                    //             border:
+                    //                 Border.all(color: whiteColor, width: 0.5),
+                    //             shape: BoxShape.circle),
+                    //         child: Padding(
+                    //             padding: EdgeInsets.all(w * 0.008),
+                    //             child: CircleAvatar(
+                    //                 radius: 1,
+                    //                 child: ClipRRect(
+                    //                     borderRadius:
+                    //                         BorderRadius.circular(200),
+                    //                     child: assetImage(
+                    //                         AppAssets.blankProfile)))))),
+                    // (w * 0.045).addWSpace(),
                     AppShowProfilePic(
                       image: '',
                       onTap: () {
@@ -589,13 +611,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           const Spacer(),
                           AppButton(
                             onTap: () {
-                              if (talkTimeController.text != '') {
+                              const pattern = r'^[0-9]+$';
+                              final regex = RegExp(pattern);
+
+                              if (talkTimeController.text.isEmpty ||
+                                  talkTimeController.text == '' ||
+                                  !regex.hasMatch(talkTimeController.text) ||
+                                  int.parse(talkTimeController.text) <= 0) {
+                                showAppSnackBar(
+                                    AppString.pleaseEnterValidAmount);
+                              } else {
                                 /// Payment Method
 
                                 var options = {
                                   'key': 'rzp_test_EM5urUrcGkdJvm',
-                                  'amount':
-                                      100 * int.parse(talkTimeController.text),
+                                  'amount': 100 *
+                                      double.parse(talkTimeController.text),
                                   'name': 'Acme Corp.',
                                   'description': 'Recharge',
                                   'retry': {'enabled': true, 'max_count': 1},
@@ -615,8 +646,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 } catch (e) {
                                   log("ERROR==RAZORPAY   $e");
                                 }
-                              } else {
-                                showAppSnackBar(AppString.pleaseEnterAmount);
                               }
                             },
                             child: AppString.add.regularLeagueSpartan(

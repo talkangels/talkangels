@@ -182,8 +182,8 @@ class CallingScreenController extends GetxController {
     await engine!.leaveChannel();
 
     /// call Rating API
-    if (secondCount > 10) {
-      log("LEAVECHANNELS10");
+    if (secondCount > 30) {
+      log("LEAVECHANNELS30");
       Get.dialog(
         AlertDialog(
           insetPadding: EdgeInsets.symmetric(horizontal: Get.width * 0.08),
